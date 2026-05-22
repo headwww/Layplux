@@ -100,7 +100,7 @@ export interface PluginEventBus {
  * 低代码平台注入：{ skeleton: SkeletonApi, canvas: CanvasApi }
  */
 export interface PluginContext<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > {
   /** 当前插件名 */
   readonly pluginName: string;
@@ -119,7 +119,7 @@ export interface PluginContext<
  * exports 改为静态对象，避免每次调用都重新生成。
  */
 export interface PluginConfig<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > {
   /** 插件名（与 meta.pluginName 一致，二次确认） */
   name: string;
@@ -142,7 +142,7 @@ export interface PluginConfig<
  * 插件模型：元数据 + 配置工厂函数
  */
 export type PluginModel<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > = {
   /** 插件名（可在工厂函数返回值中覆盖） */
   pluginName?: string;
@@ -170,7 +170,7 @@ export interface PluginRegisterOptions {
  * 管理器接口
  */
 export interface IPluginManager<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > {
   register(
     model: PluginModel<TServices>,
@@ -211,7 +211,7 @@ export type PluginLifecycleState =
  * 插件运行时状态机
  */
 export interface PluginRuntime<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > {
   readonly name: string;
   readonly meta: PluginMeta;
@@ -234,7 +234,7 @@ export interface PluginRuntime<
  * 上下文组装器接口
  */
 export interface ContextApiAssembler<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > {
   /**
    * 组装业务服务，注入到 context.services

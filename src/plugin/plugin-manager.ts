@@ -9,12 +9,12 @@ import type {
   PreferenceValueType,
   PluginMeta,
   PreferenceDeclaration,
+  PluginContext,
+  PluginConfig,
 } from './plugin-types';
 import { sequencify, SequencifyError } from './sequencify';
 
-export interface PluginManagerOptions<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
-> {
+export interface PluginManagerOptions<TServices = Record<string, unknown>> {
   /** 业务服务组装器，每个插件获得独立的 context.services */
   assembler: ContextApiAssembler<TServices>;
 
@@ -60,7 +60,7 @@ const DEFAULT_RESERVED_PREFIXES = [
 ];
 
 export class PluginManager<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > implements IPluginManager<TServices> {
   /** 有序插件列表（保证 init 顺序） */
   private plugins: PluginRuntimeImpl<TServices>[] = [];
@@ -341,4 +341,23 @@ export function isPluginRegisterOptions(
     opts !== null &&
     ('override' in opts || 'autoInit' in opts)
   );
+}
+
+/**
+ * 在你的项目里定义一次即可
+ * @param meta
+ * @param factory
+ * @returns
+ */
+export function definePlugin<TServices = Record<string, unknown>>(
+  meta: PluginMeta,
+  factory: (
+    ctx: PluginContext<TServices>,
+    options?: Record<string, unknown>,
+  ) => PluginConfig<TServices>,
+): PluginModel<TServices> {
+  return Object.assign(factory, {
+    pluginName: meta.pluginName,
+    meta,
+  });
 }

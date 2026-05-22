@@ -18,7 +18,7 @@ import type {
 import { createPluginEventBus } from './event-bus';
 
 export interface PluginContextOptions<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > {
   pluginName: string;
   meta: PluginMeta;
@@ -37,7 +37,7 @@ export interface PluginContextOptions<
 }
 
 export function createPluginContext<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 >(options: PluginContextOptions<TServices>): PluginContext<TServices> {
   const {
     pluginName,

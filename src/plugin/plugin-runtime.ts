@@ -7,7 +7,7 @@ import type {
 } from './plugin-types';
 
 export class PluginRuntimeImpl<
-  TServices extends Record<string, unknown> = Record<string, unknown>,
+  TServices = Record<string, unknown>,
 > implements PluginRuntime<TServices> {
   readonly name: string;
   readonly meta: PluginMeta;
