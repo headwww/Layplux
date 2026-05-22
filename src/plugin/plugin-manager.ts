@@ -114,7 +114,7 @@ export class PluginManager<
     );
 
     // 4. 组装 context（改造点：preference 在构造时一次性完整初始化）
-    const pluginName = processedModel.pluginName || meta.pluginName;
+    const pluginName = meta.pluginName;
     if (!pluginName) throw new Error('[PluginManager] pluginName is required');
 
     const savedPreference = this.pluginPreference.get(pluginName) ?? {};
@@ -128,20 +128,18 @@ export class PluginManager<
 
     // 5. 执行工厂函数得到 config
     const config = processedModel(ctx, filteredOptions);
-    const finalName = pluginName || config.name;
-    if (!finalName) throw new Error('[PluginManager] Plugin name is required');
 
     // 6. 处理同名覆盖
-    if (this.pluginsMap.has(finalName)) {
+    if (this.pluginsMap.has(pluginName)) {
       if (!override) {
         throw new Error(
-          `[PluginManager] Plugin "${finalName}" already registered. Use override:true to replace.`,
+          `[PluginManager] Plugin "${pluginName}" already registered. Use override:true to replace.`,
         );
       }
-      const old = this.pluginsMap.get(finalName)!;
+      const old = this.pluginsMap.get(pluginName)!;
       await old.destroy();
-      this.plugins = this.plugins.filter((p) => p.name !== finalName);
-      this.pluginsMap.delete(finalName);
+      this.plugins = this.plugins.filter((p) => p.name !== pluginName);
+      this.pluginsMap.delete(pluginName);
     }
 
     // 7. 版本兼容性检查（改造点：通过注入的 versionChecker，不硬依赖 semver）
@@ -157,7 +155,7 @@ export class PluginManager<
       );
       if (!compatible) {
         throw new Error(
-          `[PluginManager] Plugin "${finalName}" version check failed: ` +
+          `[PluginManager] Plugin "${pluginName}" version check failed: ` +
             `requires engine ${engineVersionExp}, current is ${this.options.engineVersion}`,
         );
       }
@@ -165,13 +163,13 @@ export class PluginManager<
 
     // 8. 创建运行时并存入注册表
     const runtime = new PluginRuntimeImpl<TServices>(
-      finalName,
+      pluginName,
       meta,
       config,
       ctx,
     );
     this.plugins.push(runtime);
-    this.pluginsMap.set(finalName, runtime);
+    this.pluginsMap.set(pluginName, runtime);
 
     // 9. autoInit
     if (autoInit) {
@@ -356,8 +354,5 @@ export function definePlugin<TServices = Record<string, unknown>>(
     options?: Record<string, unknown>,
   ) => PluginConfig<TServices>,
 ): PluginModel<TServices> {
-  return Object.assign(factory, {
-    pluginName: meta.pluginName,
-    meta,
-  });
+  return Object.assign(factory, { meta });
 }

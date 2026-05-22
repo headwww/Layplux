@@ -10,7 +10,7 @@ interface LaypluxServices {
 }
 
 const LaypluxAssembler: ContextApiAssembler<LaypluxServices> = {
-  assembleServices(pluginName, meta) {
+  assembleServices(_pluginName, _meta) {
     return {
       skeleton: new Skeleton(),
     };
@@ -26,7 +26,6 @@ const examplePlugin = definePlugin<LaypluxServices>(
     pluginName: 'builtin.terminal',
   },
   (ctx) => ({
-    name: 'builtin.terminal',
     setup(ctx) {
       ctx.services.skeleton;
     },
@@ -37,6 +36,8 @@ const examplePlugin = definePlugin<LaypluxServices>(
 );
 
 laypluxPlugins.register(examplePlugin);
+
+console.log(laypluxPlugins);
 
 export * from './plugin';
 export * from './skeleton';

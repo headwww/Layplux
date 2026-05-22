@@ -121,8 +121,6 @@ export interface PluginContext<
 export interface PluginConfig<
   TServices = Record<string, unknown>,
 > {
-  /** 插件名（与 meta.pluginName 一致，二次确认） */
-  name: string;
   /**
    * 插件初始化入口。
    * 返回 teardown 函数（可选），destroy 时自动调用。
@@ -144,8 +142,6 @@ export interface PluginConfig<
 export type PluginModel<
   TServices = Record<string, unknown>,
 > = {
-  /** 插件名（可在工厂函数返回值中覆盖） */
-  pluginName?: string;
   meta: PluginMeta;
   /** 工厂函数，接收 context 返回 config */
   (

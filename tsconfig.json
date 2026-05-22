@@ -42,6 +42,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "main.ts"],
   "exclude": ["**/node_modules/**", "**/dist/**", "**/.turbo/**"]
 }
