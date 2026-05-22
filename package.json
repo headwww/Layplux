@@ -1,5 +1,5 @@
 {
-  "name": "Layplux",
+  "name": "layplux",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -29,5 +29,8 @@
     "stylelint-scss": "^7.1.1",
     "typescript": "^6.0.3",
     "vite": "^8.0.14"
+  },
+  "dependencies": {
+    "eventemitter2": "^6.4.9"
   }
 }
