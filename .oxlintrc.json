@@ -47,6 +47,7 @@
     "dist",
     "node_modules",
     "*.min.js",
-    "public"
+    "public",
+    "src/plugin/__tests__"
   ]
 }

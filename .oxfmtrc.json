@@ -7,5 +7,6 @@
   "singleQuote": true,
   "bracketSpacing": true,
   "arrowParens": "always",
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "ignorePatterns": ["src/plugin/__tests__"]
 }

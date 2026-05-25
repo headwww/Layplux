@@ -7,7 +7,7 @@ export default [
   // 忽略文件
   // =====================
   {
-    ignores: ['dist/**', 'node_modules/**', '*.min.js', 'public/**'],
+    ignores: ['dist/**', 'node_modules/**', '*.min.js', 'public/**', 'src/plugin/__tests__/**'],
   },
 
   // =====================

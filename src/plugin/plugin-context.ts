@@ -53,12 +53,12 @@ export function createPluginContext<TServices = Record<string, unknown>>(
     savedPreference,
   );
 
-  const ctx: PluginContext<TServices> = {
+  const ctx = {
     pluginName,
     event,
     prefs,
-    services,
-  };
+    ...services,
+  } as PluginContext<TServices>;
 
   // ── 5. 可选的上下文增强（对标 enhancePluginContextHook）──────
   if (enhanceHook) {

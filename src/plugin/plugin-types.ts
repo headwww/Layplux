@@ -86,22 +86,18 @@ export interface PluginEventBus {
 /**
  * 通用插件上下文
  *
- * TServices 是业务系统注入的服务集合，框架不感知其具体结构。
- * 例如窗口系统注入：{ layout: LayoutApi }
- * 低代码平台注入：{ skeleton: SkeletonApi, canvas: CanvasApi }
+ * TServices 的 key 会直接平铺到 ctx 上，无需 ctx.services.xxx。
+ * 例如窗口系统注入 { layout: LayoutApi } → ctx.layout.toggleSelf()
+ * 低代码平台注入 { skeleton, canvas } → ctx.skeleton.xxx / ctx.canvas.xxx
  */
-export interface PluginContext<TServices = Record<string, unknown>> {
+export type PluginContext<TServices = Record<string, unknown>> = {
   /** 当前插件名 */
   readonly pluginName: string;
   /** 插件私有事件总线（自动加命名空间） */
   readonly event: PluginEventBus;
   /** 偏好配置（只能读写 preferenceDeclaration 声明的 key） */
   readonly prefs: PluginPreferenceManager;
-  /** 日志（自动带 [pluginName] 前缀） */
-  // readonly logger: PluginLogger
-  /** 业务集合，类型由系统决定 */
-  readonly services: TServices;
-}
+} & { [K in keyof TServices]: TServices[K] };
 
 /**
  * 插件定义 改造：setup 返回 teardown，强制配对。
@@ -202,7 +198,7 @@ export interface PluginRuntime<TServices = Record<string, unknown>> {
  */
 export interface ContextApiAssembler<TServices = Record<string, unknown>> {
   /**
-   * 组装业务服务，注入到 context.services
+   * 组装业务服务，平铺注入到 context 上
    * 每个插件调用一次，可根据 pluginName/meta 做差异化注入
    */
   assembleServices(pluginName: string, meta: PluginMeta): TServices;

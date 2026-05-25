@@ -15,7 +15,7 @@ import type {
 import { sequencify, SequencifyError } from './sequencify';
 
 export interface PluginManagerOptions<TServices = Record<string, unknown>> {
-  /** 业务服务组装器，每个插件获得独立的 context.services */
+  /** 业务服务组装器，每个插件获得独立的 context（服务平铺在 ctx 上） */
   assembler: ContextApiAssembler<TServices>;
 
   /** 当前引擎版本（用于 engineVersion 兼容性检查），不需要版本检查可不传 */

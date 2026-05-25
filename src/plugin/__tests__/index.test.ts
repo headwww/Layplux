@@ -346,8 +346,8 @@ describe('createPluginContext', () => {
       meta: createTestMeta(),
       assembler,
     });
-    expect(ctx.services.log).toBeDefined();
-    expect(typeof ctx.services.log).toBe('function');
+    expect(ctx.log).toBeDefined();
+    expect(typeof ctx.log).toBe('function');
   });
 
   it('receives pluginName and meta in assembler', () => {
@@ -1136,7 +1136,7 @@ describe('ContextApiAssembler', () => {
       (_ctx: PluginContext<DiffServices>) =>
         ({
           setup(ctx: PluginContext<DiffServices>) {
-            adminRole = ctx.services.role;
+            adminRole = ctx.role;
           },
         }) as PluginConfig<DiffServices>,
       { meta: { pluginName: 'admin' } },
@@ -1145,7 +1145,7 @@ describe('ContextApiAssembler', () => {
       (_ctx: PluginContext<DiffServices>) =>
         ({
           setup(ctx: PluginContext<DiffServices>) {
-            userRole = ctx.services.role;
+            userRole = ctx.role;
           },
         }) as PluginConfig<DiffServices>,
       { meta: { pluginName: 'user' } },
@@ -1184,7 +1184,7 @@ describe('integration', () => {
     const model: PluginModel<MyServices> = Object.assign(
       (ctx: PluginContext<MyServices>) => ({
         setup(ctx2: PluginContext<MyServices>) {
-          receivedServices.push(ctx2.services.api.fetch());
+          receivedServices.push(ctx2.api.fetch());
           ctx2.event.emitGlobal('plugin:ready', ctx2.pluginName);
           return () => { teardownCalls.push(ctx2.pluginName); };
         },
