@@ -39,9 +39,7 @@ export interface PluginManagerOptions<TServices = Record<string, unknown>> {
   /**
    * 上下文增强钩子
    */
-  enhanceContextHook?: (
-    ctx: ReturnType<typeof createPluginContext<TServices>>,
-  ) => void;
+  enhanceContextHook?: (ctx: ReturnType<typeof createPluginContext<TServices>>) => void;
 
   /** 初始偏好配置（对标原版 init(pluginPreference) 参数） */
   pluginPreference?: Map<string, Record<string, PreferenceValueType>>;
@@ -82,9 +80,7 @@ export class PluginManager<
     this.reservedPrefixes = reservedPrefixes;
   }
 
-  setPreference(
-    preference: Map<string, Record<string, PreferenceValueType>>,
-  ): void {
+  setPreference(preference: Map<string, Record<string, PreferenceValueType>>): void {
     this.pluginPreference = preference;
   }
 
@@ -92,11 +88,7 @@ export class PluginManager<
     model: PluginModel<TServices>,
     registerOptions: PluginRegisterOptions = {},
   ): Promise<void> {
-    const {
-      override = false,
-      autoInit = false,
-      options = {},
-    } = registerOptions;
+    const { override = false, autoInit = false, options = {} } = registerOptions;
 
     // 1. 验证 eventPrefix 不使用保留前缀
     const { meta = {} as PluginMeta } = model;
@@ -108,10 +100,7 @@ export class PluginManager<
       : model;
 
     // 3. 过滤 options（只保留 preferenceDeclaration 声明的 key）
-    const filteredOptions = filterValidOptions(
-      options,
-      meta.preferenceDeclaration ?? {},
-    );
+    const filteredOptions = filterValidOptions(options, meta.preferenceDeclaration ?? {});
 
     // 4. 组装 context（改造点：preference 在构造时一次性完整初始化）
     const pluginName = meta.pluginName;
@@ -144,15 +133,8 @@ export class PluginManager<
 
     // 7. 版本兼容性检查（改造点：通过注入的 versionChecker，不硬依赖 semver）
     const engineVersionExp = meta.engineVersion;
-    if (
-      engineVersionExp &&
-      this.options.engineVersion &&
-      this.options.versionChecker
-    ) {
-      const compatible = this.options.versionChecker(
-        engineVersionExp,
-        this.options.engineVersion,
-      );
+    if (engineVersionExp && this.options.engineVersion && this.options.versionChecker) {
+      const compatible = this.options.versionChecker(engineVersionExp, this.options.engineVersion);
       if (!compatible) {
         throw new Error(
           `[PluginManager] Plugin "${pluginName}" version check failed: ` +
@@ -162,12 +144,7 @@ export class PluginManager<
     }
 
     // 8. 创建运行时并存入注册表
-    const runtime = new PluginRuntimeImpl<TServices>(
-      pluginName,
-      meta,
-      config,
-      ctx,
-    );
+    const runtime = new PluginRuntimeImpl<TServices>(pluginName, meta, config, ctx);
     this.plugins.push(runtime);
     this.pluginsMap.set(pluginName, runtime);
 
@@ -180,10 +157,7 @@ export class PluginManager<
   async init(): Promise<void> {
     // 构建任务 Map（sequencify 需要）
     const tasksMap = new Map(
-      this.plugins.map((p) => [
-        p.name,
-        { name: p.name, dep: p.meta.dependencies ?? [] },
-      ]),
+      this.plugins.map((p) => [p.name, { name: p.name, dep: p.meta.dependencies ?? [] }]),
     );
 
     // 拓扑排序（改造点：sequencify 出错会抛 SequencifyError）
@@ -195,6 +169,7 @@ export class PluginManager<
       if (err instanceof SequencifyError) {
         throw new Error(
           `[PluginManager] Cannot init: dependency resolution failed.\n${err.message}`,
+          { cause: err },
         );
       }
       throw err;
@@ -203,8 +178,9 @@ export class PluginManager<
     // 串行初始化（保证顺序）
     for (const name of sequence) {
       try {
+        // oxlint-disable-next-line no-await-in-loop
         await this.pluginsMap.get(name)!.init();
-      } catch (err) {
+      } catch {
         // 单个插件失败不阻断，但记录日志
         console.error(
           `[PluginManager] Plugin "${name}" failed to init, ` +
@@ -238,16 +214,15 @@ export class PluginManager<
     this.pluginsMap.get(name)?.setDisabled(flag);
   }
 
-  getPluginPreference(
-    name: string,
-  ): Record<string, PreferenceValueType> | undefined {
+  getPluginPreference(name: string): Record<string, PreferenceValueType> | undefined {
     return this.pluginPreference.get(name);
   }
 
   async destroy(): Promise<void> {
     // 逆序销毁（与初始化顺序相反）
-    const reversed = [...this.plugins].reverse();
+    const reversed = [...this.plugins].toReversed();
     for (const plugin of reversed) {
+      // oxlint-disable-next-line no-await-in-loop
       await plugin.destroy();
     }
   }
@@ -268,9 +243,7 @@ export class PluginManager<
           if (runtime.disabled) return undefined;
           // 未初始化：返回明确提示而非 invariant 抛错
           if (!runtime.isInited()) {
-            console.warn(
-              `[PluginManager] Plugin "${name}" not initialized yet`,
-            );
+            console.warn(`[PluginManager] Plugin "${name}" not initialized yet`);
             return undefined;
           }
           return runtime.toProxy();
@@ -300,10 +273,7 @@ export class PluginManager<
  *
  * 改造点：原版遍历 properties 数组（O(n)），改为 Record 直接查找（O(1)）
  */
-export function isValidPreferenceKey(
-  key: string,
-  decl: PreferenceDeclaration,
-): boolean {
+export function isValidPreferenceKey(key: string, decl: PreferenceDeclaration): boolean {
   return Object.prototype.hasOwnProperty.call(decl, key);
 }
 
@@ -320,7 +290,7 @@ export function filterValidOptions(
 
   const result: Record<string, unknown> = {};
   for (const key of Object.keys(opts)) {
-    if (isValidPreferenceKey(key, decl) && opts[key] != null) {
+    if (isValidPreferenceKey(key, decl) && opts[key] !== null) {
       result[key] = opts[key];
     }
   }
@@ -334,11 +304,7 @@ export function filterValidOptions(
 export function isPluginRegisterOptions(
   opts: unknown,
 ): opts is { override?: boolean; autoInit?: boolean } {
-  return (
-    typeof opts === 'object' &&
-    opts !== null &&
-    ('override' in opts || 'autoInit' in opts)
-  );
+  return typeof opts === 'object' && opts !== null && ('override' in opts || 'autoInit' in opts);
 }
 
 /**

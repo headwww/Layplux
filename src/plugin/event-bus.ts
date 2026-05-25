@@ -71,21 +71,16 @@ export function createPluginEventBus(namespace: string): PluginEventBus {
     },
 
     off<T>(event: string, handler: (payload: T) => void): void {
-      privateEmitter.off(
-        prefixed(event),
-        handler as (payload: unknown) => void,
-      );
+      privateEmitter.off(prefixed(event), handler as (payload: unknown) => void);
     },
 
     /**
      * 订阅一次后自动取消
      */
     once<T>(event: string, handler: (payload: T) => void): () => void {
-      const listener = privateEmitter.once(
-        prefixed(event),
-        handler as (payload: unknown) => void,
-        { objectify: true },
-      ) as Listener;
+      const listener = privateEmitter.once(prefixed(event), handler as (payload: unknown) => void, {
+        objectify: true,
+      }) as Listener;
 
       return () => listener.off();
     },
@@ -103,11 +98,9 @@ export function createPluginEventBus(namespace: string): PluginEventBus {
      *   onGlobal('**', fn)             → 订阅所有全局事件（慎用）
      */
     onGlobal<T>(event: string, handler: (payload: T) => void): () => void {
-      const listener = globalEmitter.on(
-        event,
-        handler as (payload: unknown) => void,
-        { objectify: true },
-      ) as Listener;
+      const listener = globalEmitter.on(event, handler as (payload: unknown) => void, {
+        objectify: true,
+      }) as Listener;
 
       return () => listener.off();
     },
@@ -117,11 +110,9 @@ export function createPluginEventBus(namespace: string): PluginEventBus {
     },
 
     onGlobalOnce<T>(event: string, handler: (payload: T) => void): () => void {
-      const listener = globalEmitter.once(
-        event,
-        handler as (payload: unknown) => void,
-        { objectify: true },
-      ) as Listener;
+      const listener = globalEmitter.once(event, handler as (payload: unknown) => void, {
+        objectify: true,
+      }) as Listener;
 
       return () => listener.off();
     },
@@ -136,11 +127,7 @@ export function createPluginEventBus(namespace: string): PluginEventBus {
         const timer = timeoutMs
           ? setTimeout(() => {
               globalEmitter.off(event, onEvent);
-              reject(
-                new Error(
-                  `[EventBus] Timeout waiting for "${event}" after ${timeoutMs}ms`,
-                ),
-              );
+              reject(new Error(`[EventBus] Timeout waiting for "${event}" after ${timeoutMs}ms`));
             }, timeoutMs)
           : null;
 
@@ -171,10 +158,7 @@ export function emitSystemEvent(event: string, payload?: unknown): void {
   globalEmitter.emit(event, payload);
 }
 
-export function onSystemEvent(
-  event: string,
-  handler: (payload: unknown) => void,
-): () => void {
+export function onSystemEvent(event: string, handler: (payload: unknown) => void): () => void {
   const listener = globalEmitter.on(event, handler, {
     objectify: true,
   }) as Listener;

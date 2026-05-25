@@ -93,9 +93,7 @@ export function sequencify(
       parts.push(`Missing dependencies: ${missing.join(', ')}`);
     }
     if (recursive.length > 0) {
-      parts.push(
-        `Circular dependencies: ${recursive.map((r) => r.join(' → ')).join('; ')}`,
-      );
+      parts.push(`Circular dependencies: ${recursive.map((r) => r.join(' → ')).join('; ')}`);
     }
     throw new SequencifyError(parts.join('\n'), missing, recursive);
   }

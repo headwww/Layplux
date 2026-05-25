@@ -17,9 +17,7 @@ import type {
 } from './plugin-types';
 import { createPluginEventBus } from './event-bus';
 
-export interface PluginContextOptions<
-  TServices = Record<string, unknown>,
-> {
+export interface PluginContextOptions<TServices = Record<string, unknown>> {
   pluginName: string;
   meta: PluginMeta;
   assembler: ContextApiAssembler<TServices>;
@@ -36,16 +34,10 @@ export interface PluginContextOptions<
   enhanceHook?: (ctx: PluginContext<TServices>) => void;
 }
 
-export function createPluginContext<
-  TServices = Record<string, unknown>,
->(options: PluginContextOptions<TServices>): PluginContext<TServices> {
-  const {
-    pluginName,
-    meta,
-    assembler,
-    savedPreference = {},
-    enhanceHook,
-  } = options;
+export function createPluginContext<TServices = Record<string, unknown>>(
+  options: PluginContextOptions<TServices>,
+): PluginContext<TServices> {
+  const { pluginName, meta, assembler, savedPreference = {}, enhanceHook } = options;
 
   // ── 1. 组装业务服务（assembler 决定注入什么）──────────────────
   const services = assembler.assembleServices(pluginName, meta);
@@ -122,10 +114,7 @@ function createPreferenceManager(
   }
 
   return {
-    get<T extends PreferenceValueType>(
-      key: string,
-      defaultValue?: T,
-    ): T | undefined {
+    get<T extends PreferenceValueType>(key: string, defaultValue?: T): T | undefined {
       validateKey(key);
       const val = store[key];
       if (val === undefined || val === null) return defaultValue;

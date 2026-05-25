@@ -14,10 +14,7 @@ export interface PreferencePropertyDeclaration {
  * Record 格式，O(1) 查找，比原版 Array<{key}> 更直观
  * { fontSize: { type: 'number', default: 13 } }
  */
-export type PreferenceDeclaration = Record<
-  string,
-  PreferencePropertyDeclaration
->;
+export type PreferenceDeclaration = Record<string, PreferencePropertyDeclaration>;
 
 /**
  * 插件元数据
@@ -68,17 +65,11 @@ export interface PluginEventBus {
    *   'layout:**'    → layout 下所有层级事件
    *   '**'           → 全部事件（调试用）
    */
-  onGlobal<T = unknown>(
-    event: string,
-    handler: (payload: T) => void,
-  ): () => void;
+  onGlobal<T = unknown>(event: string, handler: (payload: T) => void): () => void;
   /** 取消订阅全局事件 */
   offGlobal<T = unknown>(event: string, handler: (payload: T) => void): void;
   /** 订阅全局事件一次 */
-  onGlobalOnce<T = unknown>(
-    event: string,
-    handler: (payload: T) => void,
-  ): () => void;
+  onGlobalOnce<T = unknown>(event: string, handler: (payload: T) => void): () => void;
   /**
    * 等待某个全局事件，返回 Promise（EventEmitter2 原生特性）
    * 适合 setup 中等待其他插件初始化完成：
@@ -99,9 +90,7 @@ export interface PluginEventBus {
  * 例如窗口系统注入：{ layout: LayoutApi }
  * 低代码平台注入：{ skeleton: SkeletonApi, canvas: CanvasApi }
  */
-export interface PluginContext<
-  TServices = Record<string, unknown>,
-> {
+export interface PluginContext<TServices = Record<string, unknown>> {
   /** 当前插件名 */
   readonly pluginName: string;
   /** 插件私有事件总线（自动加命名空间） */
@@ -118,17 +107,13 @@ export interface PluginContext<
  * 插件定义 改造：setup 返回 teardown，强制配对。
  * exports 改为静态对象，避免每次调用都重新生成。
  */
-export interface PluginConfig<
-  TServices = Record<string, unknown>,
-> {
+export interface PluginConfig<TServices = Record<string, unknown>> {
   /**
    * 插件初始化入口。
    * 返回 teardown 函数（可选），destroy 时自动调用。
    * 支持异步。
    */
-  setup(
-    ctx: PluginContext<TServices>,
-  ): void | (() => void) | Promise<void | (() => void)>;
+  setup(ctx: PluginContext<TServices>): void | (() => void) | Promise<void | (() => void)>;
   /**
    * 插件对外暴露的 API（可通过 manager.get(name).toProxy() 访问）
    * 原版用 exports() 函数，改为对象，避免每次调用都重新生成
@@ -139,15 +124,10 @@ export interface PluginConfig<
 /**
  * 插件模型：元数据 + 配置工厂函数
  */
-export type PluginModel<
-  TServices = Record<string, unknown>,
-> = {
+export type PluginModel<TServices = Record<string, unknown>> = {
   meta: PluginMeta;
   /** 工厂函数，接收 context 返回 config */
-  (
-    ctx: PluginContext<TServices>,
-    options?: Record<string, unknown>,
-  ): PluginConfig<TServices>;
+  (ctx: PluginContext<TServices>, options?: Record<string, unknown>): PluginConfig<TServices>;
 };
 
 /**
@@ -165,13 +145,8 @@ export interface PluginRegisterOptions {
 /**
  * 管理器接口
  */
-export interface IPluginManager<
-  TServices = Record<string, unknown>,
-> {
-  register(
-    model: PluginModel<TServices>,
-    registerOptions?: PluginRegisterOptions,
-  ): Promise<void>;
+export interface IPluginManager<TServices = Record<string, unknown>> {
+  register(model: PluginModel<TServices>, registerOptions?: PluginRegisterOptions): Promise<void>;
 
   init(): Promise<void>;
 
@@ -185,9 +160,7 @@ export interface IPluginManager<
 
   setDisabled(name: string, flag: boolean): void;
 
-  getPluginPreference(
-    name: string,
-  ): Record<string, PreferenceValueType> | undefined;
+  getPluginPreference(name: string): Record<string, PreferenceValueType> | undefined;
 
   destroy(): Promise<void>;
   dispose(): Promise<void>;
@@ -206,9 +179,7 @@ export type PluginLifecycleState =
 /**
  * 插件运行时状态机
  */
-export interface PluginRuntime<
-  TServices = Record<string, unknown>,
-> {
+export interface PluginRuntime<TServices = Record<string, unknown>> {
   readonly name: string;
   readonly meta: PluginMeta;
   readonly state: PluginLifecycleState;
@@ -229,9 +200,7 @@ export interface PluginRuntime<
 /**
  * 上下文组装器接口
  */
-export interface ContextApiAssembler<
-  TServices = Record<string, unknown>,
-> {
+export interface ContextApiAssembler<TServices = Record<string, unknown>> {
   /**
    * 组装业务服务，注入到 context.services
    * 每个插件调用一次，可根据 pluginName/meta 做差异化注入

@@ -120,14 +120,10 @@ export class PluginRuntimeImpl<
    */
   toProxy(): Record<string, unknown> {
     if (this._state !== 'initialized') {
-      console.warn(
-        `toProxy() called before init (state: ${this._state}), returning empty proxy`,
-      );
+      console.warn(`toProxy() called before init (state: ${this._state}), returning empty proxy`);
       return new Proxy({} as Record<string, unknown>, {
         get(_, prop) {
-          console.warn(
-            `[PluginProxy] Plugin not initialized, cannot access "${String(prop)}"`,
-          );
+          console.warn(`[PluginProxy] Plugin not initialized, cannot access "${String(prop)}"`);
           return undefined;
         },
       });
