@@ -76,7 +76,8 @@ export class PluginManager<
     private readonly options: PluginManagerOptions<TServices>,
     reservedPrefixes: string[] = DEFAULT_RESERVED_PREFIXES,
   ) {
-    this.pluginPreference = options.pluginPreference ?? new Map();
+    this.pluginPreference =
+      options.pluginPreference ?? new Map<string, Record<string, PreferenceValueType>>();
     this.reservedPrefixes = reservedPrefixes;
   }
 
@@ -248,7 +249,7 @@ export class PluginManager<
           }
           return runtime.toProxy();
         }
-        return Reflect.get(target, prop, receiver);
+        return Reflect.get(target, prop, receiver) as unknown;
       },
     });
   }

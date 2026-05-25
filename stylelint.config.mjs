@@ -53,5 +53,11 @@ export default {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.vue'],
+      customSyntax: 'postcss-html',
+    },
+  ],
   ignoreFiles: ['dist/**', 'node_modules/**', '**/*.js', '**/*.ts'],
 };

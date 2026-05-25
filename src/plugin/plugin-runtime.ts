@@ -16,7 +16,7 @@ export class PluginRuntimeImpl<
 
   private _state: PluginLifecycleState = 'registered';
   private _disabled = false;
-  private _teardown: (() => void) | null = null;
+  private _teardown: (() => void | Promise<void>) | null = null;
   private _initTime?: number;
   private _error?: Error;
 
@@ -121,12 +121,15 @@ export class PluginRuntimeImpl<
   toProxy(): Record<string, unknown> {
     if (this._state !== 'initialized') {
       console.warn(`toProxy() called before init (state: ${this._state}), returning empty proxy`);
-      return new Proxy({} as Record<string, unknown>, {
-        get(_, prop) {
-          console.warn(`[PluginProxy] Plugin not initialized, cannot access "${String(prop)}"`);
-          return undefined;
+      return new Proxy(
+        {},
+        {
+          get(_, prop) {
+            console.warn(`[PluginProxy] Plugin not initialized, cannot access "${String(prop)}"`);
+            return undefined;
+          },
         },
-      });
+      );
     }
 
     const exports = this.config.exports ?? {};
@@ -135,7 +138,7 @@ export class PluginRuntimeImpl<
         if (Object.prototype.hasOwnProperty.call(exports, prop)) {
           return exports[prop as string];
         }
-        return Reflect.get(target, prop, receiver);
+        return Reflect.get(target, prop, receiver) as unknown;
       },
     });
   }

@@ -11,25 +11,38 @@ export default [
   },
 
   // =====================
-  // Vue 文件解析
+  // Vue 文件解析（vue-eslint-parser 解析 SFC，tseslint 解析 <script> 块）
   // =====================
   ...pluginVue.configs['flat/recommended'],
 
   // =====================
-  // TypeScript 类型感知规则（oxlint 暂不支持）
+  // TypeScript 类型感知规则（仅 .ts/.tsx，不对 .vue 设置 parser，避免覆盖 vue-eslint-parser）
   // =====================
   ...tseslint.configs.recommendedTypeChecked.map((config) => ({
     ...config,
-    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
+    files: ['**/*.ts', '**/*.tsx'],
   })),
 
   // =====================
-  // TypeScript 解析器配置
+  // TypeScript 解析器配置（.ts/.tsx 直接用 tseslint parser）
   // =====================
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parserOptions: {
+        project: './tsconfig.json',
+      },
+    },
+  },
+
+  // =====================
+  // Vue + TypeScript：vue-eslint-parser 在外层，tseslint parser 只解析 <script> 块
+  // =====================
+  {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parserOptions: {
+        parser: tseslint.parser,
         project: './tsconfig.json',
         extraFileExtensions: ['.vue'],
       },
@@ -46,12 +59,15 @@ export default [
   // =====================
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+    },
     rules: {
       // Vue template 规则（oxlint 不支持）
       'vue/multi-word-component-names': 'off',
       'vue/no-v-html': 'warn',
       'vue/require-default-prop': 'off',
-      'vue/component-tags-order': [
+      'vue/block-order': [
         'error',
         {
           order: ['script', 'template', 'style'],
