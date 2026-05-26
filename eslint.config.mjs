@@ -7,7 +7,7 @@ export default [
   // 忽略文件
   // =====================
   {
-    ignores: ['dist/**', 'node_modules/**', '*.min.js', 'public/**', 'src/plugin/__tests__/**'],
+    ignores: ['dist/**', 'node_modules/**', '*.min.js', 'public/**', '**/__tests__/**'],
   },
 
   // =====================
@@ -30,7 +30,7 @@ export default [
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parserOptions: {
-        project: './tsconfig.json',
+        projectService: true,
       },
     },
   },
@@ -43,7 +43,7 @@ export default [
     languageOptions: {
       parserOptions: {
         parser: tseslint.parser,
-        project: './tsconfig.json',
+        projectService: true,
         extraFileExtensions: ['.vue'],
       },
     },

@@ -1,0 +1,21 @@
+{
+  "name": "@layplux/playground",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "layplux": "workspace:*",
+    "vue": "^3.5.34"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vitejs/plugin-vue-jsx": "^5.1.5",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14"
+  }
+}

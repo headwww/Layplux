@@ -1,12 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    // 基础编译选项
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "jsxImportSource": "vue",
     "useDefineForClassFields": true,
     "experimentalDecorators": true,
@@ -19,7 +18,6 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "preserveWatchOutput": true,
-    // 严格检查选项
     "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
@@ -29,19 +27,20 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    // 输出与声明（由打包工具处理实际输出，TypeScript 不生成文件）
     "noEmit": true,
     "removeComments": true,
     "sourceMap": false,
     "inlineSources": false,
     "declaration": false,
-    // 类型定义
     "types": ["vite/client", "node"],
-    // 路径别名
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts", "main.ts"],
+  "include": [],
+  "references": [
+    { "path": "./packages/layplux" },
+    { "path": "./packages/playground" }
+  ],
   "exclude": ["**/node_modules/**", "**/dist/**", "**/.turbo/**"]
 }
