@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue';
 import { TopArea } from './top-area';
+import { BottomArea } from './bottom-area';
 import { useSkeleton } from '../../managers';
 
 export const Skeleton = defineComponent({
@@ -95,6 +96,55 @@ export const Skeleton = defineComponent({
       content: <div class="toolbar-item">⚙️</div>,
     });
 
+    // ── 底部状态栏 widget ──
+    // 左侧 — 当前分支
+    skeleton.add({
+      name: 'GitBranchStatus',
+      type: 'interaction',
+      area: 'bottomArea',
+      props: { align: 'left' },
+      content: <span>🌿 main</span>,
+    });
+
+    // 右侧 — 行号:列号
+    skeleton.add({
+      name: 'LineCol',
+      type: 'interaction',
+      area: 'bottomArea',
+      props: { align: 'right' },
+      content: <span>20:1</span>,
+    });
+
+    // 右侧 — 编码
+    skeleton.add({
+      name: 'Encoding',
+      type: 'interaction',
+      area: 'bottomArea',
+      props: { align: 'right' },
+      content: <span>UTF-8</span>,
+      index: 10,
+    });
+
+    // 右侧 — 换行符
+    skeleton.add({
+      name: 'LineSeparator',
+      type: 'interaction',
+      area: 'bottomArea',
+      props: { align: 'right' },
+      content: <span>LF</span>,
+      index: 11,
+    });
+
+    // 右侧 — 内存使用
+    skeleton.add({
+      name: 'Memory',
+      type: 'interaction',
+      area: 'bottomArea',
+      props: { align: 'right' },
+      content: <span>512M / 2048M</span>,
+      index: 12,
+    });
+
     return () => (
       <div class="layplux-skeleton">
         <TopArea area={skeleton.topArea} />
@@ -103,7 +153,7 @@ export const Skeleton = defineComponent({
           <div class="layplux-skeleton__center"></div>
           <div class="layplux-skeleton__stripe"></div>
         </div>
-        <div class="layplux-skeleton__bottom"></div>
+        <BottomArea area={skeleton.bottomArea} />
       </div>
     );
   },

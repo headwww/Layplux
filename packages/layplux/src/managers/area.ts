@@ -9,12 +9,11 @@ export interface IArea<C, W> {
 }
 
 /**
- * 把整个容器分为不同的区域，每个区域可以包含一个或多个Widget，
- * C 是widget的配置类型
- * W 是widget的实例类型
+ * `useArea` 只需要 skeleton 的 `createContainer` 能力，
+ * 不依赖完整的 ISkeleton（避免创建时的循环依赖）。
  */
 export function useArea<C extends WidgetBaseConfig = any, W extends IWidget = IWidget>(
-  skeleton: Omit<ISkeleton, 'topArea'>,
+  skeleton: Pick<ISkeleton, 'createContainer'>,
   name: string,
   handle: (item: C | W) => W,
 ): IArea<C, W> {

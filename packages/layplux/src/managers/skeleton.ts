@@ -7,6 +7,7 @@ import { useWidgetContainer, type IWidgetContainer, type WidgetItem } from './wi
 export interface ISkeleton {
   add(widget: SkeletonConfig, extraConfig?: Record<string, any>): void;
   topArea: IArea<InteractionWidgetConfig, IWidget>;
+  bottomArea: IArea<InteractionWidgetConfig, IWidget>;
   createContainer<T extends IWidget = IWidget, G extends WidgetItem = SkeletonConfig>(
     name: string,
     handle: (item: T | G) => T,
@@ -19,10 +20,23 @@ export function useSkeleton(): ISkeleton {
   // 顶部工具栏
   const topArea = useArea<InteractionWidgetConfig, IWidget>(
     {
-      add,
       createContainer,
     },
     'topArea',
+    (config) => {
+      if (isWidget(config)) {
+        return config;
+      }
+      return useWidget(config);
+    },
+  );
+
+  // 底部状态栏
+  const bottomArea = useArea<InteractionWidgetConfig, IWidget>(
+    {
+      createContainer,
+    },
+    'bottomArea',
     (config) => {
       if (isWidget(config)) {
         return config;
@@ -39,6 +53,8 @@ export function useSkeleton(): ISkeleton {
     const { area } = config;
     if (area === 'topArea') {
       topArea.add(config as InteractionWidgetConfig);
+    } else if (area === 'bottomArea') {
+      bottomArea.add(config as InteractionWidgetConfig);
     }
   }
 
@@ -53,6 +69,7 @@ export function useSkeleton(): ISkeleton {
 
   return {
     topArea,
+    bottomArea,
     add,
     createContainer,
   };
