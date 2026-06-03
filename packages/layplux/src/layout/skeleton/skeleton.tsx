@@ -2,7 +2,6 @@ import { defineComponent } from 'vue';
 import { TopArea } from './top-area';
 import { BottomArea } from './bottom-area';
 import { useSkeleton } from '../../managers';
-import { LeftTopArea } from './left-top-area';
 
 export const Skeleton = defineComponent({
   name: 'Skeleton',
@@ -150,9 +149,7 @@ export const Skeleton = defineComponent({
       <div class="layplux-skeleton">
         <TopArea area={skeleton.topArea} />
         <div class="layplux-skeleton__body">
-          <div class="layplux-skeleton__stripe">
-            <LeftTopArea area={skeleton.leftTopArea} />
-          </div>
+          <div class="layplux-skeleton__stripe"></div>
           <div class="layplux-skeleton__center"></div>
           <div class="layplux-skeleton__stripe"></div>
         </div>

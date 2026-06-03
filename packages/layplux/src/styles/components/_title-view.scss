@@ -30,8 +30,14 @@
 
   // 仅图标
   &--icon-only {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+
     .title-view__icon {
       display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .title-view__label {
@@ -42,15 +48,24 @@
   // 图标在上，标题在下
   &--stacked {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    padding: 4px 3px 3px;
+    border-radius: 6px;
 
     .title-view__icon {
-      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1px;
     }
 
     .title-view__label {
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: center;
       white-space: nowrap;
     }
   }
@@ -59,9 +74,13 @@
   &--inline {
     flex-direction: row;
     gap: 6px;
+    align-items: center;
 
     .title-view__icon {
+      display: flex;
       flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
     }
 
     .title-view__label {
@@ -75,17 +94,22 @@
 
   &--idle {
     color: hsl(var(--layplux-muted-foreground));
+    cursor: pointer;
     background: transparent;
   }
 
   &--hover {
     color: hsl(var(--layplux-foreground));
-    background: hsl(var(--layplux-accent-hover));
+    cursor: pointer;
+    background: hsl(var(--layplux-foreground) / 8%);
+    border-radius: 6px;
   }
 
   &--active {
-    color: hsl(var(--layplux-primary));
-    background: hsl(var(--layplux-accent));
+    color: hsl(var(--layplux-foreground));
+    cursor: pointer;
+    background: hsl(var(--layplux-primary) / 18%);
+    border-radius: 6px;
   }
 
   &--disabled {
@@ -97,6 +121,7 @@
 
   &--error {
     color: hsl(var(--layplux-destructive));
+    cursor: pointer;
     background: transparent;
 
     .title-view__icon {
@@ -114,6 +139,12 @@
       }
     }
   }
+
+  // ── 过渡动画 ──
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    opacity 0.15s ease;
 
   // ── 子元素 ──
 

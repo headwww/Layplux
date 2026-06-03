@@ -1,4 +1,4 @@
-import { defineComponent, type PropType, type Component, type VNode } from 'vue';
+import { defineComponent, ref, type PropType, type Component, type VNode } from 'vue';
 import { createContent } from '../../utils';
 
 export const TitleView = defineComponent({
@@ -30,15 +30,28 @@ export const TitleView = defineComponent({
     },
   },
   setup(props) {
+    const isHovered = ref(false);
+
+    function onMouseEnter() {
+      isHovered.value = true;
+    }
+
+    function onMouseLeave() {
+      isHovered.value = false;
+    }
+
     return () => {
       const { icon, title, mode, state, size, className } = props;
       const iconNode = icon ? createContent(icon) : null;
       const titleNode = title ? createContent(title) : null;
 
+      // 当 prop.state 为 idle 且鼠标悬停时，自动升为 hover 视觉态
+      const visualState = isHovered.value && state === 'idle' ? 'hover' : state;
+
       const classes = [
         'title-view',
         `title-view--${mode}`,
-        `title-view--${state}`,
+        `title-view--${visualState}`,
         `title-view--${size}`,
         className,
       ]
@@ -46,7 +59,7 @@ export const TitleView = defineComponent({
         .join(' ');
 
       return (
-        <span class={classes}>
+        <span class={classes} onMouseenter={onMouseEnter} onMouseleave={onMouseLeave}>
           <span class="title-view__icon">{iconNode}</span>
           <span class="title-view__label">{titleNode}</span>
         </span>

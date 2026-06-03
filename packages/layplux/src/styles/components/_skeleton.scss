@@ -5,10 +5,6 @@
   min-height: 0;
   overflow: hidden;
 
-  // &__toolbar {
-  //   flex-shrink: 0;
-  //   height: 42px;
-  // }
   &__body {
     display: flex;
     flex: 1;
@@ -19,6 +15,7 @@
   &__stripe {
     display: flex;
     flex-shrink: 0;
+    flex-direction: column;
     min-width: 6px;
     overflow: hidden;
   }
