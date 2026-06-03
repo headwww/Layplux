@@ -10,6 +10,9 @@ export interface ISkeleton {
   leftTopArea: IArea<PanelWidgetConfig, IWidget>;
   leftBottomArea: IArea<PanelWidgetConfig, IWidget>;
   bottomLeftArea: IArea<PanelWidgetConfig, IWidget>;
+  rightTopArea: IArea<PanelWidgetConfig, IWidget>;
+  rightBottomArea: IArea<PanelWidgetConfig, IWidget>;
+  bottomRightArea: IArea<PanelWidgetConfig, IWidget>;
   add(widget: SkeletonConfig, extraConfig?: Record<string, any>): void;
   createContainer<T extends IWidget = IWidget, G extends WidgetItem = SkeletonConfig>(
     name: string,
@@ -76,6 +79,27 @@ export function useSkeleton(): ISkeleton {
     },
   );
 
+  // 右侧顶部主区域
+  const rightTopArea = useArea<PanelWidgetConfig, IWidget>(
+    { createContainer },
+    'rightTopArea',
+    (config) => (isWidget(config) ? config : useWidget(config)),
+  );
+
+  // 右侧底部区域
+  const rightBottomArea = useArea<PanelWidgetConfig, IWidget>(
+    { createContainer },
+    'rightBottomArea',
+    (config) => (isWidget(config) ? config : useWidget(config)),
+  );
+
+  // 右侧最底部快捷操作
+  const bottomRightArea = useArea<PanelWidgetConfig, IWidget>(
+    { createContainer },
+    'bottomRightArea',
+    (config) => (isWidget(config) ? config : useWidget(config)),
+  );
+
   // 左侧最底部快捷操作（交互型）
   const bottomLeftArea = useArea<PanelWidgetConfig, IWidget>(
     {
@@ -106,6 +130,12 @@ export function useSkeleton(): ISkeleton {
       leftBottomArea.add(config as PanelWidgetConfig);
     } else if (area === 'bottomLeftArea') {
       bottomLeftArea.add(config as PanelWidgetConfig);
+    } else if (area === 'rightTopArea') {
+      rightTopArea.add(config as PanelWidgetConfig);
+    } else if (area === 'rightBottomArea') {
+      rightBottomArea.add(config as PanelWidgetConfig);
+    } else if (area === 'bottomRightArea') {
+      bottomRightArea.add(config as PanelWidgetConfig);
     }
   }
 
@@ -124,6 +154,9 @@ export function useSkeleton(): ISkeleton {
     leftTopArea,
     leftBottomArea,
     bottomLeftArea,
+    rightTopArea,
+    rightBottomArea,
+    bottomRightArea,
     add,
     createContainer,
   };

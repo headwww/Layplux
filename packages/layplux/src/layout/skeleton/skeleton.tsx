@@ -4,6 +4,9 @@ import { BottomArea } from './bottom-area';
 import { LeftTopArea } from './left-top-area';
 import { LeftBottomArea } from './left-bottom-area';
 import { BottomLeftArea } from './bottom-left-area';
+import { RightTopArea } from './right-top-area';
+import { RightBottomArea } from './right-bottom-area';
+import { BottomRightArea } from './bottom-right-area';
 import { useSkeleton } from '../../managers';
 
 export const Skeleton = defineComponent({
@@ -172,6 +175,38 @@ export const Skeleton = defineComponent({
       index: 2,
     });
 
+    // ── 右侧 Stripe 上半段 — 面板型 widget ──
+    skeleton.add({
+      name: 'database',
+      type: 'panel',
+      area: 'rightTopArea',
+      props: { icon: '🗄', title: 'Database' },
+    });
+
+    skeleton.add({
+      name: 'favorites',
+      type: 'panel',
+      area: 'rightTopArea',
+      props: { icon: '⭐', title: 'Favorites' },
+      index: 1,
+    });
+
+    skeleton.add({
+      name: 'bookmarks',
+      type: 'panel',
+      area: 'rightBottomArea',
+      props: { icon: '🔖', title: 'Bookmarks' },
+      index: 2,
+    });
+
+    // ── 右侧 Stripe 最底部 — 快捷操作 ──
+    skeleton.add({
+      name: 'notifications',
+      type: 'panel',
+      area: 'bottomRightArea',
+      props: { icon: '🔔' },
+    });
+
     // ── 左侧 Stripe 最底部 — 快捷操作 ──
     skeleton.add({
       name: 'settings-quick',
@@ -201,7 +236,14 @@ export const Skeleton = defineComponent({
             <BottomLeftArea area={skeleton.bottomLeftArea} />
           </div>
           <div class="layplux-skeleton__center"></div>
-          <div class="layplux-skeleton__stripe"></div>
+          <div class="layplux-skeleton__stripe">
+            <div class="layplux-skeleton__stripe-top">
+              <RightTopArea area={skeleton.rightTopArea} />
+              <div class="layplux-skeleton__stripe-separator" />
+              <RightBottomArea area={skeleton.rightBottomArea} />
+            </div>
+            <BottomRightArea area={skeleton.bottomRightArea} />
+          </div>
         </div>
         <BottomArea area={skeleton.bottomArea} />
       </div>
