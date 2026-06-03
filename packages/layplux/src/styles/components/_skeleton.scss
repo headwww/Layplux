@@ -18,6 +18,19 @@
     flex-direction: column;
     min-width: 6px;
     overflow: hidden;
+
+    &-top {
+      flex: 1;
+      overflow: hidden auto;
+    }
+
+    &-separator {
+      flex-shrink: 0;
+      width: 24px;
+      height: 1px;
+      margin: 4px auto;
+      background: hsl(var(--layplux-border));
+    }
   }
 
   &__center {
@@ -26,6 +39,7 @@
     min-width: 0;
     overflow: hidden;
     background-color: hsl(var(--layplux-background));
+    border-radius: 12px;
   }
 
   &__bottom {

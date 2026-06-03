@@ -1,7 +1,7 @@
 import { h, type VNode } from 'vue';
 import type { InteractionWidgetAlign, SkeletonConfig, SkeletonConfigType } from '../types';
 import { createContent, uniqueId } from '../utils';
-import { WidgetView } from '../components';
+import { WidgetTitleView, WidgetView } from '../components';
 
 export interface IWidget {
   readonly type?: SkeletonConfigType;
@@ -12,6 +12,7 @@ export interface IWidget {
   readonly config: SkeletonConfig;
   renderBody(): VNode | null;
   renderContent(): VNode | null;
+  renderTitle(): VNode | null;
 }
 
 export function useWidget(config: SkeletonConfig): IWidget {
@@ -37,6 +38,13 @@ export function useWidget(config: SkeletonConfig): IWidget {
     });
   }
 
+  function renderTitle() {
+    return h(WidgetTitleView, {
+      key: id,
+      widget,
+    });
+  }
+
   // 当是面板型组件时，渲染标题，当是交互型组件时，渲染空
 
   const widget: IWidget = {
@@ -48,6 +56,7 @@ export function useWidget(config: SkeletonConfig): IWidget {
     config,
     renderBody,
     renderContent,
+    renderTitle,
   };
   props?.onInit?.(widget);
   return widget;

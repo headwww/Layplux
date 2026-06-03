@@ -8,8 +8,8 @@ export type SkeletonConfigArea =
   | 'leftBottomArea'
   | 'rightTopArea'
   | 'rightBottomArea'
-  | 'BottomLeftArea'
-  | 'BottomRightArea';
+  | 'bottomLeftArea'
+  | 'bottomRightArea';
 
 // 组件的类型 交互型和面板型
 export type SkeletonConfigType = 'interaction' | 'panel';

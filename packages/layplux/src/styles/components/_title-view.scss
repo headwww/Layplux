@@ -90,19 +90,18 @@
     }
   }
 
-  // ── 交互状态 ──
+  // ── 交互状态（hover 由 CSS :hover 原生处理，JS 只管显式状态）──
 
   &--idle {
     color: hsl(var(--layplux-muted-foreground));
     cursor: pointer;
     background: transparent;
-  }
 
-  &--hover {
-    color: hsl(var(--layplux-foreground));
-    cursor: pointer;
-    background: hsl(var(--layplux-foreground) / 8%);
-    border-radius: 6px;
+    &:hover {
+      color: hsl(var(--layplux-foreground));
+      background: hsl(var(--layplux-foreground) / 8%);
+      border-radius: 6px;
+    }
   }
 
   &--active {

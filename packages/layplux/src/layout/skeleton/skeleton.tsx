@@ -1,6 +1,9 @@
 import { defineComponent } from 'vue';
 import { TopArea } from './top-area';
 import { BottomArea } from './bottom-area';
+import { LeftTopArea } from './left-top-area';
+import { LeftBottomArea } from './left-bottom-area';
+import { BottomLeftArea } from './bottom-left-area';
 import { useSkeleton } from '../../managers';
 
 export const Skeleton = defineComponent({
@@ -145,11 +148,58 @@ export const Skeleton = defineComponent({
       index: 12,
     });
 
+    // ── 左侧 Stripe 上半段 — 面板型 widget ──
+    skeleton.add({
+      name: 'project',
+      type: 'panel',
+      area: 'leftTopArea',
+      props: { icon: '📁', title: 'Project' },
+    });
+
+    skeleton.add({
+      name: 'structure',
+      type: 'panel',
+      area: 'leftTopArea',
+      props: { icon: '🧬', title: 'Structure' },
+      index: 1,
+    });
+
+    skeleton.add({
+      name: 'git',
+      type: 'panel',
+      area: 'leftBottomArea',
+      props: { icon: '🔀', title: 'Git' },
+      index: 2,
+    });
+
+    // ── 左侧 Stripe 最底部 — 快捷操作 ──
+    skeleton.add({
+      name: 'settings-quick',
+      type: 'interaction',
+      area: 'bottomLeftArea',
+      props: { icon: '⚙', align: 'left' },
+    });
+
+    skeleton.add({
+      name: 'help',
+      type: 'interaction',
+      area: 'bottomLeftArea',
+      props: { icon: '?', align: 'left' },
+      index: 1,
+    });
+
     return () => (
       <div class="layplux-skeleton">
         <TopArea area={skeleton.topArea} />
         <div class="layplux-skeleton__body">
-          <div class="layplux-skeleton__stripe"></div>
+          <div class="layplux-skeleton__stripe">
+            <div class="layplux-skeleton__stripe-top">
+              <LeftTopArea area={skeleton.leftTopArea} />
+              <div class="layplux-skeleton__stripe-separator" />
+              <LeftBottomArea area={skeleton.leftBottomArea} />
+            </div>
+            <BottomLeftArea area={skeleton.bottomLeftArea} />
+          </div>
           <div class="layplux-skeleton__center"></div>
           <div class="layplux-skeleton__stripe"></div>
         </div>

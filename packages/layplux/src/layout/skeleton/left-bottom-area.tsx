@@ -2,8 +2,8 @@ import { defineComponent, type PropType } from 'vue';
 import type { IArea, IWidget } from '../../managers';
 import type { PanelWidgetConfig } from '../../types';
 
-export const LeftTopArea = defineComponent({
-  name: 'LeftTopArea',
+export const LeftBottomArea = defineComponent({
+  name: 'LeftBottomArea',
   props: {
     area: Object as PropType<IArea<PanelWidgetConfig, IWidget>>,
   },
@@ -13,7 +13,7 @@ export const LeftTopArea = defineComponent({
       if (!items || items.length === 0) return null;
 
       return (
-        <div class="layplux-left-top-area">
+        <div class="layplux-left-bottom-area">
           {items
             .slice()
             .toSorted((a, b) => {

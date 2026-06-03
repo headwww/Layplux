@@ -8,6 +8,8 @@ export interface ISkeleton {
   topArea: IArea<InteractionWidgetConfig, IWidget>;
   bottomArea: IArea<InteractionWidgetConfig, IWidget>;
   leftTopArea: IArea<PanelWidgetConfig, IWidget>;
+  leftBottomArea: IArea<PanelWidgetConfig, IWidget>;
+  bottomLeftArea: IArea<PanelWidgetConfig, IWidget>;
   add(widget: SkeletonConfig, extraConfig?: Record<string, any>): void;
   createContainer<T extends IWidget = IWidget, G extends WidgetItem = SkeletonConfig>(
     name: string,
@@ -60,6 +62,34 @@ export function useSkeleton(): ISkeleton {
     },
   );
 
+  // 左侧底部快捷区域
+  const leftBottomArea = useArea<PanelWidgetConfig, IWidget>(
+    {
+      createContainer,
+    },
+    'leftBottomArea',
+    (config) => {
+      if (isWidget(config)) {
+        return config;
+      }
+      return useWidget(config);
+    },
+  );
+
+  // 左侧最底部快捷操作（交互型）
+  const bottomLeftArea = useArea<PanelWidgetConfig, IWidget>(
+    {
+      createContainer,
+    },
+    'bottomLeftArea',
+    (config) => {
+      if (isWidget(config)) {
+        return config;
+      }
+      return useWidget(config);
+    },
+  );
+
   function add(config: SkeletonConfig, extraConfig?: Record<string, any>): void {
     // TODO: 处理extraConfig
     if (extraConfig) {
@@ -72,6 +102,10 @@ export function useSkeleton(): ISkeleton {
       bottomArea.add(config as InteractionWidgetConfig);
     } else if (area === 'leftTopArea') {
       leftTopArea.add(config as PanelWidgetConfig);
+    } else if (area === 'leftBottomArea') {
+      leftBottomArea.add(config as PanelWidgetConfig);
+    } else if (area === 'bottomLeftArea') {
+      bottomLeftArea.add(config as PanelWidgetConfig);
     }
   }
 
@@ -88,6 +122,8 @@ export function useSkeleton(): ISkeleton {
     topArea,
     bottomArea,
     leftTopArea,
+    leftBottomArea,
+    bottomLeftArea,
     add,
     createContainer,
   };

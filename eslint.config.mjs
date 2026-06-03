@@ -102,6 +102,7 @@ export default [
       '@typescript-eslint/semi': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
+      'vue/one-component-per-file': 'off',
     },
   },
 ];
