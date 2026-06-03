@@ -1,13 +1,14 @@
-import type { InteractionWidgetConfig, SkeletonConfig } from '../types';
+import type { InteractionWidgetConfig, PanelWidgetConfig, SkeletonConfig } from '../types';
 import { useArea } from './area';
 import type { IArea } from './area';
 import { isWidget, useWidget, type IWidget } from './widget';
 import { useWidgetContainer, type IWidgetContainer, type WidgetItem } from './widget-container';
 
 export interface ISkeleton {
-  add(widget: SkeletonConfig, extraConfig?: Record<string, any>): void;
   topArea: IArea<InteractionWidgetConfig, IWidget>;
   bottomArea: IArea<InteractionWidgetConfig, IWidget>;
+  leftTopArea: IArea<PanelWidgetConfig, IWidget>;
+  add(widget: SkeletonConfig, extraConfig?: Record<string, any>): void;
   createContainer<T extends IWidget = IWidget, G extends WidgetItem = SkeletonConfig>(
     name: string,
     handle: (item: T | G) => T,
@@ -45,6 +46,20 @@ export function useSkeleton(): ISkeleton {
     },
   );
 
+  // 左侧顶部主区域
+  const leftTopArea = useArea<PanelWidgetConfig, IWidget>(
+    {
+      createContainer,
+    },
+    'leftTopArea',
+    (config) => {
+      if (isWidget(config)) {
+        return config;
+      }
+      return useWidget(config);
+    },
+  );
+
   function add(config: SkeletonConfig, extraConfig?: Record<string, any>): void {
     // TODO: 处理extraConfig
     if (extraConfig) {
@@ -55,6 +70,8 @@ export function useSkeleton(): ISkeleton {
       topArea.add(config as InteractionWidgetConfig);
     } else if (area === 'bottomArea') {
       bottomArea.add(config as InteractionWidgetConfig);
+    } else if (area === 'leftTopArea') {
+      leftTopArea.add(config as PanelWidgetConfig);
     }
   }
 
@@ -70,6 +87,7 @@ export function useSkeleton(): ISkeleton {
   return {
     topArea,
     bottomArea,
+    leftTopArea,
     add,
     createContainer,
   };

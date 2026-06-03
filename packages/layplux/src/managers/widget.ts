@@ -1,9 +1,10 @@
 import { h, type VNode } from 'vue';
-import type { InteractionWidgetAlign, InteractionWidgetConfig, SkeletonConfig } from '../types';
+import type { InteractionWidgetAlign, SkeletonConfig, SkeletonConfigType } from '../types';
 import { createContent, uniqueId } from '../utils';
 import { WidgetView } from '../components';
 
 export interface IWidget {
+  readonly type?: SkeletonConfigType;
   readonly id: string;
   readonly isWidget: true;
   readonly name: string;
@@ -13,9 +14,10 @@ export interface IWidget {
   renderContent(): VNode | null;
 }
 
-export function useWidget(config: InteractionWidgetConfig): IWidget {
-  const id: string = uniqueId('widget');
-  const { name, props } = config;
+export function useWidget(config: SkeletonConfig): IWidget {
+  const { name, props, type } = config;
+
+  const id: string = uniqueId(type);
   const align = props ? props.align : 'left';
 
   function renderBody() {
@@ -35,8 +37,11 @@ export function useWidget(config: InteractionWidgetConfig): IWidget {
     });
   }
 
+  // 当是面板型组件时，渲染标题，当是交互型组件时，渲染空
+
   const widget: IWidget = {
     id,
+    type,
     isWidget: true,
     name,
     align,

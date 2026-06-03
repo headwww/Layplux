@@ -1,0 +1,132 @@
+.title-view {
+  display: inline-flex;
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+
+  // ── 尺寸变体 ──
+  &--sm {
+    font-size: 10px;
+
+    .title-view__icon {
+      width: 16px;
+      height: 16px;
+      font-size: 14px;
+    }
+  }
+
+  &--md {
+    font-size: 11px;
+
+    .title-view__icon {
+      width: 20px;
+      height: 20px;
+      font-size: 16px;
+    }
+  }
+
+  // ── 布局模式 ──
+
+  // 仅图标
+  &--icon-only {
+    .title-view__icon {
+      display: flex;
+    }
+
+    .title-view__label {
+      display: none;
+    }
+  }
+
+  // 图标在上，标题在下
+  &--stacked {
+    flex-direction: column;
+
+    .title-view__icon {
+      margin-bottom: 2px;
+    }
+
+    .title-view__label {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  // 图标在左，标题在右
+  &--inline {
+    flex-direction: row;
+    gap: 6px;
+
+    .title-view__icon {
+      flex-shrink: 0;
+    }
+
+    .title-view__label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  // ── 交互状态 ──
+
+  &--idle {
+    color: hsl(var(--layplux-muted-foreground));
+    background: transparent;
+  }
+
+  &--hover {
+    color: hsl(var(--layplux-foreground));
+    background: hsl(var(--layplux-accent-hover));
+  }
+
+  &--active {
+    color: hsl(var(--layplux-primary));
+    background: hsl(var(--layplux-accent));
+  }
+
+  &--disabled {
+    color: hsl(var(--layplux-muted-foreground));
+    cursor: not-allowed;
+    background: transparent;
+    opacity: 0.4;
+  }
+
+  &--error {
+    color: hsl(var(--layplux-destructive));
+    background: transparent;
+
+    .title-view__icon {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 6px;
+        height: 6px;
+        content: '';
+        background: hsl(var(--layplux-destructive));
+        border-radius: 50%;
+      }
+    }
+  }
+
+  // ── 子元素 ──
+
+  &__icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__label {
+    display: block;
+    font-weight: 400;
+    user-select: none;
+  }
+}
