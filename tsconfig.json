@@ -5,7 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "jsxImportSource": "vue",
     "useDefineForClassFields": true,
     "experimentalDecorators": true,

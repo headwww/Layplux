@@ -1,0 +1,6 @@
+.glass-pane {
+  position: absolute;
+  inset: 0;
+  z-index: var(--layplux-popup-z-index);
+  pointer-events: none;
+}

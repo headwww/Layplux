@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
 
+<script setup lang="ts">
+import { Layplux } from 'layplux';
+</script>
 <template>
-  <div />
+  <Layplux />
 </template>

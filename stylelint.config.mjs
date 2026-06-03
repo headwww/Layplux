@@ -16,7 +16,6 @@ export default {
     'color-hex-length': 'short',
     'color-named': 'never',
     'number-max-precision': 4,
-    'string-quotes': 'single',
     'max-nesting-depth': [3, { ignore: ['blockless-at-rules', 'pseudo-classes'] }],
     'property-no-vendor-prefix': true,
     'value-no-vendor-prefix': true,

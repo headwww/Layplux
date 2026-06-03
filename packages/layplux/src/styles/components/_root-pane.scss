@@ -1,0 +1,21 @@
+.layplux-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  contain: strict;
+  overflow: hidden;
+  font-family: var(--layplux-font-family);
+  font-size: var(--layplux-font-size-base);
+  color: hsl(var(--layplux-foreground));
+  background-color: hsl(var(--layplux-root-background));
+  isolation: isolate;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}

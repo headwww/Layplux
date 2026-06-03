@@ -1,0 +1,39 @@
+.layplux-skeleton {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+
+  // &__toolbar {
+  //   flex-shrink: 0;
+  //   height: 42px;
+  // }
+  &__body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &__stripe {
+    display: flex;
+    flex-shrink: 0;
+    min-width: 6px;
+    overflow: hidden;
+  }
+
+  &__center {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    background-color: hsl(var(--layplux-background));
+  }
+
+  &__bottom {
+    display: flex;
+    flex-shrink: 0;
+    height: 30px;
+  }
+}

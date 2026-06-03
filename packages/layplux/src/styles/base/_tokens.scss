@@ -1,0 +1,53 @@
+.layplux-root {
+  --layplux-popup-z-index: 2000;
+  --layplux-font-family:
+    -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', arial, 'Noto Sans',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --layplux-background: 0 0% 100%;
+  --layplux-background-deep: 216 20.11% 95.47%;
+  --layplux-foreground: 210 6% 21%;
+  --layplux-card: 0 0% 100%;
+  --layplux-card-foreground: 222.2 84% 4.9%;
+  --layplux-popover: 0 0% 100%;
+  --layplux-popover-foreground: 222.2 84% 4.9%;
+  --layplux-muted: 240 4.8% 95.9%;
+  --layplux-muted-foreground: 240 3.8% 46.1%;
+  --layplux-primary: 212 100% 45%;
+  --layplux-primary-foreground: 0 0% 98%;
+  --layplux-destructive: 359.33 100% 65.1%;
+  --layplux-destructive-foreground: 0 0% 98%;
+  --layplux-info: 240 5% 96%;
+  --layplux-info-foreground: 220 4% 58%;
+  --layplux-success: 144 57% 58%;
+  --layplux-success-foreground: 0 0% 98%;
+  --layplux-warning: 42 84% 61%;
+  --layplux-warning-foreground: 0 0% 98%;
+  --layplux-secondary: 240 5% 96%;
+  --layplux-secondary-foreground: 240 6% 10%;
+  --layplux-accent: 240 5% 96%;
+  --layplux-accent-dark: 216 14% 93%;
+  --layplux-accent-darker: 216 11% 91%;
+  --layplux-accent-lighter: 240 0% 98%;
+  --layplux-accent-hover: 200deg 10% 90%;
+  --layplux-accent-foreground: 240 6% 10%;
+  --layplux-heavy: 192deg 9.43% 89.61%;
+  --layplux-heavy-foreground: var(--layplux-accent-foreground);
+  --layplux-border: 240 5.9% 90%;
+  --layplux-input: 240deg 5.88% 90%;
+  --layplux-input-placeholder: 217 10.6% 65%;
+  --layplux-input-background: 0 0% 100%;
+  --layplux-ring: 222.2 84% 4.9%;
+  --layplux-radius: 0.5rem;
+  --layplux-overlay: 0 0% 0% / 45%;
+  --layplux-overlay-content: 0 0% 95% / 45%;
+  --layplux-font-size-base: 16px;
+  --layplux-sidebar: 0 0% 100%;
+  --layplux-sidebar-deep: 0 0% 100%;
+  --layplux-menu: var(--layplux-sidebar);
+  --layplux-header: 0 0% 100%;
+
+  accent-color: var(--layplux-primary);
+  color-scheme: light;
+
+  --layplux-root-background: 216 12% 92%;
+}

@@ -22,7 +22,9 @@
     "typescript/consistent-type-imports": ["error", { "prefer": "type-imports" }],
     "typescript/no-non-null-assertion": "off",
 
-    "import/no-duplicates": "error"
+    "import/no-duplicates": "error",
+
+    "no-explicit-any": "off"
   },
   "overrides": [
     {
@@ -43,11 +45,5 @@
     "es2022": true,
     "node": true
   },
-  "ignorePatterns": [
-    "dist",
-    "node_modules",
-    "*.min.js",
-    "public",
-    "src/plugin/__tests__"
-  ]
+  "ignorePatterns": ["dist", "node_modules", "*.min.js", "public", "src/plugin/__tests__"]
 }
