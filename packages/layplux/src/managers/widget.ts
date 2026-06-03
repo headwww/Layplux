@@ -1,6 +1,7 @@
-import type { VNode } from 'vue';
+import { h, type VNode } from 'vue';
 import type { InteractionWidgetAlign, InteractionWidgetConfig, SkeletonConfig } from '../types';
 import { createContent, uniqueId } from '../utils';
+import { WidgetView } from '../components';
 
 export interface IWidget {
   readonly id: string;
@@ -22,12 +23,16 @@ export function useWidget(config: InteractionWidgetConfig): IWidget {
     const body = createContent(content, {
       ...contentProps,
       config,
+      // TODO 将event传递进去
     });
     return body;
   }
 
   function renderContent() {
-    return renderBody();
+    return h(WidgetView, {
+      key: id,
+      widget,
+    });
   }
 
   const widget: IWidget = {
