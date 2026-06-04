@@ -8,10 +8,10 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse at 20% 5%,
-    hsl(var(--layplux-primary) / 18%),
-    hsl(var(--layplux-primary) / 8%),
-    hsl(var(--layplux-primary) / 3%),
+    hsl(var(--layplux-primary) / 16%) 0%,
+    hsl(var(--layplux-primary) / 10%) 30%,
+    hsl(var(--layplux-primary) / 6%) 60%,
     transparent
   );
-  filter: blur(20px);
+  filter: blur(40px);
 }

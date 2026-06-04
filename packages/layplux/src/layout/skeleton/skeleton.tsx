@@ -8,6 +8,7 @@ import { RightTopArea } from './right-top-area';
 import { RightBottomArea } from './right-bottom-area';
 import { BottomRightArea } from './bottom-right-area';
 import { type ISkeleton } from '../../managers';
+import { CenterArea } from './center-area';
 
 export const Skeleton = defineComponent({
   name: 'Skeleton',
@@ -27,7 +28,9 @@ export const Skeleton = defineComponent({
             </div>
             <BottomLeftArea area={props.skeleton?.bottomLeftArea} />
           </div>
-          <div class="layplux-skeleton__center"></div>
+          <div class="layplux-skeleton__center">
+            <CenterArea />
+          </div>
           <div class="layplux-skeleton__stripe">
             <div class="layplux-skeleton__stripe-top">
               <RightTopArea area={props.skeleton?.rightTopArea} />

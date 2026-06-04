@@ -36,15 +36,6 @@
   &__center {
     display: flex;
     flex: 1;
-    min-width: 0;
     overflow: hidden;
-    background-color: hsl(var(--layplux-background));
-    border-radius: 12px;
-  }
-
-  &__bottom {
-    display: flex;
-    flex-shrink: 0;
-    height: 30px;
   }
 }
