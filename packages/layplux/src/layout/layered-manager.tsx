@@ -1,5 +1,6 @@
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import { Skeleton } from './skeleton';
+import type { ISkeleton } from '../managers';
 
 /**
  * Z 轴分层容器，把子组件分配到不同"层号"，层号大的显示在上方。
@@ -9,10 +10,13 @@ import { Skeleton } from './skeleton';
  */
 export const LayeredManager = defineComponent({
   name: 'LayeredManager',
-  setup() {
+  props: {
+    skeleton: Object as PropType<ISkeleton>,
+  },
+  setup(props) {
     return () => (
       <div class="layered-manager">
-        <Skeleton />
+        <Skeleton skeleton={props.skeleton} />
       </div>
     );
   },

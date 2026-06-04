@@ -6,7 +6,7 @@
   line-height: 1;
 
   // ── 尺寸变体 ──
-  &--sm {
+  &--small {
     font-size: 10px;
 
     .title-view__icon {
@@ -16,13 +16,23 @@
     }
   }
 
-  &--md {
+  &--middle {
     font-size: 11px;
 
     .title-view__icon {
       width: 20px;
       height: 20px;
       font-size: 16px;
+    }
+  }
+
+  &--large {
+    font-size: 13px;
+
+    .title-view__icon {
+      width: 24px;
+      height: 24px;
+      font-size: 20px;
     }
   }
 
@@ -107,7 +117,7 @@
   &--active {
     color: hsl(var(--layplux-foreground));
     cursor: pointer;
-    background: hsl(var(--layplux-primary) / 18%);
+    background: hsl(var(--layplux-foreground) / 8%);
     border-radius: 6px;
   }
 
@@ -137,6 +147,14 @@
         border-radius: 50%;
       }
     }
+  }
+
+  // ── 聚焦态（独立维度，可与任何 state 叠加）──
+
+  &--focused {
+    color: hsl(var(--layplux-foreground));
+    background: hsl(var(--layplux-primary) / 18%);
+    border-radius: 6px;
   }
 
   // ── 过渡动画 ──

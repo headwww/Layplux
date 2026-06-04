@@ -15,7 +15,7 @@ export interface IArea<C, W> {
 export function useArea<C extends WidgetBaseConfig = any, W extends IWidget = IWidget>(
   skeleton: Pick<ISkeleton, 'createContainer'>,
   name: string,
-  handle: (item: C | W) => W,
+  handle: (item: C | W, container: IWidgetContainer<W, C | W>) => W,
 ): IArea<C, W> {
   const container = skeleton.createContainer(name, handle);
 

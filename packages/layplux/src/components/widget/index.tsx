@@ -20,13 +20,22 @@ export const WidgetTitleView = defineComponent({
   props: {
     widget: Object as PropType<IWidget>,
   },
+
   setup(props) {
     return () => {
       const { widget } = props;
 
       return (
         <div class="widget-title-view">
-          <TitleView icon={widget?.config.props?.icon} title={widget?.config.props?.title} />
+          <TitleView
+            onClick={() => {
+              widget?.container?.activate(widget?.name);
+            }}
+            focused={widget?.focused.value}
+            state={widget?.active.value ? 'active' : 'idle'}
+            icon={widget?.config.props?.icon}
+            title={widget?.config.props?.title}
+          />
         </div>
       );
     };

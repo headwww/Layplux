@@ -9,8 +9,23 @@ export interface IWidgetContainer<T, G> {
   get(name: string): T | null;
   getAt(index: number): T | null;
   indexOf(item: T): number;
+  remove(name: string): T | null;
   items: Ref<T[]>;
+  activeId: Ref<string | null>; // 替代分散在每个 widget 上的 active
+  /** 激活指定 widget，互斥，其他自动关闭 */
+  activate(id: string): void;
+  /** 取消激活 */
+  deactivate(): void;
 }
+
+/**
+ * handle 函数签名：把原始 item（config 或 widget）转换成 widget 实例。
+ * 第二个参数是所属 container 的引用，方便在创建 widget 时回引。
+ */
+export type WidgetContainerHandle<T extends WidgetItem, G extends WidgetItem> = (
+  item: T | G,
+  container: IWidgetContainer<T, G>,
+) => T;
 
 /**
  * widget container 用于管理 widget 的添加、删除、获取等操作
@@ -18,19 +33,30 @@ export interface IWidgetContainer<T, G> {
  * G 为 widgetconfig 的配置类型
  */
 export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetItem = any>(
-  handle: (item: T | G) => T,
+  handle: WidgetContainerHandle<T, G>,
+  onFocus?: (id: string) => void,
 ): IWidgetContainer<T, G> {
   const maps: { [name: string]: T } = {};
-
   const items: Ref<T[]> = ref([]);
+  const activeId = ref<string | null>(null); // ✅ 单一数据源
+
+  const self: IWidgetContainer<T, G> = {
+    items,
+    activeId,
+    add,
+    get,
+    getAt,
+    indexOf,
+    remove,
+    activate,
+    deactivate,
+  };
 
   function add(item: T | G): T {
-    // 将config转换为widget,将创建widget的能力交给外部
-    const nItem = handle(item);
+    // 将config转换为widget,将创建widget的能力交给外部，并把 container 自身传出去
+    const nItem = handle(item, self);
     const origin = get(nItem.name);
-    if (origin === nItem) {
-      return origin;
-    }
+    if (origin === nItem) return origin;
     const i = origin ? items.value.indexOf(origin) : -1;
     if (i > -1) {
       items.value.splice(i, 1, nItem);
@@ -53,11 +79,24 @@ export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetI
     return items.value.indexOf(item);
   }
 
-  return {
-    add,
-    get,
-    getAt,
-    indexOf,
-    items,
-  };
+  function remove(name: string): T | null {
+    const item = maps[name];
+    if (!item) return null;
+    const i = items.value.indexOf(item);
+    if (i > -1) items.value.splice(i, 1);
+    delete maps[name];
+    return item;
+  }
+
+  function activate(id: string): void {
+    if (!maps[id]) return;
+    activeId.value = id;
+    onFocus?.(id);
+  }
+
+  function deactivate(): void {
+    activeId.value = null;
+  }
+
+  return self;
 }

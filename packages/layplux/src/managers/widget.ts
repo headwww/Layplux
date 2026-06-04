@@ -1,7 +1,9 @@
-import { h, type VNode } from 'vue';
+import { computed, h, type Ref, type VNode } from 'vue';
 import type { InteractionWidgetAlign, SkeletonConfig, SkeletonConfigType } from '../types';
 import { createContent, uniqueId } from '../utils';
 import { WidgetTitleView, WidgetView } from '../components';
+import type { IWidgetContainer } from './widget-container';
+import type { ISkeleton } from './skeleton';
 
 export interface IWidget {
   readonly type?: SkeletonConfigType;
@@ -10,15 +12,27 @@ export interface IWidget {
   readonly name: string;
   readonly align?: InteractionWidgetAlign;
   readonly config: SkeletonConfig;
+  readonly active: Ref<boolean>;
+  readonly focused: Ref<boolean>;
+  readonly container?: IWidgetContainer<IWidget, any>;
   renderBody(): VNode | null;
   renderContent(): VNode | null;
   renderTitle(): VNode | null;
 }
 
-export function useWidget(config: SkeletonConfig): IWidget {
+export function useWidget(
+  config: SkeletonConfig,
+  container?: IWidgetContainer<IWidget, any>,
+  skeleton?: Pick<ISkeleton, 'focusedId'>, // ✅ 注入 skeleton 引用
+): IWidget {
   const { name, props, type } = config;
+  // 容器级激活态
+  const active = computed(() => container?.activeId.value === name);
+  // 全局唯一 focused 态
+  const focused = computed(() => skeleton?.focusedId.value === name);
 
   const id: string = uniqueId(type);
+
   const align = props ? props.align : 'left';
 
   function renderBody() {
@@ -54,6 +68,9 @@ export function useWidget(config: SkeletonConfig): IWidget {
     name,
     align,
     config,
+    active,
+    focused,
+    container,
     renderBody,
     renderContent,
     renderTitle,

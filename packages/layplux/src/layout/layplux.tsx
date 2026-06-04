@@ -1,11 +1,15 @@
-import type { App } from 'vue';
+import type { App, PropType } from 'vue';
 import { defineComponent } from 'vue';
 import { RootPane } from './root-pane';
+import type { ISkeleton } from '../managers';
 
 const Layplux = defineComponent({
   name: 'Layplux',
-  setup() {
-    return () => <RootPane>Layplux</RootPane>;
+  props: {
+    skeleton: Object as PropType<ISkeleton>,
+  },
+  setup(props) {
+    return () => <RootPane skeleton={props.skeleton}>Layplux</RootPane>;
   },
 });
 
