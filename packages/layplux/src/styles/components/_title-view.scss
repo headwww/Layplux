@@ -37,12 +37,11 @@
   }
 
   // ── 布局模式 ──
-
   // 仅图标
   &--icon-only {
     width: 32px;
     height: 32px;
-    border-radius: 6px;
+    border-radius: 8px;
 
     .title-view__icon {
       display: flex;
@@ -62,7 +61,7 @@
     justify-content: center;
     width: 34px;
     padding: 4px 3px 3px;
-    border-radius: 6px;
+    border-radius: 8px;
 
     .title-view__icon {
       display: flex;
@@ -101,7 +100,6 @@
   }
 
   // ── 交互状态（hover 由 CSS :hover 原生处理，JS 只管显式状态）──
-
   &--idle {
     color: hsl(var(--layplux-muted-foreground));
     cursor: pointer;
@@ -110,7 +108,7 @@
     &:hover {
       color: hsl(var(--layplux-foreground));
       background: hsl(var(--layplux-foreground) / 8%);
-      border-radius: 6px;
+      border-radius: 8px;
     }
   }
 
@@ -118,7 +116,7 @@
     color: hsl(var(--layplux-foreground));
     cursor: pointer;
     background: hsl(var(--layplux-foreground) / 8%);
-    border-radius: 6px;
+    border-radius: 8px;
   }
 
   &--disabled {
@@ -150,11 +148,10 @@
   }
 
   // ── 聚焦态（独立维度，可与任何 state 叠加）──
-
   &--focused {
-    color: hsl(var(--layplux-foreground));
-    background: hsl(var(--layplux-primary) / 18%);
-    border-radius: 6px;
+    color: hsl(var(--layplux-primary-foreground));
+    background: hsl(var(--layplux-primary));
+    border-radius: 8px;
   }
 
   // ── 过渡动画 ──
@@ -164,7 +161,6 @@
     opacity 0.15s ease;
 
   // ── 子元素 ──
-
   &__icon {
     display: flex;
     flex-shrink: 0;
