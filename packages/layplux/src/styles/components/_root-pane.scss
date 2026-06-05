@@ -1,11 +1,8 @@
 .layplux-root {
   position: relative;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  height: 100dvh;
+  height: 100%;
   contain: strict;
-  overflow: hidden;
   font-family: var(--layplux-font-family);
   font-size: var(--layplux-font-size-base);
   color: hsl(var(--layplux-foreground));

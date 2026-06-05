@@ -19,11 +19,18 @@ export const CenterArea = defineComponent({
     }
 
     // ─── 各区域可见性 ─────────────────────────────────────────────────────
+    // isLeftVisible 只在 DockPinned / DockUnpinned 时显示左侧栏
     const isLeftVisible = computed(() => {
       const sk = props.skeleton;
+      const topMode = getActiveWidget(sk?.leftTopArea.container.activeId.value ?? null)?.pane
+        .viewMode.value;
+      const bottomMode = getActiveWidget(sk?.leftBottomArea.container.activeId.value ?? null)?.pane
+        .viewMode.value;
       return (
-        sk?.leftTopArea.container.activeId.value !== null ||
-        sk?.leftBottomArea.container.activeId.value !== null
+        topMode === 'DockPinned' ||
+        topMode === 'DockUnpinned' ||
+        bottomMode === 'DockPinned' ||
+        bottomMode === 'DockUnpinned'
       );
     });
 
@@ -39,7 +46,7 @@ export const CenterArea = defineComponent({
       return mode === 'DockPinned' || mode === 'DockUnpinned';
     });
 
-    const isUndockedVisible = computed(() => {
+    const isLeftUndockedVisible = computed(() => {
       const w = getActiveWidget(props.skeleton?.focusedId.value ?? null);
       const mode = w?.pane.viewMode.value;
       return mode === 'Undock';
@@ -105,8 +112,6 @@ export const CenterArea = defineComponent({
           }
         });
 
-      console.log(map);
-
       return map;
     });
 
@@ -116,6 +121,8 @@ export const CenterArea = defineComponent({
       return (
         <div class="layplux-center-area">
           <div id="widget-offscreen" style="display:none;" />
+
+          {/* Teleport 声明区 */}
           {props.skeleton.widgets
             .filter((w) => w.type === 'panel')
             .map((w) => (
@@ -128,7 +135,16 @@ export const CenterArea = defineComponent({
               </Teleport>
             ))}
 
+          {/* undocked 浮动面板，absolute 定位，不参与 flex 布局 */}
+          <PanelView
+            anchor="left-undocked-area"
+            widget={leftUndockedWidget.value ?? undefined}
+            v-show={isLeftUndockedVisible.value}
+            class="layplux-panel--undocked layplux-panel--undocked-left"
+          />
+
           <div class="layplux-center-area__main">
+            {/* DockPinned / DockUnpinned 左侧栏，参与 flex 布局挤压编辑器 */}
             <div class="layplux-center-area__left" v-show={isLeftVisible.value}>
               <div class="layplux-center-area__docked-panels">
                 <PanelView
@@ -136,22 +152,19 @@ export const CenterArea = defineComponent({
                   widget={leftTopActiveWidget.value ?? undefined}
                   v-show={isLeftTopAreaVisible.value}
                 />
-                <div class="layplux-separator" />
+                <div
+                  class="layplux-separator"
+                  v-show={isLeftTopAreaVisible.value && isLeftBottomAreaVisible.value}
+                />
                 <PanelView
                   anchor="left-bottom-area"
                   widget={leftBottomActiveWidget.value ?? undefined}
                   v-show={isLeftBottomAreaVisible.value}
                 />
               </div>
-              <PanelView
-                anchor="left-undocked-area"
-                widget={leftUndockedWidget.value ?? undefined}
-                v-show={isUndockedVisible.value}
-              />
             </div>
 
-            <div class="layplux-separator" />
-
+            <div class="layplux-separator" v-show={isLeftVisible.value} />
             <div class="layplux-center-area__editor" />
           </div>
         </div>

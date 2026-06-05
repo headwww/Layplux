@@ -3,13 +3,11 @@
   flex: 1;
   flex-direction: column;
   min-height: 0;
-  overflow: hidden;
 
   &__body {
     display: flex;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
   }
 
   &__stripe {
@@ -17,7 +15,6 @@
     flex-shrink: 0;
     flex-direction: column;
     min-width: 6px;
-    overflow: hidden;
 
     &-top {
       flex: 1;
@@ -37,6 +34,5 @@
     display: flex;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
   }
 }

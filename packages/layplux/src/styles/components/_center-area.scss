@@ -1,10 +1,10 @@
 .layplux-center-area {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
 
   &__main {
     display: flex;
@@ -18,7 +18,6 @@
     flex-direction: column;
     width: 300px;
     min-height: 0;
-    overflow: hidden;
   }
 
   &__docked-panels {
@@ -26,7 +25,6 @@
     flex: 1;
     flex-direction: column;
     min-height: 0;
-    overflow: hidden;
   }
 
   &__editor {
@@ -35,33 +33,5 @@
     min-width: 0;
     min-height: 0;
     background-color: hsl(var(--layplux-background));
-  }
-
-  &__right {
-    display: flex;
-    flex-shrink: 0;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-
-    > .layplux-panel {
-      flex: 1;
-      min-height: 0;
-    }
-  }
-
-  &__bottom {
-    display: flex;
-    flex-shrink: 0;
-    min-height: 0;
-
-    > .layplux-panel {
-      height: 200px;
-      min-height: 0;
-    }
-
-    &-spacer {
-      flex: 1;
-    }
   }
 }
