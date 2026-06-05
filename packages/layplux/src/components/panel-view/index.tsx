@@ -1,4 +1,5 @@
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
+import type { IWidget } from '../../managers';
 
 /**
  * PanelView — 面板壳子
@@ -11,11 +12,19 @@ export const PanelView = defineComponent({
     anchor: String,
     /** 面板标题 */
     title: String,
+    widget: Object as PropType<IWidget>,
   },
   setup(props) {
     return () => (
       <div class="layplux-panel">
         <div class="layplux-panel__header">
+          <button onClick={() => props.widget?.pane.setViewMode('DockPinned')}>
+            切换模式：DockPinned
+          </button>
+          <button onClick={() => props.widget?.pane.setViewMode('DockUnpinned')}>
+            切换模式：DockUnpinned
+          </button>
+          <button onClick={() => props.widget?.pane.setViewMode('Undock')}>切换模式：Undock</button>
           <span class="layplux-panel__title">{props.title}</span>
         </div>
         <div id={props.anchor} class="layplux-panel__body" />
