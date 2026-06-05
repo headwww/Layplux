@@ -17,6 +17,8 @@
     flex-shrink: 0;
     flex-direction: column;
     width: 300px;
+    min-height: 0;
+    overflow: hidden;
   }
 
   &__docked-panels {
@@ -24,6 +26,7 @@
     flex: 1;
     flex-direction: column;
     min-height: 0;
+    overflow: hidden;
   }
 
   &__editor {
@@ -38,6 +41,8 @@
     display: flex;
     flex-shrink: 0;
     flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
 
     > .layplux-panel {
       flex: 1;
@@ -48,9 +53,11 @@
   &__bottom {
     display: flex;
     flex-shrink: 0;
+    min-height: 0;
 
     > .layplux-panel {
       height: 200px;
+      min-height: 0;
     }
 
     &-spacer {
