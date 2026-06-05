@@ -1,19 +1,15 @@
-import { computed, defineComponent, type PropType } from 'vue';
+// center-area.tsx
+
+import { computed, defineComponent, Teleport, type PropType } from 'vue';
 import type { ISkeleton } from '../../managers';
 import { PanelView } from '../../components';
 
-/**
- * 左侧，宽度可拖拽的，整个左侧左上左下的几种模式的面吧尺寸是共享的，高度在DockPinned并且打开了左上和左下两个面板的时候是可以调整两个面板尺寸的，其他情况是固定高度
- * 右侧，宽度可拖拽的，整个右侧右上右下的几种模式的面吧尺寸是共享的，高度在DockPinned并且打开了右上和右下两个面板的时候是可以调整两个面板尺寸的，其他情况是固定高度
- * 底部，高度的逻辑等于左右两侧宽度的逻辑
- */
 export const CenterArea = defineComponent({
   name: 'CenterArea',
   props: {
     skeleton: Object as PropType<ISkeleton>,
   },
   setup(props) {
-    // 写一个计算属性判断整个layplux-center-area__left是否显示
     const isLeftVisible = computed(() => {
       return (
         props.skeleton?.leftTopArea.container.activeId.value !== null ||
@@ -22,7 +18,6 @@ export const CenterArea = defineComponent({
     });
 
     const isLeftTopAreaVisible = computed(() => {
-      // 找到这个widget，判断下当前的pane的viewmode
       const widget = props.skeleton?.widgets.find(
         (w) => w.name === props.skeleton?.leftTopArea.container.activeId.value,
       );
@@ -50,51 +45,95 @@ export const CenterArea = defineComponent({
       return widget.pane.viewMode.value === 'Undock';
     });
 
+    /**
+     * 计算每个 panel widget 的 Teleport 目标锚点
+     * 优先级：Undock > DockPinned/DockUnpinned（按所属 area）
+     */
+    function getTeleportTarget(widgetName: string): string | null {
+      const sk = props.skeleton;
+      if (!sk) return null;
+
+      const widget = sk.widgets.find((w) => w.name === widgetName);
+      if (!widget) return null;
+
+      const viewMode = widget.pane.viewMode.value;
+
+      // Undock 模式：统一传送到 undocked 锚点
+      // 只有当前 focused 的 widget 才显示在 undocked 区域
+      if (viewMode === 'Undock') {
+        // 判断属于左侧还是右侧，分别用不同的 undocked 锚点
+        if (
+          sk.leftTopArea.container.items.value.some((w) => w.name === widgetName) ||
+          sk.leftBottomArea.container.items.value.some((w) => w.name === widgetName)
+        ) {
+          return '#left-undocked-area';
+        }
+        if (
+          sk.rightTopArea.container.items.value.some((w) => w.name === widgetName) ||
+          sk.rightBottomArea.container.items.value.some((w) => w.name === widgetName)
+        ) {
+          return '#right-undocked-area';
+        }
+        return null;
+      }
+
+      // DockPinned / DockUnpinned：传送到所属 area 的锚点
+      // 只有当该 area 的 activeId 是自己时，才是"激活"的目标
+      if (sk.leftTopArea.container.activeId.value === widgetName) {
+        return '#left-top-area';
+      }
+      if (sk.leftBottomArea.container.activeId.value === widgetName) {
+        return '#left-bottom-area';
+      }
+      if (sk.rightTopArea.container.activeId.value === widgetName) {
+        return '#right-top-area';
+      }
+      if (sk.rightBottomArea.container.activeId.value === widgetName) {
+        return '#right-bottom-area';
+      }
+
+      // 未激活的 widget：传送到一个隐藏容器，保活但不显示
+      return '#widget-offscreen';
+    }
+
     return () => {
       if (!props.skeleton) return null;
+
       return (
         <div class="layplux-center-area">
+          {/* 离屏保活容器，未激活的 widget content 藏在这里 */}
+          <div id="widget-offscreen" style="display:none;" />
+
+          {/* 所有 panel widget 统一在这里声明 Teleport，to 动态计算 */}
+          {props.skeleton.widgets
+            .filter((w) => w.type === 'panel')
+            .map((w) => {
+              const to = getTeleportTarget(w.name);
+              // to 为 null 说明锚点还没挂载（理论上不应发生），fallback 到离屏
+              return (
+                <Teleport defer key={w.id} to={to ?? '#widget-offscreen'}>
+                  {w.renderContent()}
+                </Teleport>
+              );
+            })}
+
           {/* ── 上半区：左面板 + 编辑器 + 右面板 ── */}
           <div class="layplux-center-area__main">
             {/* 左侧面板 */}
             <div class="layplux-center-area__left" v-show={isLeftVisible.value}>
               <div class="layplux-center-area__docked-panels">
-                {/* 左侧上部分面板 */}
-                <PanelView
-                  container={props.skeleton?.leftTopArea.container}
-                  v-show={isLeftTopAreaVisible.value}
-                />
+                <PanelView anchor="left-top-area" v-show={isLeftTopAreaVisible.value} />
                 <div class="layplux-separator" />
-                {/* 左侧下部分面板 */}
-                <PanelView
-                  container={props.skeleton?.leftBottomArea.container}
-                  v-show={isLeftBottomAreaVisible.value}
-                />
+                <PanelView anchor="left-bottom-area" v-show={isLeftBottomAreaVisible.value} />
               </div>
-              {/* 左侧undocked面板 */}
-              <PanelView
-                container={props.skeleton?.leftBottomArea.container}
-                v-show={isUndockedVisible.value}
-              />
+              <PanelView anchor="left-undocked-area" v-show={isUndockedVisible.value} />
             </div>
 
             <div class="layplux-separator" />
 
             {/* 编辑器 */}
             <div class="layplux-center-area__editor" />
-
-            {/* 右侧面板 */}
-            {/* <div class="layplux-center-area__right">
-              <PanelView />
-              <PanelView />
-            </div> */}
           </div>
-
-          {/* ── 下半区：底部面板 ── */}
-          {/* <div class="layplux-center-area__bottom">
-            <PanelView />
-            <PanelView />
-          </div> */}
         </div>
       );
     };

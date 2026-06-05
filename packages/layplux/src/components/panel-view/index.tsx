@@ -1,61 +1,25 @@
-import { defineComponent, type PropType } from 'vue';
-import type { IWidgetContainer } from '../../managers/widget-container';
-import type { IWidget } from '../../managers/widget';
+import { defineComponent } from 'vue';
 
-/** 追踪已渲染过的 widget，全局复用，不因 v-show 销毁 */
-const renderedWidgets = new WeakMap<IWidgetContainer<any, any>, Set<string>>();
-
-function ensureRendered(container: IWidgetContainer<any, any>, widget: IWidget) {
-  let set = renderedWidgets.get(container);
-  if (!set) {
-    set = new Set();
-    renderedWidgets.set(container, set);
-  }
-  if (!set.has(widget.name)) {
-    set.add(widget.name);
-  }
-  return set;
-}
-
+/**
+ * PanelView — 面板壳子
+ * 只提供标题栏 + Teleport 锚点，不管理内容渲染
+ */
 export const PanelView = defineComponent({
   name: 'PanelView',
-  inheritAttrs: false,
   props: {
-    container: {
-      type: Object as PropType<IWidgetContainer<IWidget, any>>,
-      required: true,
-    },
+    /** Teleport 锚点 id，widget content 通过 Teleport 注入到这里 */
+    anchor: String,
+    /** 面板标题 */
+    title: String,
   },
   setup(props) {
-    return () => {
-      const c = props.container;
-      const rendered = ensureRendered(c, c.items.value[0]!);
-
-      // 每次渲染时把当前激活的加入 rendered
-      const activeWidget = c.activeId.value
-        ? (c.items.value.find((w) => w.name === c.activeId.value) ?? null)
-        : null;
-      if (activeWidget) {
-        rendered.add(activeWidget.name);
-      }
-
-      return (
-        <div class="layplux-panel">
-          <div class="layplux-panel__body">
-            {c.items.value
-              .filter((w) => rendered.has(w.name))
-              .map((w) => (
-                <div
-                  key={w.name}
-                  v-show={c.activeId.value === w.name}
-                  class="layplux-panel__content"
-                >
-                  {w.renderContent()}
-                </div>
-              ))}
-          </div>
+    return () => (
+      <div class="layplux-panel">
+        <div class="layplux-panel__header">
+          <span class="layplux-panel__title">{props.title}</span>
         </div>
-      );
-    };
+        <div id={props.anchor} class="layplux-panel__body" />
+      </div>
+    );
   },
 });
