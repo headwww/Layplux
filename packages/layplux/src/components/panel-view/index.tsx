@@ -5,7 +5,7 @@ export const PanelView = defineComponent({
   props: {
     title: String,
   },
-  setup() {
-    return () => <div class="layplux-panel"></div>;
+  setup(props) {
+    return () => <div class="layplux-panel">{props.title}</div>;
   },
 });

@@ -29,7 +29,7 @@ export const WidgetTitleView = defineComponent({
         <div class="widget-title-view">
           <TitleView
             onClick={() => {
-              widget?.container?.activate(widget?.name);
+              widget?.container?.toggleActive(widget?.name);
             }}
             focused={widget?.focused.value}
             state={widget?.active.value ? 'active' : 'idle'}

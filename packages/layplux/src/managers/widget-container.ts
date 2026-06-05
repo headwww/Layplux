@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue';
+import type { ISkeleton } from './skeleton';
 
 export interface WidgetItem {
   name: string;
@@ -16,6 +17,8 @@ export interface IWidgetContainer<T, G> {
   activate(id: string): void;
   /** 取消激活 */
   deactivate(): void;
+  /** 切换激活 */
+  toggleActive(id: string): void;
 }
 
 /**
@@ -34,7 +37,7 @@ export type WidgetContainerHandle<T extends WidgetItem, G extends WidgetItem> = 
  */
 export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetItem = any>(
   handle: WidgetContainerHandle<T, G>,
-  onFocus?: (id: string) => void,
+  skeleton: ISkeleton,
 ): IWidgetContainer<T, G> {
   const maps: { [name: string]: T } = {};
   const items: Ref<T[]> = ref([]);
@@ -50,6 +53,7 @@ export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetI
     remove,
     activate,
     deactivate,
+    toggleActive,
   };
 
   function add(item: T | G): T {
@@ -91,11 +95,20 @@ export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetI
   function activate(id: string): void {
     if (!maps[id]) return;
     activeId.value = id;
-    onFocus?.(id);
+    skeleton.focus(id);
   }
 
   function deactivate(): void {
     activeId.value = null;
+    skeleton.blur();
+  }
+
+  function toggleActive(id: string): void {
+    if (activeId.value === id) {
+      deactivate();
+    } else {
+      activate(id);
+    }
   }
 
   return self;

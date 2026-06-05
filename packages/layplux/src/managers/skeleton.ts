@@ -6,6 +6,7 @@ import { isWidget, useWidget, type IWidget } from './widget';
 import { useWidgetContainer, type IWidgetContainer, type WidgetItem } from './widget-container';
 
 export interface ISkeleton {
+  widgets: IWidget[];
   topArea: IArea<InteractionWidgetConfig, IWidget>;
   bottomArea: IArea<InteractionWidgetConfig, IWidget>;
   leftTopArea: IArea<PanelWidgetConfig, IWidget>;
@@ -15,6 +16,7 @@ export interface ISkeleton {
   rightBottomArea: IArea<PanelWidgetConfig, IWidget>;
   bottomRightArea: IArea<PanelWidgetConfig, IWidget>;
   focusedId: Ref<string | null>;
+  toggleFocus(id: string): void;
   focus(id: string): void;
   blur(): void;
   add(widget: SkeletonConfig, extraConfig?: Record<string, any>): void;
@@ -25,6 +27,10 @@ export interface ISkeleton {
 }
 
 export function useSkeleton(): ISkeleton {
+  const widgets: IWidget[] = [];
+
+  const self = {} as ISkeleton;
+
   const containers = new Map<string, IWidgetContainer<any, any>>();
 
   // 顶部工具栏
@@ -33,7 +39,7 @@ export function useSkeleton(): ISkeleton {
       createContainer,
     },
     'topArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 底部状态栏
@@ -42,7 +48,7 @@ export function useSkeleton(): ISkeleton {
       createContainer,
     },
     'bottomArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 左侧顶部主区域
@@ -51,7 +57,7 @@ export function useSkeleton(): ISkeleton {
       createContainer,
     },
     'leftTopArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 左侧底部快捷区域
@@ -60,28 +66,28 @@ export function useSkeleton(): ISkeleton {
       createContainer,
     },
     'leftBottomArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 右侧顶部主区域
   const rightTopArea = useArea<PanelWidgetConfig, IWidget>(
     { createContainer },
     'rightTopArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 右侧底部区域
   const rightBottomArea = useArea<PanelWidgetConfig, IWidget>(
     { createContainer },
     'rightBottomArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 右侧最底部快捷操作
   const bottomRightArea = useArea<PanelWidgetConfig, IWidget>(
     { createContainer },
     'bottomRightArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
   // 左侧最底部快捷操作（交互型）
@@ -90,10 +96,30 @@ export function useSkeleton(): ISkeleton {
       createContainer,
     },
     'bottomLeftArea',
-    (config, container) => (isWidget(config) ? config : useWidget(config, container, self)),
+    (config, container) => createWidget(config, container),
   );
 
+  function createWidget(
+    config: SkeletonConfig | IWidget,
+    container: IWidgetContainer<IWidget, any>,
+  ): IWidget {
+    if (isWidget(config)) {
+      return config;
+    }
+    const widget = useWidget(config, container, self);
+    widgets.push(widget);
+    return widget;
+  }
+
   const focusedId = ref<string | null>(null);
+
+  function toggleFocus(id: string) {
+    if (focusedId.value === id) {
+      blur();
+    } else {
+      focus(id);
+    }
+  }
 
   function focus(id: string) {
     focusedId.value = id;
@@ -132,26 +158,29 @@ export function useSkeleton(): ISkeleton {
     name: string,
     handle: (item: T | G, container: IWidgetContainer<T, T | G>) => T,
   ): IWidgetContainer<T, T | G> {
-    const container = useWidgetContainer<T, T | G>(handle, focus);
+    const container = useWidgetContainer<T, T | G>(handle, self);
     containers.set(name, container);
     return container;
   }
 
-  const self: ISkeleton = {
+  // 4. 填充 self 的真正属性
+  Object.assign(self, {
+    widgets,
     topArea,
     bottomArea,
     leftTopArea,
     leftBottomArea,
-    bottomLeftArea,
     rightTopArea,
     rightBottomArea,
     bottomRightArea,
+    bottomLeftArea,
     focusedId,
+    toggleFocus,
     focus,
     blur,
     add,
     createContainer,
-  };
+  });
 
   return self;
 }

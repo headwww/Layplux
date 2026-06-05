@@ -1,7 +1,10 @@
 .layplux-panel {
-  width: 300px;
-  margin-right: 6px;
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-shrink: 0;
+  flex-direction: column;
   overflow: hidden;
-  background-color: hsl(var(--layplux-background));
-  border-radius: 12px;
+  background-color: #eee;
+  border: 1px solid hsl(var(--layplux-border));
 }

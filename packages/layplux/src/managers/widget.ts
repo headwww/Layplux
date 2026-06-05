@@ -4,6 +4,7 @@ import { createContent, uniqueId } from '../utils';
 import { WidgetTitleView, WidgetView } from '../components';
 import type { IWidgetContainer } from './widget-container';
 import type { ISkeleton } from './skeleton';
+import { usePane, type IPane } from './pane';
 
 export interface IWidget {
   readonly type?: SkeletonConfigType;
@@ -15,6 +16,7 @@ export interface IWidget {
   readonly active: Ref<boolean>;
   readonly focused: Ref<boolean>;
   readonly container?: IWidgetContainer<IWidget, any>;
+  readonly pane: IPane;
   renderBody(): VNode | null;
   renderContent(): VNode | null;
   renderTitle(): VNode | null;
@@ -34,6 +36,8 @@ export function useWidget(
   const id: string = uniqueId(type);
 
   const align = props ? props.align : 'left';
+
+  const pane = usePane();
 
   function renderBody() {
     const { content, contentProps } = config;
@@ -71,6 +75,7 @@ export function useWidget(
     active,
     focused,
     container,
+    pane,
     renderBody,
     renderContent,
     renderTitle,

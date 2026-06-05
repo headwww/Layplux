@@ -1,0 +1,60 @@
+.layplux-center-area {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+
+  &__main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__left {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    width: 300px;
+  }
+
+  &__docked-panels {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__editor {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    background-color: hsl(var(--layplux-background));
+  }
+
+  &__right {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+
+    > .layplux-panel {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    flex-shrink: 0;
+
+    > .layplux-panel {
+      height: 200px;
+    }
+
+    &-spacer {
+      flex: 1;
+    }
+  }
+}
