@@ -4,7 +4,19 @@
   flex: 1;
   flex-shrink: 0;
   flex-direction: column;
+  min-height: 0;
   overflow: hidden;
-  background-color: #eee;
+  background-color: hsl(var(--layplux-sidebar-deep));
   border: 1px solid hsl(var(--layplux-border));
+
+  &__body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden auto;
+  }
+
+  &__content {
+    height: 100%;
+    min-height: 0;
+  }
 }

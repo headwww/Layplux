@@ -4,7 +4,7 @@ export function createContent(
   content?: VNode | Component | string,
   extraProps: Record<string, unknown> = {},
 ) {
-  if (content === null) return null;
+  if (!content) return null;
 
   // 1. 是 VNode -> 克隆并合并属性
   if (isVNode(content)) {
@@ -22,5 +22,5 @@ export function createContent(
   }
 
   // 3. 否则视为组件（对象或函数）
-  return h(content as Component, extraProps);
+  return h(content, extraProps);
 }

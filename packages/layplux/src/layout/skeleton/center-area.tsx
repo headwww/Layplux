@@ -60,13 +60,22 @@ export const CenterArea = defineComponent({
             <div class="layplux-center-area__left" v-show={isLeftVisible.value}>
               <div class="layplux-center-area__docked-panels">
                 {/* 左侧上部分面板 */}
-                <PanelView v-show={isLeftTopAreaVisible.value} title="Left Top Area" />
+                <PanelView
+                  container={props.skeleton?.leftTopArea.container}
+                  v-show={isLeftTopAreaVisible.value}
+                />
                 <div class="layplux-separator" />
                 {/* 左侧下部分面板 */}
-                <PanelView v-show={isLeftBottomAreaVisible.value} title="Left Bottom Area" />
+                <PanelView
+                  container={props.skeleton?.leftBottomArea.container}
+                  v-show={isLeftBottomAreaVisible.value}
+                />
               </div>
               {/* 左侧undocked面板 */}
-              <PanelView v-show={isUndockedVisible.value} />
+              <PanelView
+                container={props.skeleton?.leftBottomArea.container}
+                v-show={isUndockedVisible.value}
+              />
             </div>
 
             <div class="layplux-separator" />

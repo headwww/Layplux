@@ -4,6 +4,7 @@ import { TitleView } from '../title';
 
 export const WidgetView = defineComponent({
   name: 'WidgetView',
+  inheritAttrs: false,
   props: {
     widget: Object as PropType<IWidget>,
   },
@@ -17,6 +18,7 @@ export const WidgetView = defineComponent({
 
 export const WidgetTitleView = defineComponent({
   name: 'WidgetTitleView',
+  inheritAttrs: false,
   props: {
     widget: Object as PropType<IWidget>,
   },

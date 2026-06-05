@@ -3,6 +3,7 @@ import { createContent } from '../../utils';
 
 export const TitleView = defineComponent({
   name: 'TitleView',
+  inheritAttrs: false,
   props: {
     icon: [String, Object, Function] as PropType<string | Component | VNode>,
     title: [String, Object, Function] as PropType<string | Component | VNode>,
