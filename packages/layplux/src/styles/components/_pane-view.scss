@@ -6,7 +6,7 @@
   min-height: 0;
   overflow: hidden;
   background-color: hsl(var(--layplux-sidebar-deep));
-  border: 1px solid hsl(var(--layplux-border));
+  border-radius: var(--layplux-radius);
 
   &__header {
     display: flex;

@@ -43,6 +43,7 @@
     min-width: 0;
     min-height: 0;
     background-color: hsl(var(--layplux-background));
+    border-radius: var(--layplux-radius);
   }
 
   // ── 底部面板行 ───────────────────────────────────────────────────────────
@@ -66,13 +67,8 @@
   background-color: transparent;
   transition: background-color 0.15s;
 
-  &:hover,
-  &:active {
-    background-color: hsl(var(--layplux-border));
-  }
-
-  // 横向手柄（调整左/右侧面板宽度，底部内部左右分割）
-  &--x {
+  &:hover, // 横向手柄（调整左/右侧面板宽度，底部内部左右分割）
+    &--x {
     align-self: stretch;
     width: 4px;
     cursor: col-resize;
@@ -95,7 +91,6 @@
 .layplux-panel--undocked {
   position: absolute;
   z-index: 100;
-  box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
 
   &-left {
     top: 0;
