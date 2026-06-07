@@ -1,7 +1,6 @@
 .layplux-panel {
   position: relative;
   display: flex;
-  flex: 1;
   flex-shrink: 0;
   flex-direction: column;
   min-height: 0;
@@ -9,18 +8,62 @@
   background-color: hsl(var(--layplux-sidebar-deep));
   border: 1px solid hsl(var(--layplux-border));
 
-  &--undocked {
-    position: absolute;
-    z-index: 100;
-
-    // 初始位置，后续拖拽会覆盖
+  &__header {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+    align-items: center;
+    height: 36px;
+    padding: 0 8px;
+    user-select: none;
+    border-bottom: 1px solid hsl(var(--layplux-border));
   }
 
-  &--undocked-left {
-    top: 0;
-    left: 0;
-    width: var(--left-panel-width, 240px);
-    height: 100%;
+  &__title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    font-weight: 600;
+    color: hsl(var(--layplux-foreground-muted));
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  // viewMode 切换按钮组
+  &__actions {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    color: hsl(var(--layplux-foreground-muted));
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    transition:
+      background-color 0.1s,
+      color 0.1s;
+
+    &:hover {
+      color: hsl(var(--layplux-foreground));
+      background-color: hsl(var(--layplux-hover));
+    }
+
+    &--active {
+      color: hsl(var(--layplux-foreground));
+      background-color: hsl(var(--layplux-active));
+    }
   }
 
   &__body {

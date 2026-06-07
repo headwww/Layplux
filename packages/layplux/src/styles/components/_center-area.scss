@@ -1,37 +1,117 @@
 .layplux-center-area {
-  position: relative;
+  position: relative; // undocked 面板的定位父级
   display: flex;
   flex: 1;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
 
+  // ── 主区域（左 + 编辑器 + 右） ──────────────────────────────────────────
   &__main {
     display: flex;
     flex: 1;
     min-height: 0;
   }
 
-  &__left {
+  // ── 左 / 右侧面板列 ─────────────────────────────────────────────────────
+  &__left,
+  &__right {
     display: flex;
     flex-shrink: 0;
     flex-direction: column;
-    width: 300px;
     min-height: 0;
   }
 
+  // 面板列内部容器（负责上下分割）
   &__docked-panels {
     display: flex;
     flex: 1;
     flex-direction: column;
     min-height: 0;
+
+    // 没有内部分割时，PanelView 撑满全部高度
+    > .layplux-panel {
+      flex: 1;
+      min-height: 0;
+    }
   }
 
+  // ── 编辑器 ───────────────────────────────────────────────────────────────
   &__editor {
     position: relative;
     flex: 1;
     min-width: 0;
     min-height: 0;
     background-color: hsl(var(--layplux-background));
+  }
+
+  // ── 底部面板行 ───────────────────────────────────────────────────────────
+  &__bottom {
+    display: flex;
+    flex-shrink: 0;
+    min-height: 0;
+
+    // 没有内部分割时，PanelView 撑满全部宽度
+    > .layplux-panel {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+}
+
+// ── 拖拽手柄 ─────────────────────────────────────────────────────────────────
+.layplux-resize-handle {
+  z-index: 10;
+  flex-shrink: 0;
+  background-color: transparent;
+  transition: background-color 0.15s;
+
+  &:hover,
+  &:active {
+    background-color: hsl(var(--layplux-border));
+  }
+
+  // 横向手柄（调整左/右侧面板宽度，底部内部左右分割）
+  &--x {
+    align-self: stretch;
+    width: 4px;
+    cursor: col-resize;
+  }
+
+  // 纵向手柄（调整底部面板高度，左/右侧内部上下分割）
+  &--y {
+    align-self: stretch;
+    height: 4px;
+    cursor: row-resize;
+  }
+
+  // 底部面板的上边缘拖拽手柄（独立定位，不在 flex 流里）
+  &--bottom-edge {
+    align-self: auto;
+  }
+}
+
+// ── Undocked 浮动面板 ─────────────────────────────────────────────────────────
+.layplux-panel--undocked {
+  position: absolute;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
+
+  &-left {
+    top: 0;
+    left: 0;
+    height: 100%;
+  }
+
+  &-right {
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+
+  &-bottom {
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
 }
