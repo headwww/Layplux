@@ -162,7 +162,7 @@ export const CenterArea = defineComponent({
       const map: Record<string, string> = {};
       if (!sk) return map;
 
-      // widgetName -> undocked 锚点
+      // widgetName -> 所属侧的 undocked 锚点（仅表达归属，不代表一定能传送过去）
       const sideIndex = new Map<string, string>();
       sk.leftTopArea.container.items.value.forEach((w) =>
         sideIndex.set(w.name, '#left-undocked-area'),
@@ -183,6 +183,22 @@ export const CenterArea = defineComponent({
         sideIndex.set(w.name, '#bottom-undocked-area'),
       );
 
+      // 每个 undocked 锚点当前唯一获得传送权的 widgetName
+      // 规则：focusedId 优先；若 focusedId 不属于该侧则该侧无 undocked 显示
+      const focusedName = sk.focusedId.value;
+      const undockWinner: Record<string, string | null> = {
+        '#left-undocked-area': null,
+        '#right-undocked-area': null,
+        '#bottom-undocked-area': null,
+      };
+      if (focusedName) {
+        const focusedWidget = sk.widgets.find((w) => w.name === focusedName);
+        if (focusedWidget?.pane.viewMode.value === 'Undock') {
+          const anchor = sideIndex.get(focusedName);
+          if (anchor) undockWinner[anchor] = focusedName;
+        }
+      }
+
       // activeId -> docked 锚点
       const dockTargets: Record<string, string> = {
         [sk.leftTopArea.container.activeId.value ?? '']: '#left-top-area',
@@ -197,10 +213,13 @@ export const CenterArea = defineComponent({
       sk.widgets
         .filter((w) => w.type === 'panel')
         .forEach((w) => {
-          map[w.name] =
-            w.pane.viewMode.value === 'Undock'
-              ? (sideIndex.get(w.name) ?? '#widget-offscreen')
-              : (dockTargets[w.name] ?? '#widget-offscreen');
+          if (w.pane.viewMode.value === 'Undock') {
+            const anchor = sideIndex.get(w.name) ?? '#widget-offscreen';
+            // 只有赢得该锚点的 widget 才能传送过去，其余保活在 offscreen
+            map[w.name] = undockWinner[anchor] === w.name ? anchor : '#widget-offscreen';
+          } else {
+            map[w.name] = dockTargets[w.name] ?? '#widget-offscreen';
+          }
         });
 
       return map;
@@ -322,8 +341,8 @@ export const CenterArea = defineComponent({
               </div>
             </div>
 
-            {/* 左侧宽度拖拽手柄 */}
-            {isLeftVisible.value && (
+            {/* 左侧宽度拖拽手柄：undocked 面板打开时由浮层自己的边缘手柄接管 */}
+            {isLeftVisible.value && !isLeftUndockedVisible.value && (
               <div
                 class="layplux-resize-handle layplux-resize-handle--x"
                 onMousedown={dragLeftWidth}
@@ -333,8 +352,8 @@ export const CenterArea = defineComponent({
             {/* 编辑器 */}
             <div class="layplux-center-area__editor" />
 
-            {/* 右侧宽度拖拽手柄 */}
-            {isRightVisible.value && (
+            {/* 右侧宽度拖拽手柄：undocked 面板打开时由浮层自己的边缘手柄接管 */}
+            {isRightVisible.value && !isRightUndockedVisible.value && (
               <div
                 class="layplux-resize-handle layplux-resize-handle--x"
                 onMousedown={dragRightWidth}
@@ -377,8 +396,8 @@ export const CenterArea = defineComponent({
             </div>
           </div>
 
-          {/* 底部高度拖拽手柄 */}
-          {isBottomVisible.value && (
+          {/* 底部高度拖拽手柄：undocked 面板打开时由浮层自己的边缘手柄接管 */}
+          {isBottomVisible.value && !isBottomUndockedVisible.value && (
             <div
               class="layplux-resize-handle layplux-resize-handle--y layplux-resize-handle--bottom-edge"
               onMousedown={dragBottomHeight}
