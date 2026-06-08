@@ -1,4 +1,11 @@
-import { defineComponent, provide, inject, type PropType, type InjectionKey, type VNode } from 'vue';
+import {
+  defineComponent,
+  provide,
+  inject,
+  type PropType,
+  type InjectionKey,
+  type VNode,
+} from 'vue';
 import { Popup } from '../popup';
 import { ChevronRightIcon } from '../icon';
 
@@ -94,7 +101,7 @@ export const DropdownDivider = defineComponent({
 export const DropdownSubmenu = defineComponent({
   name: 'LaypluxDropdownSubmenu',
   props: {
-    title: { type: String, required: true },
+    title: { type: String },
     icon: Object as PropType<VNode>,
     disabled: { type: Boolean, default: false },
   },

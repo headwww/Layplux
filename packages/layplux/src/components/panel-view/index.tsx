@@ -11,8 +11,9 @@ import {
 import { MoreIcon, MinimizeIcon, ChevronRightIcon } from '../icon';
 
 interface MenuItemConfig {
-  key: string;
-  label: string;
+  type?: 'item' | 'divider';
+  key?: string;
+  label?: string;
   icon?: VNode;
   children?: MenuItemConfig[];
 }
@@ -38,6 +39,7 @@ const innerItems: MenuItemConfig[] = [
       { key: 'extendBottom', label: '延伸至底部' },
     ],
   },
+  { type: 'divider' },
   { key: 'help', label: '帮助' },
 ];
 
@@ -45,19 +47,24 @@ const viewModeKeys = new Set(['DockPinned', 'DockUnpinned', 'Undock']);
 
 function renderItems(items: MenuItemConfig[], currentMode?: ViewMode) {
   return items.map((item) => {
+    if (item.type === 'divider') {
+      return <DropdownDivider key={item.key ?? 'divider'} />;
+    }
+
+    const k = item.key ?? '';
+
     if (item.children?.length) {
       return (
-        <DropdownSubmenu key={item.key} title={item.label} icon={item.icon}>
+        <DropdownSubmenu key={k} title={item.label} icon={item.icon}>
           {renderItems(item.children, currentMode)}
         </DropdownSubmenu>
       );
     }
 
-    const disabled =
-      currentMode !== undefined && viewModeKeys.has(item.key) && currentMode === item.key;
+    const disabled = currentMode !== undefined && viewModeKeys.has(k) && currentMode === k;
 
     return (
-      <DropdownItem key={item.key} eventKey={item.key} disabled={disabled}>
+      <DropdownItem key={k} eventKey={k} disabled={disabled}>
         {item.icon} {item.label}
       </DropdownItem>
     );
