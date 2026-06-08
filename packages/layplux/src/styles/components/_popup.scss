@@ -1,0 +1,19 @@
+.layplux-popup-trigger {
+  display: inline-flex;
+}
+
+.layplux-popup {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.95);
+  transform-origin: top left;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+
+  &--visible {
+    pointer-events: auto;
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -1,6 +1,7 @@
-import { defineComponent, Fragment, type PropType } from 'vue';
+import { defineComponent, Fragment, ref, type PropType } from 'vue';
 import type { IWidget } from '../../managers';
 import { TitleView } from '../title';
+import { Tooltip } from '../tooltip';
 
 export const WidgetView = defineComponent({
   name: 'WidgetView',
@@ -24,20 +25,36 @@ export const WidgetTitleView = defineComponent({
   },
 
   setup(props) {
+    const tooltipVisible = ref(false);
+
+    const handleClick = () => {
+      tooltipVisible.value = false;
+      props.widget?.container?.toggleActive(props.widget?.name);
+    };
+
     return () => {
       const { widget } = props;
+      const tooltipTitle = (widget?.config.props?.title as string) ?? widget?.name ?? '';
 
       return (
         <div class="widget-title-view">
-          <TitleView
-            onClick={() => {
-              widget?.container?.toggleActive(widget?.name);
+          <Tooltip
+            visible={tooltipVisible.value}
+            onUpdate:visible={(v: boolean) => {
+              tooltipVisible.value = v;
             }}
-            focused={widget?.focused.value}
-            state={widget?.active.value ? 'active' : 'idle'}
-            icon={widget?.config.props?.icon}
-            title={widget?.config.props?.title}
-          />
+            title={tooltipTitle}
+            placement="right"
+            mouseEnterDelay={500}
+          >
+            <TitleView
+              onClick={handleClick}
+              focused={widget?.focused.value}
+              state={widget?.active.value ? 'active' : 'idle'}
+              icon={widget?.config.props?.icon}
+              title={widget?.config.props?.title}
+            />
+          </Tooltip>
         </div>
       );
     };

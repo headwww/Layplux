@@ -25,7 +25,7 @@
     text-overflow: ellipsis;
     font-size: 12px;
     font-weight: 600;
-    color: hsl(var(--layplux-foreground-muted));
+    color: hsl(var(--layplux-muted-foreground));
     text-transform: uppercase;
     letter-spacing: 0.05em;
     white-space: nowrap;
@@ -46,7 +46,7 @@
     width: 22px;
     height: 22px;
     padding: 0;
-    color: hsl(var(--layplux-foreground-muted));
+    color: hsl(var(--layplux-muted-foreground));
     cursor: pointer;
     background: transparent;
     border: none;

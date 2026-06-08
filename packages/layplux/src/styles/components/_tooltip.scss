@@ -1,0 +1,65 @@
+.layplux-tooltip {
+  position: relative;
+  max-width: 280px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: hsl(var(--layplux-primary-foreground));
+  overflow-wrap: break-word;
+  background: hsl(var(--layplux-foreground));
+  border-radius: calc(var(--layplux-radius) - 2px);
+  box-shadow:
+    0 6px 16px 0 hsl(var(--layplux-shadow) / 8%),
+    0 3px 6px -4px hsl(var(--layplux-shadow) / 12%),
+    0 9px 28px 8px hsl(var(--layplux-shadow) / 5%);
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__arrow {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: hsl(var(--layplux-foreground));
+    transform: rotate(45deg);
+  }
+}
+
+// Arrow positioning per placement
+.layplux-popup.top,
+.layplux-popup.top-start,
+.layplux-popup.top-end {
+  .layplux-tooltip__arrow {
+    bottom: -3px;
+    left: calc(50% - 3px);
+  }
+}
+
+.layplux-popup.bottom,
+.layplux-popup.bottom-start,
+.layplux-popup.bottom-end {
+  .layplux-tooltip__arrow {
+    top: -3px;
+    left: calc(50% - 3px);
+  }
+}
+
+.layplux-popup.left,
+.layplux-popup.left-start,
+.layplux-popup.left-end {
+  .layplux-tooltip__arrow {
+    top: calc(50% - 3px);
+    right: -3px;
+  }
+}
+
+.layplux-popup.right,
+.layplux-popup.right-start,
+.layplux-popup.right-end {
+  .layplux-tooltip__arrow {
+    top: calc(50% - 3px);
+    left: -3px;
+  }
+}

@@ -1,4 +1,5 @@
-.layplux-root {
+.layplux-root,
+.layplux-portal {
   --layplux-popup-z-index: 2000;
   --layplux-font-family:
     -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', arial, 'Noto Sans',
@@ -45,6 +46,9 @@
   --layplux-sidebar-deep: 0 0% 100%;
   --layplux-menu: var(--layplux-sidebar);
   --layplux-header: 0 0% 100%;
+  --layplux-shadow: 0 0% 0%;
+  --layplux-hover: var(--layplux-foreground) / 0.08;
+  --layplux-active: var(--layplux-foreground) / 0.12;
 
   accent-color: var(--layplux-primary);
   color-scheme: light;

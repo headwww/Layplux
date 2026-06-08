@@ -26,7 +26,8 @@
       "Bash(curl -s http://localhost:9098/src/App.vue)",
       "Bash(open *)",
       "Bash(screencapture /tmp/layplux-playground.png)",
-      "Bash(curl -s http://localhost:9098/)"
+      "Bash(curl -s http://localhost:9098/)",
+      "Bash(npx vue-tsc *)"
     ]
   }
 }
