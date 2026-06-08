@@ -91,22 +91,67 @@
 .layplux-panel--undocked {
   position: absolute;
   z-index: 100;
-
+  display: flex; // 让内部 PanelView 和 edge 手柄并排 / 堆叠
   &-left {
     top: 0;
     left: 0;
+    flex-direction: row; // PanelView + 右边缘手柄 横向排列
     height: 100%;
+
+    > .layplux-panel {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   &-right {
     top: 0;
     right: 0;
+    flex-direction: row; // 左边缘手柄 + PanelView 横向排列
     height: 100%;
+
+    > .layplux-panel {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   &-bottom {
     right: 0;
     bottom: 0;
     left: 0;
+    flex-direction: column; // 上边缘手柄 + PanelView 纵向排列
+    > .layplux-panel {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+
+  > .layplux-resize-handle {
+    background-color: hsl(var(--layplux-root-background));
+  }
+}
+
+// edge 手柄：absolute 贴边，覆盖在 undocked 容器边界上
+.layplux-resize-handle {
+  &--edge-right {
+    flex-shrink: 0;
+    align-self: stretch;
+    width: 4px;
+    cursor: col-resize;
+  }
+
+  &--edge-left {
+    flex-shrink: 0;
+    align-self: stretch;
+    width: 4px;
+    cursor: col-resize;
+  }
+
+  &--edge-top {
+    flex-shrink: 0;
+    align-self: stretch;
+    height: 4px;
+    cursor: row-resize;
   }
 }

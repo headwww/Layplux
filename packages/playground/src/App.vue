@@ -407,14 +407,16 @@ skeleton.add({
 // ── 快捷操作 ──
 skeleton.add({
   name: 'settings-quick',
-  type: 'interaction',
+  type: 'panel',
   area: 'bottomLeftArea',
+  content: h('div', 'settings-quick'),
   props: { icon: h(SettingOutlined), align: 'left' },
 });
 skeleton.add({
   name: 'help',
-  type: 'interaction',
+  type: 'panel',
   area: 'bottomLeftArea',
+  content: h('div', 'help'),
   props: { icon: h(QuestionCircleOutlined), align: 'left' },
   index: 1,
 });
@@ -422,6 +424,7 @@ skeleton.add({
   name: 'notifications',
   type: 'panel',
   area: 'bottomRightArea',
+  content: h('div', 'Notifications'),
   props: { icon: h(BellOutlined) },
 });
 </script>

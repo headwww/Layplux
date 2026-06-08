@@ -226,7 +226,6 @@ export const CenterArea = defineComponent({
         <div class="layplux-center-area">
           {/* 离屏保活容器 */}
           <div id="widget-offscreen" style="display:none;" />
-
           {/* 所有 panel widget Teleport 声明 */}
           {sk.widgets
             .filter((w) => w.type === 'panel')
@@ -241,27 +240,50 @@ export const CenterArea = defineComponent({
             ))}
 
           {/* ── Undocked 浮动面板，absolute 定位，不参与 flex 布局 ── */}
-          <PanelView
+          {/* 左侧 undocked：手柄贴右边缘 */}
+          <div
             class="layplux-panel--undocked layplux-panel--undocked-left"
-            anchor="left-undocked-area"
-            widget={leftUndockedWidget.value ?? undefined}
             v-show={isLeftUndockedVisible.value}
             style={{ width: `${leftWidth.value}px` }}
-          />
-          <PanelView
+          >
+            <PanelView anchor="left-undocked-area" widget={leftUndockedWidget.value ?? undefined} />
+            <div
+              class="layplux-resize-handle layplux-resize-handle--x layplux-resize-handle--edge-right"
+              onMousedown={dragLeftWidth}
+            />
+          </div>
+
+          {/* 右侧 undocked：手柄贴左边缘 */}
+          <div
             class="layplux-panel--undocked layplux-panel--undocked-right"
-            anchor="right-undocked-area"
-            widget={rightUndockedWidget.value ?? undefined}
             v-show={isRightUndockedVisible.value}
             style={{ width: `${rightWidth.value}px` }}
-          />
-          <PanelView
+          >
+            <div
+              class="layplux-resize-handle layplux-resize-handle--x layplux-resize-handle--edge-left"
+              onMousedown={dragRightWidth}
+            />
+            <PanelView
+              anchor="right-undocked-area"
+              widget={rightUndockedWidget.value ?? undefined}
+            />
+          </div>
+
+          {/* 底部 undocked：手柄贴上边缘 */}
+          <div
             class="layplux-panel--undocked layplux-panel--undocked-bottom"
-            anchor="bottom-undocked-area"
-            widget={bottomUndockedWidget.value ?? undefined}
             v-show={isBottomUndockedVisible.value}
             style={{ height: `${bottomHeight.value}px` }}
-          />
+          >
+            <div
+              class="layplux-resize-handle layplux-resize-handle--y layplux-resize-handle--edge-top"
+              onMousedown={dragBottomHeight}
+            />
+            <PanelView
+              anchor="bottom-undocked-area"
+              widget={bottomUndockedWidget.value ?? undefined}
+            />
+          </div>
 
           {/* ── 主区域（flex row）：左侧 + 编辑器 + 右侧 ── */}
           <div class="layplux-center-area__main">
