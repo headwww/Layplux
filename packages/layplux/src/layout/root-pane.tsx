@@ -18,7 +18,7 @@ export const RootPane = defineComponent({
     });
 
     return () => (
-      <div class={rootClass.value}>
+      <div class={rootClass.value} data-theme={props.skeleton?.themeName?.value}>
         <CornerGlow />
         <LayeredManager skeleton={props.skeleton} />
         <GlassOverlay />
