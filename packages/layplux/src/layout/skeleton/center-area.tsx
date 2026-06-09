@@ -27,9 +27,9 @@ export const CenterArea = defineComponent({
     });
 
     // ─── 面板尺寸状态 ─────────────────────────────────────────────────────
-    const leftWidth = ref(240);
-    const rightWidth = ref(240);
-    const bottomHeight = ref(200);
+    const leftWidth = ref(340);
+    const rightWidth = ref(340);
+    const bottomHeight = ref(300);
 
     // 上下 / 左右内部分割比例 (0~1)
     const leftSplitRatio = ref(0.5);

@@ -46,6 +46,7 @@ export const WidgetTitleView = defineComponent({
             title={tooltipTitle}
             placement="right"
             mouseEnterDelay={500}
+            getContainer={() => document.querySelector('.layplux-root') || document.body}
           >
             <TitleView
               onClick={handleClick}

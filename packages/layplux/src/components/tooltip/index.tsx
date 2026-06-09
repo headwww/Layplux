@@ -1,3 +1,11 @@
+/*
+ * @Author: shuwen 1243889238@qq.com
+ * @Date: 2026-06-08 16:12:13
+ * @LastEditors: shuwen 1243889238@qq.com
+ * @LastEditTime: 2026-06-09 16:58:03
+ * @FilePath: /Layplux/packages/layplux/src/components/tooltip/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { defineComponent, type PropType, type VNode } from 'vue';
 import { createContent } from '../../utils';
 import { Popup } from '../popup';
@@ -26,6 +34,7 @@ export const Tooltip = defineComponent({
     mouseLeaveDelay: { type: Number, default: 100 },
     visible: Boolean,
     disabled: { type: Boolean, default: false },
+    getContainer: { type: Function as PropType<() => HTMLElement>, default: () => document.body },
   },
   emits: ['update:visible'],
   setup(props, { emit, slots }) {
@@ -37,8 +46,8 @@ export const Tooltip = defineComponent({
         disabled={props.disabled}
         mouseEnterDelay={props.mouseEnterDelay}
         mouseLeaveDelay={props.mouseLeaveDelay}
-        offset={{ y: 8 }}
         destroyOnClose={true}
+        getContainer={props.getContainer}
         onUpdate:visible={(v: boolean) => emit('update:visible', v)}
       >
         {{

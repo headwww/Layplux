@@ -8,7 +8,7 @@ import {
   DropdownDivider,
   DropdownSubmenu,
 } from '../dropdown';
-import { MoreIcon, MinimizeIcon, ChevronRightIcon } from '../icon';
+import { MoreIcon, MinimizeIcon } from '../icon';
 import { createContent } from '../../utils';
 
 export interface MenuItemConfig {
@@ -25,7 +25,6 @@ const innerItems: MenuItemConfig[] = [
   {
     key: 'viewMode',
     label: '视图模式',
-    icon: <ChevronRightIcon size={16} />,
     children: [
       { key: 'DockPinned', label: '停靠固定' },
       { key: 'DockUnpinned', label: '停靠不固定' },
@@ -137,8 +136,16 @@ export const PanelView = defineComponent({
       const hasPanelMenuItems = panelMenuItems && panelMenuItems.length > 0;
       const showHelp = widgetProps?.showHelp !== false;
       const finalInnerItems = showHelp ? innerItems : innerItems.filter((i) => i.key !== 'help');
-      const panelTitleExtra = widgetProps?.panelTitleExtra as string | Component | VNode | undefined;
-      const panelActionsExtra = widgetProps?.panelActionsExtra as string | Component | VNode | undefined;
+      const panelTitleExtra = widgetProps?.panelTitleExtra as
+        | string
+        | Component
+        | VNode
+        | undefined;
+      const panelActionsExtra = widgetProps?.panelActionsExtra as
+        | string
+        | Component
+        | VNode
+        | undefined;
 
       return (
         <div ref={panelRef} id={widget?.id} class="layplux-panel" onClick={handlePanelClick}>
