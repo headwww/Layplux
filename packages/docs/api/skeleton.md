@@ -67,8 +67,28 @@ skeleton.registerTheme('blue', {
 ## 区域
 
 ```ts
-skeleton.leftTopArea   // IArea<PanelWidgetConfig, IWidget>
-skeleton.rightTopArea  // IArea<PanelWidgetConfig, IWidget>
-skeleton.topArea       // IArea<InteractionWidgetConfig, IWidget>
-skeleton.bottomArea    // IArea<InteractionWidgetConfig, IWidget>
+skeleton.leftTopArea       // IArea<PanelWidgetConfig, IWidget>
+skeleton.rightTopArea      // IArea<PanelWidgetConfig, IWidget>
+skeleton.centerArea        // IArea<CenterWidgetConfig, IWidget>
+skeleton.topArea           // IArea<InteractionWidgetConfig, IWidget>
+skeleton.bottomArea        // IArea<InteractionWidgetConfig, IWidget>
+```
+
+### centerArea
+
+中心区域用于放置编辑器、Canvas、预览等内容，与左右面板机制完全一致，区别在于：
+
+- 使用 `CenterView` 渲染，无标题栏、tabs 等 chrome
+- 单选模式，同一时间只显示一个 Widget
+- Teleport 保活，切换不销毁
+
+```ts
+skeleton.add({
+  name: 'editor',
+  type: 'panel',
+  area: 'centerArea',
+  content: h(MyEditor),
+})
+
+skeleton.centerArea.container.activate('editor')
 ```

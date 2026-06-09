@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   title: 'Layplux',
@@ -25,6 +25,7 @@ export default defineConfig({
       ],
       '/components/': [
         { text: 'PanelView', link: '/components/panel-view' },
+        { text: 'CenterView', link: '/components/center-view' },
         { text: 'Dropdown', link: '/components/dropdown' },
         { text: 'Tooltip & Popup', link: '/components/tooltip-popup' },
       ],
@@ -35,12 +36,10 @@ export default defineConfig({
       ],
     },
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com' },
-    ],
+    socialLinks: [{ icon: 'github', link: 'https://github.com' }],
 
     footer: {
       message: 'MIT Licensed',
     },
   },
-})
+});

@@ -7,13 +7,15 @@ import {
   Teleport,
   type PropType,
 } from 'vue';
-import type { ISkeleton } from '../../managers';
+import type { ISkeleton, IArea } from '../../managers';
+import type { CenterWidgetConfig } from '../../types';
 import { PanelView } from '../../components';
 
 export const CenterArea = defineComponent({
   name: 'CenterArea',
   props: {
     skeleton: Object as PropType<ISkeleton>,
+    centerArea: Object as PropType<IArea<CenterWidgetConfig, any>>,
   },
   setup(props) {
     // ─── FocusTracker 全局挂载 ────────────────────────────────────────────
@@ -243,6 +245,22 @@ export const CenterArea = defineComponent({
       return map;
     });
 
+    // ─── Center widget Teleport 目标 ──────────────────────────────────────
+    const centerWidgetNames = computed(() => {
+      const names = new Set<string>();
+      props.centerArea?.container.items.value.forEach((w) => names.add(w.name));
+      return names;
+    });
+
+    const centerTargets = computed(() => {
+      const activeId = props.centerArea?.container.activeId.value ?? null;
+      const map: Record<string, string> = {};
+      props.centerArea?.container.items.value.forEach((w) => {
+        map[w.name] = w.name === activeId ? '#center-area' : '#center-offscreen';
+      });
+      return map;
+    });
+
     // ─── 内部分割高度 / 宽度（CSS calc 字符串） ───────────────────────────
     const leftTopHeight = computed(() => `calc((100% - 4px) * ${leftSplitRatio.value})`);
     const leftBottomHeight = computed(() => `calc((100% - 4px) * ${1 - leftSplitRatio.value})`);
@@ -263,9 +281,10 @@ export const CenterArea = defineComponent({
         <div class="layplux-center-area">
           {/* 离屏保活容器 */}
           <div id="widget-offscreen" style="display:none;" />
+          <div id="center-offscreen" style="display:none;" />
           {/* 所有 panel widget Teleport 声明 */}
           {sk.widgets
-            .filter((w) => w.type === 'panel')
+            .filter((w) => w.type === 'panel' && !centerWidgetNames.value.has(w.name))
             .map((w) => (
               <Teleport
                 defer
@@ -275,6 +294,13 @@ export const CenterArea = defineComponent({
                 {w.renderContent()}
               </Teleport>
             ))}
+
+          {/* Center widget Teleport 声明 */}
+          {props.centerArea?.container.items.value.map((w) => (
+            <Teleport defer key={w.name} to={centerTargets.value[w.name] ?? '#center-offscreen'}>
+              {w.renderContent()}
+            </Teleport>
+          ))}
 
           {/* ── Undocked 浮动面板，absolute 定位，不参与 flex 布局 ── */}
           {/* 左侧 undocked：手柄贴右边缘 */}
@@ -368,7 +394,7 @@ export const CenterArea = defineComponent({
             )}
 
             {/* 编辑器 */}
-            <div class="layplux-center-area__editor" />
+            <div id="center-area" class="layplux-center-area__editor" />
 
             {/* 右侧宽度拖拽手柄：undocked 面板打开时由浮层自己的边缘手柄接管 */}
             {isRightVisible.value && !isRightUndockedVisible.value && (

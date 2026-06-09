@@ -11,7 +11,7 @@ Layplux (Vue 组件)
         │           ├── TopArea / BottomArea
         │           ├── LeftTopArea / LeftBottomArea
         │           ├── RightTopArea / RightBottomArea
-        │           └── CenterArea (Dock/Undock 面板 + 拖拽)
+        │           ├── CenterArea (Dock/Undock 面板 + 拖拽 + centerArea 注册)
         └── GlassOverlay       交互事件捕获
 ```
 
@@ -25,7 +25,8 @@ Layplux (Vue 组件)
 | `managers/pane` | 面板视图模式管理 |
 | `managers/theme` | 主题 CSS 变量注入 |
 | `managers/area` | 区域工厂，封装 container |
-| `components/panel-view` | 面板容器组件 |
+| `components/panel-view` | 面板容器组件（带 chrome） |
+| `components/center-view` | 中心区域容器组件（无 chrome，纯内容） |
 | `components/popup` | 弹层组件（Dropdown/Tooltip 基础） |
 | `components/dropdown` | 下拉菜单 |
 | `components/tooltip` | 提示工具 |

@@ -29,7 +29,7 @@ export const Skeleton = defineComponent({
             <BottomLeftArea area={props.skeleton?.bottomLeftArea} />
           </div>
           <div class="layplux-skeleton__center">
-            <CenterArea skeleton={props.skeleton} />
+            <CenterArea skeleton={props.skeleton} centerArea={props.skeleton?.centerArea} />
           </div>
           <div class="layplux-skeleton__stripe">
             <div class="layplux-skeleton__stripe-top">

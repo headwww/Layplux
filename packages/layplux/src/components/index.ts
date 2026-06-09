@@ -5,3 +5,4 @@ export * from './title';
 export * from './panel-view';
 export * from './dropdown';
 export * from './tooltip';
+export * from './center-view';

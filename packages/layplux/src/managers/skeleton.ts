@@ -1,5 +1,10 @@
 import { ref, type Ref } from 'vue';
-import type { InteractionWidgetConfig, PanelWidgetConfig, SkeletonConfig } from '../types';
+import type {
+  CenterWidgetConfig,
+  InteractionWidgetConfig,
+  PanelWidgetConfig,
+  SkeletonConfig,
+} from '../types';
 import type { LaypluxLocale } from '../types/locale';
 import { useArea } from './area';
 import type { IArea } from './area';
@@ -23,6 +28,7 @@ export interface ISkeleton {
   rightTopArea: IArea<PanelWidgetConfig, IWidget>;
   rightBottomArea: IArea<PanelWidgetConfig, IWidget>;
   bottomRightArea: IArea<PanelWidgetConfig, IWidget>;
+  centerArea: IArea<CenterWidgetConfig, IWidget>;
   focusedId: Ref<string | null>;
   focusTracker: FocusTracker;
   event: PluginEventBus;
@@ -167,6 +173,13 @@ export function useSkeleton(): ISkeleton {
     (config, container) => createWidget(config, container),
   );
 
+  // 中心区域
+  const centerArea = useArea<CenterWidgetConfig, IWidget>(
+    { createContainer },
+    'centerArea',
+    (config, container) => createWidget(config, container),
+  );
+
   function createWidget(
     config: SkeletonConfig | IWidget,
     container: IWidgetContainer<IWidget, any>,
@@ -222,6 +235,8 @@ export function useSkeleton(): ISkeleton {
       rightBottomArea.add(config as PanelWidgetConfig);
     } else if (area === 'bottomRightArea') {
       bottomRightArea.add(config as PanelWidgetConfig);
+    } else if (area === 'centerArea') {
+      centerArea.add(config as CenterWidgetConfig);
     }
   }
 
@@ -245,6 +260,7 @@ export function useSkeleton(): ISkeleton {
     rightBottomArea,
     bottomRightArea,
     bottomLeftArea,
+    centerArea,
     focusedId,
     focusTracker,
     event,

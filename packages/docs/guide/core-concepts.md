@@ -20,7 +20,7 @@ Widget 是 Layplux 中最小的功能单元，分两种类型：
 
 ## Area（区域）
 
-Layplux 预定义了 8 个区域：
+Layplux 预定义了 9 个区域：
 
 | 区域 | 位置 | 类型 |
 |------|------|------|
@@ -32,6 +32,7 @@ Layplux 预定义了 8 个区域：
 | `rightBottomArea` | 右侧下部 | Panel |
 | `bottomLeftArea` | 底部左侧 | Panel |
 | `bottomRightArea` | 底部右侧 | Panel |
+| `centerArea` | 中心区域 | Panel（无 chrome） |
 
 ## Pane（面板状态）
 

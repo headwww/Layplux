@@ -9,7 +9,8 @@ export type SkeletonConfigArea =
   | 'rightTopArea'
   | 'rightBottomArea'
   | 'bottomLeftArea'
-  | 'bottomRightArea';
+  | 'bottomRightArea'
+  | 'centerArea';
 
 // 组件的类型 交互型和面板型
 export type SkeletonConfigType = 'interaction' | 'panel';
@@ -39,6 +40,18 @@ export interface PanelWidgetConfig extends WidgetBaseConfig {
   type: 'panel';
   content?: string | Component | VNode;
   props?: PanelWidgetProps;
+}
+
+// 中心区域组件配置，无面板 chrome
+export interface CenterWidgetConfig extends WidgetBaseConfig {
+  type: 'panel';
+  content?: string | Component | VNode;
+  props?: CenterWidgetProps;
+}
+
+export interface CenterWidgetProps {
+  [key: string]: any;
+  onInit?: (widget: IWidget) => void;
 }
 
 export interface PanelWidgetProps {
@@ -94,6 +107,10 @@ export interface InteractionWidgetProps {
   title?: string | Component | VNode;
 }
 
-export type SkeletonConfig = PanelWidgetConfig | InteractionWidgetConfig | WidgetBaseConfig;
+export type SkeletonConfig =
+  | PanelWidgetConfig
+  | InteractionWidgetConfig
+  | CenterWidgetConfig
+  | WidgetBaseConfig;
 
 // 按照这个配置，生成一个 widget 对象
