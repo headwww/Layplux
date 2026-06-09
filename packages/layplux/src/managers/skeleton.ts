@@ -27,6 +27,10 @@ export interface ISkeleton {
   event: PluginEventBus;
   locale: Ref<LaypluxLocale>;
   setLocale(name: string): void;
+  theme: Ref<'light' | 'dark' | 'system'>;
+  resolveTheme(): 'light' | 'dark';
+  isDark(): boolean;
+  setTheme(theme: 'light' | 'dark' | 'system'): void;
   toggleFocus(id: string): void;
   focus(id: string): void;
   blur(): void;
@@ -51,6 +55,35 @@ export function useSkeleton(): ISkeleton {
 
   function setLocale(name: string) {
     locale.value = getBuiltInLocale(name);
+  }
+
+  const theme = ref<'light' | 'dark' | 'system'>('system');
+  const systemDark = ref(
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+      : false,
+  );
+
+  function resolveTheme(): 'light' | 'dark' {
+    if (theme.value === 'system') {
+      return systemDark.value ? 'dark' : 'light';
+    }
+    return theme.value;
+  }
+
+  function isDark(): boolean {
+    return resolveTheme() === 'dark';
+  }
+
+  function setTheme(t: 'light' | 'dark' | 'system') {
+    theme.value = t;
+  }
+
+  // 监听系统主题变化
+  if (typeof window !== 'undefined') {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      systemDark.value = e.matches;
+    });
   }
 
   // 顶部工具栏
@@ -202,6 +235,10 @@ export function useSkeleton(): ISkeleton {
     event,
     locale,
     setLocale,
+    theme,
+    resolveTheme,
+    isDark,
+    setTheme,
     toggleFocus,
     focus,
     blur,
