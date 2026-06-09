@@ -68,7 +68,6 @@ export function useWidget(
       // DockUnpinned：失焦自动收起
       if (pane.viewMode.value === 'DockUnpinned' || pane.viewMode.value === 'Undock') {
         container?.deactivate();
-        skeleton?.blur();
       }
     },
   });
