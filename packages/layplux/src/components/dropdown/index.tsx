@@ -123,7 +123,7 @@ export const DropdownSubmenu = defineComponent({
       <Popup
         trigger="hover"
         placement="right-start"
-        offset={{ x: 4, y: -4 }}
+        offset={{ x: 4, y: 0 }}
         mouseEnterDelay={150}
         mouseLeaveDelay={100}
         destroyOnClose={true}

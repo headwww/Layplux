@@ -33,7 +33,7 @@ const innerItems: MenuItemConfig[] = [
     key: 'resize',
     label: '调整大小',
     children: [
-      { key: 'extendLeft', label: '延伸至左侧', icon: <ChevronRightIcon size={16} /> },
+      { key: 'extendLeft', label: '延伸至左侧' },
       { key: 'extendRight', label: '延伸至右侧' },
       { key: 'extendTop', label: '延伸至顶部' },
       { key: 'extendBottom', label: '延伸至底部' },

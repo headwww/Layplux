@@ -73,23 +73,23 @@ function computePosition(
   }
   // Horizontal placements
   else if (main === 'right') {
-    left = triggerRect.right + offsetY;
-    if (align === 'start') top = triggerRect.top + offsetX;
-    else if (align === 'end') top = triggerRect.bottom - popupH + offsetX;
-    else top = triggerRect.top + triggerRect.height / 2 - popupH / 2 + offsetX;
+    left = triggerRect.right + offsetX;
+    if (align === 'start') top = triggerRect.top + offsetY;
+    else if (align === 'end') top = triggerRect.bottom - popupH + offsetY;
+    else top = triggerRect.top + triggerRect.height / 2 - popupH / 2 + offsetY;
 
     if (left + popupW > vw - PADDING) {
-      left = triggerRect.left - popupW - offsetY;
+      left = triggerRect.left - popupW - offsetX;
       placement = align ? (`left-${align}` as Placement) : 'left';
     }
   } else if (main === 'left') {
-    left = triggerRect.left - popupW - offsetY;
-    if (align === 'start') top = triggerRect.top + offsetX;
-    else if (align === 'end') top = triggerRect.bottom - popupH + offsetX;
-    else top = triggerRect.top + triggerRect.height / 2 - popupH / 2 + offsetX;
+    left = triggerRect.left - popupW - offsetX;
+    if (align === 'start') top = triggerRect.top + offsetY;
+    else if (align === 'end') top = triggerRect.bottom - popupH + offsetY;
+    else top = triggerRect.top + triggerRect.height / 2 - popupH / 2 + offsetY;
 
     if (left < PADDING) {
-      left = triggerRect.right + offsetY;
+      left = triggerRect.right + offsetX;
       placement = align ? (`right-${align}` as Placement) : 'right';
     }
   }
