@@ -30,6 +30,8 @@ export interface WidgetBaseConfig {
   contentProps?: Record<string, any>;
   // 组件索引 用于排序
   index?: number;
+
+  focusable?: any;
 }
 
 // 如果是面板型组件，则需要配置面板内容

@@ -1,4 +1,4 @@
-import { defineComponent, type PropType, type VNode } from 'vue';
+import { defineComponent, ref, type PropType, type VNode } from 'vue';
 import type { IWidget } from '../../managers';
 import type { ViewMode } from '../../managers/pane';
 import {
@@ -45,32 +45,6 @@ const innerItems: MenuItemConfig[] = [
 
 const viewModeKeys = new Set(['DockPinned', 'DockUnpinned', 'Undock']);
 
-function renderItems(items: MenuItemConfig[], currentMode?: ViewMode) {
-  return items.map((item) => {
-    if (item.type === 'divider') {
-      return <DropdownDivider key={item.key ?? 'divider'} />;
-    }
-
-    const k = item.key ?? '';
-
-    if (item.children?.length) {
-      return (
-        <DropdownSubmenu key={k} title={item.label} icon={item.icon}>
-          {renderItems(item.children, currentMode)}
-        </DropdownSubmenu>
-      );
-    }
-
-    const disabled = currentMode !== undefined && viewModeKeys.has(k) && currentMode === k;
-
-    return (
-      <DropdownItem key={k} eventKey={k} disabled={disabled}>
-        {item.icon} {item.label}
-      </DropdownItem>
-    );
-  });
-}
-
 export const PanelView = defineComponent({
   name: 'PanelView',
   props: {
@@ -83,6 +57,8 @@ export const PanelView = defineComponent({
     onMinimize: Function as PropType<() => void>,
   },
   setup(props, { slots }) {
+    const panelRef = ref<HTMLElement>();
+
     const handleClick = (key: string) => {
       if (viewModeKeys.has(key)) {
         props.widget?.pane.setViewMode(key as ViewMode);
@@ -93,20 +69,60 @@ export const PanelView = defineComponent({
       }
     };
 
+    function handlePanelClick() {
+      props.widget?.focusable.active();
+    }
+
+    function renderItems(items: MenuItemConfig[], currentMode?: ViewMode) {
+      return items.map((item) => {
+        if (item.type === 'divider') {
+          return <DropdownDivider key={item.key ?? 'divider'} />;
+        }
+
+        const k = item.key ?? '';
+
+        if (item.children?.length) {
+          return (
+            <DropdownSubmenu
+              key={k}
+              title={item.label}
+              icon={item.icon}
+              getContainer={() => panelRef.value!}
+            >
+              {renderItems(item.children, currentMode)}
+            </DropdownSubmenu>
+          );
+        }
+
+        const disabled = currentMode !== undefined && viewModeKeys.has(k) && currentMode === k;
+
+        return (
+          <DropdownItem key={k} eventKey={k} disabled={disabled}>
+            {item.icon} {item.label}
+          </DropdownItem>
+        );
+      });
+    }
+
     return () => {
       const widget = props.widget;
       const currentMode = widget?.pane.viewMode.value;
       const hasCustomItems = props.menuItems && props.menuItems.length > 0;
 
       return (
-        <div class="layplux-panel">
+        <div ref={panelRef} id={widget?.id} class="layplux-panel" onClick={handlePanelClick}>
           <div class="layplux-panel__header">
             <span class="layplux-panel__title">{props.title ?? widget?.name}</span>
 
             <div class="layplux-panel__actions">
               {slots.actionsExtra?.()}
 
-              <Dropdown trigger="click" placement="bottom-start" onClick={handleClick}>
+              <Dropdown
+                trigger="click"
+                placement="bottom-start"
+                onClick={handleClick}
+                getContainer={() => panelRef.value!}
+              >
                 {{
                   default: () => (
                     <button class="layplux-panel__action-btn" title="更多">

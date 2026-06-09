@@ -24,6 +24,7 @@ export const Dropdown = defineComponent({
     disabled: { type: Boolean, default: false },
     destroyOnClose: { type: Boolean, default: true },
     onClick: Function as PropType<(key: string) => void>,
+    getContainer: { type: Function as PropType<() => HTMLElement> },
   },
   emits: ['update:visible'],
   setup(props, { emit, slots }) {
@@ -41,6 +42,7 @@ export const Dropdown = defineComponent({
         placement={props.placement}
         disabled={props.disabled}
         destroyOnClose={props.destroyOnClose}
+        getContainer={props.getContainer}
         onUpdate:visible={(v: boolean) => emit('update:visible', v)}
       >
         {{
@@ -104,6 +106,7 @@ export const DropdownSubmenu = defineComponent({
     title: { type: String },
     icon: Object as PropType<VNode>,
     disabled: { type: Boolean, default: false },
+    getContainer: { type: Function as PropType<() => HTMLElement> },
   },
   setup(props, { slots }) {
     const closeParent = inject(DROPDOWN_CLOSE);
@@ -128,6 +131,7 @@ export const DropdownSubmenu = defineComponent({
         mouseLeaveDelay={100}
         destroyOnClose={true}
         disabled={props.disabled}
+        getContainer={props.getContainer}
       >
         {{
           default: () => (

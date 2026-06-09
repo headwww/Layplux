@@ -3,6 +3,7 @@ import type { ISkeleton } from './skeleton';
 
 export interface WidgetItem {
   name: string;
+  focusable?: any;
 }
 
 export interface IWidgetContainer<T, G> {
@@ -96,11 +97,16 @@ export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetI
     if (!maps[id]) return;
     activeId.value = id;
     skeleton.focus(id);
+    maps[id].focusable.active(); // 面板激活 → 同步焦点栈
   }
 
   function deactivate(): void {
+    const current = activeId.value;
     activeId.value = null;
     skeleton.blur();
+    if (current && maps[current]) {
+      maps[current].focusable.suspense(); // 面板收起 → 从焦点栈移除
+    }
   }
 
   function toggleActive(id: string): void {

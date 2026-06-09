@@ -5,6 +5,7 @@ import { WidgetTitleView, WidgetView } from '../components';
 import type { IWidgetContainer } from './widget-container';
 import type { ISkeleton } from './skeleton';
 import { usePane, type IPane } from './pane';
+import type { Focusable } from '../utils';
 
 export interface IWidget {
   readonly type?: SkeletonConfigType;
@@ -17,6 +18,7 @@ export interface IWidget {
   readonly focused: Ref<boolean>;
   readonly container?: IWidgetContainer<IWidget, any>;
   readonly pane: IPane;
+  readonly focusable: Focusable;
   renderBody(): VNode | null;
   renderContent(): VNode | null;
   renderTitle(): VNode | null;
@@ -25,45 +27,64 @@ export interface IWidget {
 export function useWidget(
   config: SkeletonConfig,
   container?: IWidgetContainer<IWidget, any>,
-  skeleton?: Pick<ISkeleton, 'focusedId'>, // ✅ 注入 skeleton 引用
+  skeleton?: Pick<ISkeleton, 'focusedId' | 'focus' | 'blur' | 'focusTracker'>,
 ): IWidget {
   const { name, props, type } = config;
-  // 容器级激活态
+
   const active = computed(() => container?.activeId.value === name);
-  // 全局唯一 focused 态
   const focused = computed(() => skeleton?.focusedId.value === name);
 
   const id: string = uniqueId(type);
-
-  const align = props ? props.align : 'left';
-
+  const align = props?.align ?? 'left';
   const pane = usePane();
+
+  // ─── Focusable 注册 ──────────────────────────────────────────────────────
+  // range 初始为 () => false，PanelView 挂载后通过 focusable.setRange(el) 注入真实 DOM
+  const focusable = skeleton!.focusTracker.create({
+    range: (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target) {
+        return false;
+      }
+      // 当点击的是panel时，激活
+      const el = document.getElementById(id);
+      if (el?.contains(target)) {
+        return true;
+      }
+      // 当class中包含layplux-resize-handle则不失去焦点
+      if (target.classList.contains('layplux-resize-handle')) {
+        return true;
+      }
+      return false;
+    },
+
+    onActive: () => {
+      widget.container?.activate(name);
+    },
+
+    onBlur: () => {
+      // 焦点离开 → 清除 focusedId
+      skeleton!.blur();
+      // DockUnpinned：失焦自动收起
+      if (pane.viewMode.value === 'DockUnpinned' || pane.viewMode.value === 'Undock') {
+        container?.deactivate();
+        skeleton?.blur();
+      }
+    },
+  });
 
   function renderBody() {
     const { content, contentProps } = config;
-    const body = createContent(content, {
-      ...contentProps,
-      config,
-      // TODO 将event传递进去
-    });
-    return body;
+    return createContent(content, { ...contentProps, config });
   }
 
   function renderContent() {
-    return h(WidgetView, {
-      key: id,
-      widget,
-    });
+    return h(WidgetView, { key: id, widget });
   }
 
   function renderTitle() {
-    return h(WidgetTitleView, {
-      key: id,
-      widget,
-    });
+    return h(WidgetTitleView, { key: id, widget });
   }
-
-  // 当是面板型组件时，渲染标题，当是交互型组件时，渲染空
 
   const widget: IWidget = {
     id,
@@ -76,10 +97,12 @@ export function useWidget(
     focused,
     container,
     pane,
+    focusable,
     renderBody,
     renderContent,
     renderTitle,
   };
+
   props?.onInit?.(widget);
   return widget;
 }

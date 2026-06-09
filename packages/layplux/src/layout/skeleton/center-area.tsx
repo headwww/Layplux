@@ -1,4 +1,12 @@
-import { computed, defineComponent, ref, Teleport, type PropType } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  ref,
+  Teleport,
+  type PropType,
+} from 'vue';
 import type { ISkeleton } from '../../managers';
 import { PanelView } from '../../components';
 
@@ -8,6 +16,16 @@ export const CenterArea = defineComponent({
     skeleton: Object as PropType<ISkeleton>,
   },
   setup(props) {
+    // ─── FocusTracker 全局挂载 ────────────────────────────────────────────
+    // 监听 document click，点击面板外自动触发 onBlur（DockUnpinned 自动收起）
+    let unmountFocusTracker: (() => void) | null = null;
+    onMounted(() => {
+      unmountFocusTracker = props.skeleton?.focusTracker.mount(window) ?? null;
+    });
+    onUnmounted(() => {
+      unmountFocusTracker?.();
+    });
+
     // ─── 面板尺寸状态 ─────────────────────────────────────────────────────
     const leftWidth = ref(240);
     const rightWidth = ref(240);

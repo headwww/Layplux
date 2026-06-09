@@ -4,6 +4,7 @@ import { useArea } from './area';
 import type { IArea } from './area';
 import { isWidget, useWidget, type IWidget } from './widget';
 import { useWidgetContainer, type IWidgetContainer, type WidgetItem } from './widget-container';
+import { FocusTracker } from '../utils';
 
 export interface ISkeleton {
   widgets: IWidget[];
@@ -16,6 +17,7 @@ export interface ISkeleton {
   rightBottomArea: IArea<PanelWidgetConfig, IWidget>;
   bottomRightArea: IArea<PanelWidgetConfig, IWidget>;
   focusedId: Ref<string | null>;
+  focusTracker: FocusTracker;
   toggleFocus(id: string): void;
   focus(id: string): void;
   blur(): void;
@@ -32,6 +34,8 @@ export function useSkeleton(): ISkeleton {
   const self = {} as ISkeleton;
 
   const containers = new Map<string, IWidgetContainer<any, any>>();
+
+  const focusTracker = new FocusTracker();
 
   // 顶部工具栏
   const topArea = useArea<InteractionWidgetConfig, IWidget>(
@@ -175,6 +179,7 @@ export function useSkeleton(): ISkeleton {
     bottomRightArea,
     bottomLeftArea,
     focusedId,
+    focusTracker,
     toggleFocus,
     focus,
     blur,
