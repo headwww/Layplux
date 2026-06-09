@@ -1,10 +1,16 @@
 import { ref, type Ref } from 'vue';
 import type { InteractionWidgetConfig, PanelWidgetConfig, SkeletonConfig } from '../types';
+import type { LaypluxLocale } from '../types/locale';
 import { useArea } from './area';
 import type { IArea } from './area';
 import { isWidget, useWidget, type IWidget } from './widget';
 import { useWidgetContainer, type IWidgetContainer, type WidgetItem } from './widget-container';
-import { FocusTracker, createPluginEventBus, type PluginEventBus } from '../utils';
+import {
+  FocusTracker,
+  createPluginEventBus,
+  type PluginEventBus,
+  getBuiltInLocale,
+} from '../utils';
 
 export interface ISkeleton {
   widgets: IWidget[];
@@ -19,6 +25,8 @@ export interface ISkeleton {
   focusedId: Ref<string | null>;
   focusTracker: FocusTracker;
   event: PluginEventBus;
+  locale: Ref<LaypluxLocale>;
+  setLocale(name: string): void;
   toggleFocus(id: string): void;
   focus(id: string): void;
   blur(): void;
@@ -38,6 +46,12 @@ export function useSkeleton(): ISkeleton {
 
   const focusTracker = new FocusTracker();
   const event = createPluginEventBus('skeleton');
+
+  const locale = ref<LaypluxLocale>(getBuiltInLocale('zh-CN'));
+
+  function setLocale(name: string) {
+    locale.value = getBuiltInLocale(name);
+  }
 
   // 顶部工具栏
   const topArea = useArea<InteractionWidgetConfig, IWidget>(
@@ -186,6 +200,8 @@ export function useSkeleton(): ISkeleton {
     focusedId,
     focusTracker,
     event,
+    locale,
+    setLocale,
     toggleFocus,
     focus,
     blur,

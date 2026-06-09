@@ -1,4 +1,4 @@
-import { defineComponent, ref, type PropType, type VNode, type Component } from 'vue';
+import { defineComponent, ref, inject, type PropType, type Ref, type VNode, type Component } from 'vue';
 import type { IWidget } from '../../managers';
 import type { ViewMode } from '../../managers/pane';
 import {
@@ -10,6 +10,8 @@ import {
 } from '../dropdown';
 import { MoreIcon, MinimizeIcon } from '../icon';
 import { createContent } from '../../utils';
+import { getBuiltInLocale } from '../../locales';
+import type { LaypluxLocale } from '../../types/locale';
 
 export interface MenuItemConfig {
   type?: 'item' | 'divider';
@@ -20,20 +22,6 @@ export interface MenuItemConfig {
   /** 点击回调，参数为 key 和当前 widget */
   onClick?: (key: string, widget: IWidget) => void;
 }
-
-const innerItems: MenuItemConfig[] = [
-  {
-    key: 'viewMode',
-    label: '视图模式',
-    children: [
-      { key: 'DockPinned', label: '停靠固定' },
-      { key: 'DockUnpinned', label: '停靠不固定' },
-      { key: 'Undock', label: '取消停靠' },
-    ],
-  },
-  { type: 'divider' },
-  { key: 'help', label: '帮助' },
-];
 
 const viewModeKeys = new Set(['DockPinned', 'DockUnpinned', 'Undock']);
 
@@ -58,6 +46,8 @@ export const PanelView = defineComponent({
   },
   setup(props, { slots }) {
     const panelRef = ref<HTMLElement>();
+    const defaultLocale = ref<LaypluxLocale>(getBuiltInLocale('zh-CN'));
+    const locale = inject<Ref<LaypluxLocale>>('layplux-locale', defaultLocale);
 
     const handleClick = (key: string) => {
       const widget = props.widget;
@@ -120,7 +110,20 @@ export const PanelView = defineComponent({
       const panelMenuItems = widgetProps?.panelMenuItems as MenuItemConfig[] | undefined;
       const hasPanelMenuItems = panelMenuItems && panelMenuItems.length > 0;
       const showHelp = widgetProps?.showHelp !== false;
-      const finalInnerItems = showHelp ? innerItems : innerItems.filter((i) => i.key !== 'help');
+      const loc = locale.value.panel;
+      const finalInnerItems: MenuItemConfig[] = [
+        {
+          key: 'viewMode',
+          label: loc.viewMode,
+          children: [
+            { key: 'DockPinned', label: loc.dockPinned },
+            { key: 'DockUnpinned', label: loc.dockUnpinned },
+            { key: 'Undock', label: loc.undock },
+          ],
+        },
+        { type: 'divider' },
+        ...(showHelp ? [{ key: 'help' as const, label: loc.help }] : []),
+      ];
       const panelTitleExtra = widgetProps?.panelTitleExtra as
         | string
         | Component
@@ -151,7 +154,7 @@ export const PanelView = defineComponent({
               >
                 {{
                   default: () => (
-                    <button class="layplux-panel__action-btn" title="更多">
+                    <button class="layplux-panel__action-btn" title={loc.more}>
                       <MoreIcon size={16} />
                     </button>
                   ),
@@ -169,7 +172,7 @@ export const PanelView = defineComponent({
 
               <button
                 class="layplux-panel__action-btn"
-                title="最小化"
+                title={loc.minimize}
                 onClick={() => {
                   widget?.event?.emitGlobal(`panel:${widget.name}:minimize`, { widget });
                   widget?.container?.deactivate();

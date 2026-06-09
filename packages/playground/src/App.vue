@@ -19,6 +19,40 @@ import {
 } from '@ant-design/icons-vue';
 
 const skeleton = useSkeleton();
+const currentLocale = ref('zh-CN');
+
+const localeLabels: Record<string, string> = {
+  'zh-CN': '中',
+  'en-US': 'EN',
+};
+
+const nextLocales: Record<string, string> = {
+  'zh-CN': 'en-US',
+  'en-US': 'zh-CN',
+};
+
+function toggleLocale() {
+  const next = nextLocales[currentLocale.value];
+  currentLocale.value = next;
+  skeleton.setLocale(next);
+}
+
+// 语言切换按钮组件
+const LocaleSwitcher = defineComponent({
+  name: 'LocaleSwitcher',
+  setup() {
+    return () =>
+      h(
+        'button',
+        {
+          class: 'toolbar-btn',
+          onClick: toggleLocale,
+          style: { minWidth: '36px', fontWeight: 'bold' },
+        },
+        localeLabels[currentLocale.value],
+      );
+  },
+});
 
 // ── 顶部工具栏 ──
 skeleton.add({
@@ -69,6 +103,13 @@ skeleton.add({
   area: 'topArea',
   props: { align: 'right' },
   content: h('div', { class: 'toolbar-item' }, [h(BellOutlined), ' 3']),
+});
+skeleton.add({
+  name: 'LocaleSwitcher',
+  type: 'interaction',
+  area: 'topArea',
+  props: { align: 'right' },
+  content: h(LocaleSwitcher),
 });
 skeleton.add({
   name: 'Settings',

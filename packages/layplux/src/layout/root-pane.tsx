@@ -1,4 +1,4 @@
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, provide, type PropType } from 'vue';
 import { LayeredManager } from './layered-manager';
 import { GlassOverlay } from './glass-overlay';
 import { CornerGlow } from '../components';
@@ -10,6 +10,7 @@ export const RootPane = defineComponent({
     skeleton: Object as PropType<ISkeleton>,
   },
   setup(props) {
+    provide('layplux-locale', props.skeleton?.locale);
     return () => (
       <div class="layplux-root">
         <CornerGlow />
