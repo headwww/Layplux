@@ -33,6 +33,7 @@ export default defineConfig({
         { text: '主题系统', link: '/features/theme' },
         { text: '国际化', link: '/features/i18n' },
         { text: '事件系统', link: '/features/events' },
+        { text: '错误边界', link: '/features/error-boundary' },
       ],
     },
 

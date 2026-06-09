@@ -248,7 +248,7 @@ export const CenterArea = defineComponent({
     // ─── Center widget Teleport 目标 ──────────────────────────────────────
     const centerWidgetNames = computed(() => {
       const names = new Set<string>();
-      props.centerArea?.container.items.value.forEach((w) => names.add(w.name));
+      props.centerArea?.container.items.value.forEach((w: any) => names.add(w.name as string));
       return names;
     });
 
