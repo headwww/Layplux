@@ -30,29 +30,6 @@ import {
 
 const skeleton = useSkeleton();
 
-// 注册预设自定义主题
-skeleton.registerTheme('ocean', {
-  background: '200 15% 10%',
-  foreground: '200 10% 95%',
-  primary: '200 80% 50%',
-  accent: '200 5% 20%',
-  border: '200 10% 30%',
-});
-skeleton.registerTheme('forest', {
-  background: '150 10% 10%',
-  foreground: '150 10% 95%',
-  primary: '150 60% 40%',
-  accent: '150 5% 20%',
-  border: '150 10% 30%',
-});
-skeleton.registerTheme('sunset', {
-  background: '25 15% 10%',
-  foreground: '25 10% 95%',
-  primary: '25 80% 50%',
-  accent: '25 5% 20%',
-  border: '25 10% 30%',
-});
-
 // ═══ 国际化切换 ═══════════════════════════════════════════════════════════════
 
 const currentLocale = ref<string>('zh-CN');
@@ -65,32 +42,22 @@ function toggleLocale() {
 }
 // ═══ 主题切换 ═══════════════════════════════════════════════════════════════
 
-const themes = [
-  { name: 'default', label: '默认' },
-  { name: 'ocean', label: '海洋' },
-  { name: 'forest', label: '森林' },
-  { name: 'sunset', label: '日落' },
-];
-
-let themeIndex = 0;
+const themeIcons: Record<string, string> = { light: '☀️', dark: '🌙', system: '💻' };
+const nextThemes: Record<string, 'light' | 'dark' | 'system'> = { light: 'dark', dark: 'system', system: 'light' };
 function toggleTheme() {
-  themeIndex = (themeIndex + 1) % themes.length;
-  skeleton.setThemeName(themes[themeIndex].name);
+  const next = nextThemes[skeleton.theme.value];
+  skeleton.setTheme(next);
 }
-
 const ThemeSwitcher = defineComponent({
   name: 'ThemeSwitcher',
   setup() {
     return () =>
-      h(
-        'button',
-        {
-          class: 'ide-btn',
-          onClick: toggleTheme,
-          title: `Theme: ${skeleton.themeName.value}`,
-        },
-        themes.find((t) => t.name === skeleton.themeName.value)?.label ?? 'Theme',
-      );
+      h('button', {
+        class: 'ide-btn',
+        onClick: toggleTheme,
+        style: { fontSize: '14px' },
+        title: skeleton.theme.value,
+      }, themeIcons[skeleton.theme.value]);
   },
 });
 
@@ -191,7 +158,7 @@ skeleton.add({
   props: { align: 'right' },
   content: h('div', { class: 'ide-search' }, [
     h(SearchOutlined, { style: { color: '#888', marginRight: 6 } }),
-    h(Input, { placeholder: 'Search Everywhere...', disabled: true }),
+    h('input', { class: 'ide-search-input', placeholder: 'Search Everywhere...', disabled: true }),
   ]),
 });
 skeleton.add({
@@ -466,7 +433,14 @@ const ProjectPanel = defineComponent({
       h('div', { class: 'panel-content ide-panel' }, [
         h(Input, {
           placeholder: 'Search files...',
+          size: 'small' as const,
           prefix: () => h(SearchOutlined),
+          style: {
+            marginBottom: 8,
+            background: '#2c313a',
+            borderColor: '#3a3f4b',
+            borderRadius: 4,
+          },
           class: 'ide-input',
         }),
         h(Tree, {
@@ -744,7 +718,14 @@ const DatabasePanel = defineComponent({
       h('div', { class: 'panel-content ide-panel' }, [
         h(Input, {
           placeholder: 'SQL query...',
+          size: 'small' as const,
           prefix: () => h(ConsoleSqlOutlined),
+          style: {
+            marginBottom: 8,
+            background: '#2c313a',
+            borderColor: '#3a3f4b',
+            borderRadius: 4,
+          },
           class: 'ide-input',
         }),
         h('div', { style: cs.section('#888') }, 'Tables'),

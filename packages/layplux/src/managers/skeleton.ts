@@ -1,7 +1,6 @@
 import { ref, type Ref } from 'vue';
 import type { InteractionWidgetConfig, PanelWidgetConfig, SkeletonConfig } from '../types';
 import type { LaypluxLocale } from '../types/locale';
-import type { ThemeVars } from '../types/theme';
 import { useArea } from './area';
 import type { IArea } from './area';
 import { isWidget, useWidget, type IWidget } from './widget';
@@ -11,7 +10,6 @@ import {
   createPluginEventBus,
   type PluginEventBus,
   getBuiltInLocale,
-  injectThemeCSS,
 } from '../utils';
 
 export interface ISkeleton {
@@ -33,9 +31,6 @@ export interface ISkeleton {
   resolveTheme(): 'light' | 'dark';
   isDark(): boolean;
   setTheme(theme: 'light' | 'dark' | 'system'): void;
-  readonly themeName: Ref<string>;
-  setThemeName(name: string): void;
-  registerTheme(name: string, vars: Partial<ThemeVars>): void;
   toggleFocus(id: string): void;
   focus(id: string): void;
   blur(): void;
@@ -82,16 +77,6 @@ export function useSkeleton(): ISkeleton {
 
   function setTheme(t: 'light' | 'dark' | 'system') {
     theme.value = t;
-  }
-
-  const themeName = ref<string>('default');
-
-  function setThemeName(name: string) {
-    themeName.value = name;
-  }
-
-  function registerTheme(name: string, vars: Partial<ThemeVars>) {
-    injectThemeCSS(name, vars);
   }
 
   // 监听系统主题变化
@@ -254,9 +239,6 @@ export function useSkeleton(): ISkeleton {
     resolveTheme,
     isDark,
     setTheme,
-    themeName,
-    setThemeName,
-    registerTheme,
     toggleFocus,
     focus,
     blur,
