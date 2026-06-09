@@ -85,6 +85,11 @@
   &--bottom-edge {
     align-self: auto;
   }
+
+  // 最大化状态：视觉高亮
+  &--maximized {
+    background-color: hsl(var(--layplux-foreground) / 12%);
+  }
 }
 
 // ── Undocked 浮动面板 ─────────────────────────────────────────────────────────

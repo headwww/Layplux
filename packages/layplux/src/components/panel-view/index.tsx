@@ -31,16 +31,6 @@ const innerItems: MenuItemConfig[] = [
       { key: 'Undock', label: '取消停靠' },
     ],
   },
-  {
-    key: 'resize',
-    label: '调整大小',
-    children: [
-      { key: 'extendLeft', label: '延伸至左侧' },
-      { key: 'extendRight', label: '延伸至右侧' },
-      { key: 'extendTop', label: '延伸至顶部' },
-      { key: 'extendBottom', label: '延伸至底部' },
-    ],
-  },
   { type: 'divider' },
   { key: 'help', label: '帮助' },
 ];
@@ -65,9 +55,6 @@ export const PanelView = defineComponent({
     title: String,
     widget: Object as PropType<IWidget>,
     menuItems: Array as PropType<MenuItemConfig[]>,
-    onMenuClick: Function as PropType<(key: string) => void>,
-    onHelpClick: Function as PropType<() => void>,
-    onMinimize: Function as PropType<() => void>,
   },
   setup(props, { slots }) {
     const panelRef = ref<HTMLElement>();
@@ -86,9 +73,7 @@ export const PanelView = defineComponent({
       if (viewModeKeys.has(key)) {
         widget?.pane.setViewMode(key as ViewMode);
       } else if (key === 'help') {
-        (widgetProps?.onHelpClick ?? props.onHelpClick)?.();
-      } else {
-        props.onMenuClick?.(key);
+        widgetProps?.onHelpClick?.();
       }
     };
 
@@ -187,7 +172,7 @@ export const PanelView = defineComponent({
                 title="最小化"
                 onClick={() => {
                   widget?.event?.emitGlobal(`panel:${widget.name}:minimize`, { widget });
-                  props.onMinimize?.();
+                  widget?.container?.deactivate();
                 }}
               >
                 <MinimizeIcon size={16} />
