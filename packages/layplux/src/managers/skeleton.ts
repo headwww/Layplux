@@ -4,7 +4,7 @@ import { useArea } from './area';
 import type { IArea } from './area';
 import { isWidget, useWidget, type IWidget } from './widget';
 import { useWidgetContainer, type IWidgetContainer, type WidgetItem } from './widget-container';
-import { FocusTracker } from '../utils';
+import { FocusTracker, createPluginEventBus, type PluginEventBus } from '../utils';
 
 export interface ISkeleton {
   widgets: IWidget[];
@@ -18,6 +18,7 @@ export interface ISkeleton {
   bottomRightArea: IArea<PanelWidgetConfig, IWidget>;
   focusedId: Ref<string | null>;
   focusTracker: FocusTracker;
+  event: PluginEventBus;
   toggleFocus(id: string): void;
   focus(id: string): void;
   blur(): void;
@@ -36,6 +37,7 @@ export function useSkeleton(): ISkeleton {
   const containers = new Map<string, IWidgetContainer<any, any>>();
 
   const focusTracker = new FocusTracker();
+  const event = createPluginEventBus('skeleton');
 
   // 顶部工具栏
   const topArea = useArea<InteractionWidgetConfig, IWidget>(
@@ -112,6 +114,7 @@ export function useSkeleton(): ISkeleton {
     }
     const widget = useWidget(config, container, self);
     widgets.push(widget);
+    event.emitGlobal('skeleton:widget-added', { widget });
     return widget;
   }
 
@@ -127,10 +130,12 @@ export function useSkeleton(): ISkeleton {
 
   function focus(id: string) {
     focusedId.value = id;
+    event.emitGlobal('skeleton:focus-changed', { focusedId: id });
   }
 
   function blur() {
     focusedId.value = null;
+    event.emitGlobal('skeleton:focus-changed', { focusedId: null });
   }
 
   function add(config: SkeletonConfig, extraConfig?: Record<string, any>): void {
@@ -180,6 +185,7 @@ export function useSkeleton(): ISkeleton {
     bottomLeftArea,
     focusedId,
     focusTracker,
+    event,
     toggleFocus,
     focus,
     blur,

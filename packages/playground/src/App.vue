@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h } from 'vue';
+import { h, defineComponent, ref, onMounted, type PropType } from 'vue';
 import { Layplux } from 'layplux';
 import { useSkeleton } from '../../layplux/src/managers';
 import {
@@ -354,6 +354,106 @@ const BookmarksContent = () =>
     ),
   ]);
 
+// ── 跨面板事件通信测试组件 ──
+
+/** 发送方面板：点击按钮发送事件 */
+const EmitterPanel = defineComponent({
+  name: 'EmitterPanel',
+  props: {
+    event: Object as PropType<any>,
+  },
+  setup(props) {
+    const count = ref(0);
+    const sendMessage = () => {
+      count.value++;
+      props.event?.emitGlobal('custom:message', {
+        from: 'emitter',
+        count: count.value,
+        timestamp: new Date().toLocaleTimeString(),
+      });
+    };
+    return () =>
+      h('div', { class: 'panel-content', style: { padding: '12px' } }, [
+        h('div', { style: { fontSize: 13, color: '#4ec9b0', marginBottom: 8 } }, '📤 发送方面板'),
+        h('div', { style: { fontSize: 11, color: '#888', marginBottom: 8 } }, '点击发送跨面板消息'),
+        h(
+          'button',
+          {
+            onClick: sendMessage,
+            style: {
+              padding: '8px 16px',
+              background: '#0e639c',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 4,
+              cursor: 'pointer',
+              fontSize: 12,
+              marginBottom: 12,
+            },
+          },
+          `发送消息 (已发送 ${count.value} 条)`,
+        ),
+        h(
+          'div',
+          { style: { fontSize: 11, color: '#6a9955' } },
+          `事件: custom:message → { from, count, timestamp }`,
+        ),
+      ]);
+  },
+});
+
+/** 接收方面板：订阅事件并显示接收到的数据 */
+const ReceiverPanel = defineComponent({
+  name: 'ReceiverPanel',
+  props: {
+    event: Object as PropType<any>,
+  },
+  setup(props) {
+    const messages = ref<Array<{ from: string; count: number; timestamp: string }>>([]);
+    onMounted(() => {
+      props.event?.onGlobal('custom:message', (payload: any) => {
+        messages.value = [...messages.value.slice(-9), payload];
+      });
+    });
+    return () =>
+      h('div', { class: 'panel-content', style: { padding: '12px' } }, [
+        h('div', { style: { fontSize: 13, color: '#c586c0', marginBottom: 8 } }, '📥 接收方面板'),
+        h(
+          'div',
+          { style: { fontSize: 11, color: '#888', marginBottom: 4 } },
+          `已收到 ${messages.value.length} 条消息`,
+        ),
+        h(
+          'div',
+          {
+            style: {
+              maxHeight: '200px',
+              overflowY: 'auto',
+              fontSize: 11,
+              color: '#dcdcaa',
+              lineHeight: 1.6,
+            },
+          },
+          messages.value.length === 0
+            ? [h('div', { style: { color: '#666' } }, '等待消息...')]
+            : messages.value.map((m, i) =>
+                h(
+                  'div',
+                  {
+                    key: i,
+                    style: {
+                      padding: '2px 0',
+                      borderBottom: '1px solid #333',
+                    },
+                  },
+                  `[${m.timestamp}] from=${m.from} count=${m.count}`,
+                ),
+              ),
+        ),
+      ]);
+  },
+});
+
 // ── 左侧面板型 widget ──
 skeleton.add({
   name: 'project',
@@ -443,6 +543,54 @@ skeleton.add({
   content: h('div', 'Notifications'),
   props: { icon: h(BellOutlined) },
 });
+
+// ── 跨面板事件通信测试面板 ──
+skeleton.add({
+  name: 'emitter',
+  type: 'panel',
+  area: 'rightTopArea',
+  props: { icon: '📤', title: '发送方' },
+  index: 2,
+  content: h(EmitterPanel),
+});
+skeleton.add({
+  name: 'receiver',
+  type: 'panel',
+  area: 'rightBottomArea',
+  props: { icon: '📥', title: '接收方' },
+  index: 3,
+  content: h(ReceiverPanel),
+});
+
+// ── 生命周期事件监听 ──
+skeleton.event.onGlobal('skeleton:widget-added', (payload: any) => {
+  console.log('[lifecycle] skeleton:widget-added →', payload.widget.name);
+});
+skeleton.event.onGlobal('skeleton:focus-changed', (payload: any) => {
+  console.log('[lifecycle] skeleton:focus-changed →', payload.focusedId);
+});
+skeleton.event.onGlobal('widget:*:focus', (payload: any) => {
+  console.log('[lifecycle] widget:focus →', payload.widget.name);
+});
+skeleton.event.onGlobal('widget:*:blur', (payload: any) => {
+  console.log('[lifecycle] widget:blur →', payload.widget.name);
+});
+skeleton.event.onGlobal('widget:*:view-mode-changed', (payload: any) => {
+  console.log('[lifecycle] widget:view-mode-changed →', payload.widget.name, payload.mode);
+});
+skeleton.event.onGlobal('widget:*:activated', (payload: any) => {
+  console.log('[lifecycle] widget:activated →', payload.widget.name);
+});
+skeleton.event.onGlobal('widget:*:deactivated', (payload: any) => {
+  console.log('[lifecycle] widget:deactivated →', payload.widget.name);
+});
+skeleton.event.onGlobal('panel:*:menu-click', (payload: any) => {
+  console.log('[lifecycle] panel:menu-click →', payload.widget.name, payload.key);
+});
+skeleton.event.onGlobal('panel:*:minimize', (payload: any) => {
+  console.log('[lifecycle] panel:minimize →', payload.widget.name);
+});
+console.log('[lifecycle] All event listeners registered');
 </script>
 
 <template>

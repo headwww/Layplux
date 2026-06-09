@@ -75,6 +75,7 @@ export const PanelView = defineComponent({
 
     const handleClick = (key: string) => {
       const widget = props.widget;
+      widget?.event?.emitGlobal(`panel:${widget.name}:menu-click`, { widget, key });
       const widgetProps = widget?.config.props;
       const panelItems = widgetProps?.panelMenuItems as MenuItemConfig[] | undefined;
       const panelItem = findItem(panelItems, key);
@@ -174,7 +175,14 @@ export const PanelView = defineComponent({
                 }}
               </Dropdown>
 
-              <button class="layplux-panel__action-btn" title="最小化" onClick={props.onMinimize}>
+              <button
+                class="layplux-panel__action-btn"
+                title="最小化"
+                onClick={() => {
+                  widget?.event?.emitGlobal(`panel:${widget.name}:minimize`, { widget });
+                  props.onMinimize?.();
+                }}
+              >
                 <MinimizeIcon size={16} />
               </button>
             </div>

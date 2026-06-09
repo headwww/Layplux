@@ -1,11 +1,10 @@
-import { computed, h, type Ref, type VNode } from 'vue';
+import { computed, h, watch, type Ref, type VNode } from 'vue';
 import type { InteractionWidgetAlign, SkeletonConfig, SkeletonConfigType } from '../types';
-import { createContent, uniqueId } from '../utils';
+import { createContent, uniqueId, type PluginEventBus, type Focusable } from '../utils';
 import { WidgetTitleView, WidgetView } from '../components';
 import type { IWidgetContainer } from './widget-container';
 import type { ISkeleton } from './skeleton';
 import { usePane, type IPane } from './pane';
-import type { Focusable } from '../utils';
 
 export interface IWidget {
   readonly type?: SkeletonConfigType;
@@ -19,6 +18,7 @@ export interface IWidget {
   readonly container?: IWidgetContainer<IWidget, any>;
   readonly pane: IPane;
   readonly focusable: Focusable;
+  readonly event: PluginEventBus;
   renderBody(): VNode | null;
   renderContent(): VNode | null;
   renderTitle(): VNode | null;
@@ -27,7 +27,7 @@ export interface IWidget {
 export function useWidget(
   config: SkeletonConfig,
   container?: IWidgetContainer<IWidget, any>,
-  skeleton?: Pick<ISkeleton, 'focusedId' | 'focus' | 'blur' | 'focusTracker'>,
+  skeleton?: Pick<ISkeleton, 'focusedId' | 'focus' | 'blur' | 'focusTracker' | 'event'>,
 ): IWidget {
   const { name, props, type } = config;
 
@@ -60,11 +60,13 @@ export function useWidget(
 
     onActive: () => {
       widget.container?.activate(name);
+      skeleton!.event?.emitGlobal(`widget:${name}:focus`, { widget });
     },
 
     onBlur: () => {
       // 焦点离开 → 清除 focusedId
       skeleton!.blur();
+      skeleton!.event?.emitGlobal(`widget:${name}:blur`, { widget });
       // DockUnpinned：失焦自动收起
       if (pane.viewMode.value === 'DockUnpinned' || pane.viewMode.value === 'Undock') {
         container?.deactivate();
@@ -74,7 +76,7 @@ export function useWidget(
 
   function renderBody() {
     const { content, contentProps } = config;
-    return createContent(content, { ...contentProps, config });
+    return createContent(content, { ...contentProps, config, event: widget.event });
   }
 
   function renderContent() {
@@ -97,12 +99,24 @@ export function useWidget(
     container,
     pane,
     focusable,
+    event: skeleton!.event,
     renderBody,
     renderContent,
     renderTitle,
   };
 
   props?.onInit?.(widget);
+
+  // Emit view-mode-changed events
+  if (skeleton?.event) {
+    watch(
+      () => pane.viewMode.value,
+      (mode) => {
+        skeleton.event!.emitGlobal(`widget:${name}:view-mode-changed`, { widget, mode });
+      },
+    );
+  }
+
   return widget;
 }
 
