@@ -30,23 +30,6 @@ import {
 
 const skeleton = useSkeleton();
 
-// 注册预设自定义主题
-skeleton.registerTheme('ocean', {
-  primary: '200 80% 50%',
-  accent: '200 5% 20%',
-  border: '200 10% 30%',
-});
-skeleton.registerTheme('forest', {
-  primary: '150 60% 40%',
-  accent: '150 5% 20%',
-  border: '150 10% 30%',
-});
-skeleton.registerTheme('sunset', {
-  primary: '25 80% 50%',
-  accent: '25 5% 20%',
-  border: '25 10% 30%',
-});
-
 // ═══ 国际化切换 ═══════════════════════════════════════════════════════════════
 
 const currentLocale = ref<string>('zh-CN');
@@ -59,32 +42,24 @@ function toggleLocale() {
 }
 // ═══ 主题切换 ═══════════════════════════════════════════════════════════════
 
-const themes = [
-  { name: 'default', label: '默认' },
-  { name: 'ocean', label: '海洋' },
-  { name: 'forest', label: '森林' },
-  { name: 'sunset', label: '日落' },
-];
-
-let themeIndex = 0;
-function toggleTheme() {
-  themeIndex = (themeIndex + 1) % themes.length;
-  skeleton.setThemeName(themes[themeIndex].name);
+const colorSchemeIcons: Record<string, string> = { light: '☀️', dark: '🌙', system: '💻' };
+const nextSchemes: Record<string, 'light' | 'dark' | 'system'> = {
+  light: 'dark', dark: 'system', system: 'light',
+};
+function toggleColorScheme() {
+  skeleton.setTheme(nextSchemes[skeleton.theme.value]!);
 }
 
 const ThemeSwitcher = defineComponent({
   name: 'ThemeSwitcher',
   setup() {
     return () =>
-      h(
-        'button',
-        {
-          class: 'ide-btn',
-          onClick: toggleTheme,
-          title: `Theme: ${skeleton.themeName.value}`,
-        },
-        themes.find((t) => t.name === skeleton.themeName.value)?.label ?? 'Theme',
-      );
+      h('button', {
+        class: 'ide-btn',
+        onClick: toggleColorScheme,
+        style: { fontSize: '14px' },
+        title: skeleton.theme.value,
+      }, colorSchemeIcons[skeleton.theme.value]);
   },
 });
 
