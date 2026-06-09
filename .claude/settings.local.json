@@ -27,7 +27,10 @@
       "Bash(open *)",
       "Bash(screencapture /tmp/layplux-playground.png)",
       "Bash(curl -s http://localhost:9098/)",
-      "Bash(npx vue-tsc *)"
+      "Bash(npx vue-tsc *)",
+      "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux stash clear)",
+      "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux add -A)",
+      "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux commit --no-verify -m ' *)"
     ]
   }
 }
