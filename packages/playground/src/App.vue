@@ -359,7 +359,22 @@ skeleton.add({
   name: 'project',
   type: 'panel',
   area: 'leftTopArea',
-  props: { icon: h(FolderOutlined), title: 'Project' },
+  props: {
+    icon: h(FolderOutlined),
+    title: '我的面板',
+    panelActionsExtra: h('div', '额外操作内容'),
+    panelMenuItems: [
+      {
+        key: 'custom-action',
+        label: '自定义操作',
+        onClick: () => {
+          console.log('自定义操作');
+        },
+      },
+      { type: 'divider' },
+      { key: 'another', label: '另一个' },
+    ],
+  },
   content: h(ProjectContent),
 });
 skeleton.add({
@@ -407,9 +422,10 @@ skeleton.add({
 // ── 快捷操作 ──
 skeleton.add({
   name: 'settings-quick',
-  type: 'panel',
+  type: 'interaction',
   area: 'bottomLeftArea',
-  content: h('div', 'settings-quick'),
+  content: h('div', 'help'),
+
   props: { icon: h(SettingOutlined), align: 'left' },
 });
 skeleton.add({

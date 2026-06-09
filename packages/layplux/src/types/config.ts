@@ -1,6 +1,6 @@
 import type { Component, VNode } from 'vue';
 import type { IWidget } from '../managers';
-
+import type { MenuItemConfig } from '../components';
 export type SkeletonConfigArea =
   | 'topArea'
   | 'bottomArea'
@@ -51,6 +51,31 @@ export interface PanelWidgetProps {
    * 面板标题
    */
   title?: string | Component | VNode;
+
+  /**
+   * 面板标题区域自定义内容
+   */
+  panelTitleExtra?: string | Component | VNode;
+
+  /**
+   * actions左侧区域自定义内容
+   */
+  panelActionsExtra?: string | Component | VNode;
+
+  /**
+   * 下拉菜单自定义选项
+   */
+  panelMenuItems?: MenuItemConfig[];
+
+  /**
+   * 是否显示帮助菜单项，默认 true
+   */
+  showHelp?: boolean;
+
+  /**
+   * 帮助菜单项点击回调
+   */
+  onHelpClick?: () => void;
 }
 
 // 如果是交互型组件，则需要配置交互内容

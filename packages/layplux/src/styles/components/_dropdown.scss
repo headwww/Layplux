@@ -79,8 +79,7 @@
 
   &__divider {
     height: 1px;
-    margin: 4px 0;
-    background: hsl(var(--layplux-border));
+    background: hsl(var(--layplux-border) / 50%);
   }
 
   &__submenu-arrow {

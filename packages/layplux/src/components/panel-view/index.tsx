@@ -1,4 +1,4 @@
-import { defineComponent, ref, type PropType, type VNode } from 'vue';
+import { defineComponent, ref, type PropType, type VNode, type Component } from 'vue';
 import type { IWidget } from '../../managers';
 import type { ViewMode } from '../../managers/pane';
 import {
@@ -9,13 +9,16 @@ import {
   DropdownSubmenu,
 } from '../dropdown';
 import { MoreIcon, MinimizeIcon, ChevronRightIcon } from '../icon';
+import { createContent } from '../../utils';
 
-interface MenuItemConfig {
+export interface MenuItemConfig {
   type?: 'item' | 'divider';
   key?: string;
   label?: string;
   icon?: VNode;
   children?: MenuItemConfig[];
+  /** 点击回调，参数为 key 和当前 widget */
+  onClick?: (key: string, widget: IWidget) => void;
 }
 
 const innerItems: MenuItemConfig[] = [
@@ -45,6 +48,17 @@ const innerItems: MenuItemConfig[] = [
 
 const viewModeKeys = new Set(['DockPinned', 'DockUnpinned', 'Undock']);
 
+function findItem(items: MenuItemConfig[] | undefined, key: string): MenuItemConfig | undefined {
+  if (!items) return;
+  for (const item of items) {
+    if (item.key === key) return item;
+    if (item.children?.length) {
+      const found = findItem(item.children, key);
+      if (found) return found;
+    }
+  }
+}
+
 export const PanelView = defineComponent({
   name: 'PanelView',
   props: {
@@ -60,10 +74,19 @@ export const PanelView = defineComponent({
     const panelRef = ref<HTMLElement>();
 
     const handleClick = (key: string) => {
+      const widget = props.widget;
+      const widgetProps = widget?.config.props;
+      const panelItems = widgetProps?.panelMenuItems as MenuItemConfig[] | undefined;
+      const panelItem = findItem(panelItems, key);
+      if (panelItem?.onClick) {
+        panelItem.onClick(key, widget!);
+        return;
+      }
+
       if (viewModeKeys.has(key)) {
-        props.widget?.pane.setViewMode(key as ViewMode);
+        widget?.pane.setViewMode(key as ViewMode);
       } else if (key === 'help') {
-        props.onHelpClick?.();
+        (widgetProps?.onHelpClick ?? props.onHelpClick)?.();
       } else {
         props.onMenuClick?.(key);
       }
@@ -107,14 +130,24 @@ export const PanelView = defineComponent({
     return () => {
       const widget = props.widget;
       const currentMode = widget?.pane.viewMode.value;
+      const widgetProps = widget?.config.props;
       const hasCustomItems = props.menuItems && props.menuItems.length > 0;
+      const panelMenuItems = widgetProps?.panelMenuItems as MenuItemConfig[] | undefined;
+      const hasPanelMenuItems = panelMenuItems && panelMenuItems.length > 0;
+      const showHelp = widgetProps?.showHelp !== false;
+      const finalInnerItems = showHelp ? innerItems : innerItems.filter((i) => i.key !== 'help');
+      const panelTitleExtra = widgetProps?.panelTitleExtra as string | Component | VNode | undefined;
+      const panelActionsExtra = widgetProps?.panelActionsExtra as string | Component | VNode | undefined;
 
       return (
         <div ref={panelRef} id={widget?.id} class="layplux-panel" onClick={handlePanelClick}>
           <div class="layplux-panel__header">
             <span class="layplux-panel__title">{props.title ?? widget?.name}</span>
 
+            {panelTitleExtra && createContent(panelTitleExtra)}
+
             <div class="layplux-panel__actions">
+              {panelActionsExtra && createContent(panelActionsExtra)}
               {slots.actionsExtra?.()}
 
               <Dropdown
@@ -131,9 +164,11 @@ export const PanelView = defineComponent({
                   ),
                   overlay: () => (
                     <DropdownMenu>
+                      {hasPanelMenuItems && renderItems(panelMenuItems)}
+                      {hasPanelMenuItems && hasCustomItems && <DropdownDivider />}
                       {hasCustomItems && renderItems(props.menuItems)}
-                      {hasCustomItems && <DropdownDivider />}
-                      {renderItems(innerItems, currentMode)}
+                      {(hasPanelMenuItems || hasCustomItems) && <DropdownDivider />}
+                      {renderItems(finalInnerItems, currentMode)}
                     </DropdownMenu>
                   ),
                 }}
