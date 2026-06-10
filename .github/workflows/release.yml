@@ -38,18 +38,19 @@ jobs:
           else
             echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
-
-      # 有 changeset 才往下走，否则普通提交直接跳过所有步骤
       - name: Version packages
         if: steps.check.outputs.has_changes == 'true'
         run: pnpm changeset version
+
+      # 新增这一步 —— 版本号变更后重新同步 lockfile
+      - name: Update lockfile
+        if: steps.check.outputs.has_changes == 'true'
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         if: steps.check.outputs.has_changes == 'true'
         run: pnpm --filter layplux build
 
-      # 先把版本号和 CHANGELOG 推回 master，再发布
-      # 确保即使 publish 失败，仓库里的版本记录也是准确的
       - name: Commit and push version bump
         if: steps.check.outputs.has_changes == 'true'
         run: |
