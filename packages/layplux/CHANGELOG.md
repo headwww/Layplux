@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.1
+
+### Patch Changes
+
+- 9d62262: 发布一个版本
+
 ## 2.0.2
 
 ### Patch Changes
