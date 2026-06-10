@@ -29,6 +29,8 @@ jobs:
       - name: Create Release PR or Publish
         uses: changesets/action@v1
         with:
+          commit: "chore: version packages"
+          title: "chore: version packages"
           publish: pnpm -r publish --filter layplux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
