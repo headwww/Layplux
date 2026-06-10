@@ -61,7 +61,6 @@ export function useSkeleton(): ISkeleton {
   const focusTracker = new FocusTracker();
   const event = createPluginEventBus('skeleton');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const locale = ref<LaypluxLocale>(getBuiltInLocale('zh-CN'));
 
   function setLocale(name: string) {

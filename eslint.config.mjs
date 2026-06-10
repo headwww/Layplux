@@ -7,7 +7,14 @@ export default [
   // 忽略文件
   // =====================
   {
-    ignores: ['dist/**', 'node_modules/**', '*.min.js', 'public/**', '**/__tests__/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '*.min.js',
+      'public/**',
+      '**/__tests__/**',
+      '**/.vitepress/**',
+    ],
   },
 
   // =====================

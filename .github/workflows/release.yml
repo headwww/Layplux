@@ -3,6 +3,9 @@ name: Release
 on:
   push:
     branches: [master]
+    paths:
+      - '.changeset/**'
+      - 'packages/layplux/package.json'
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
