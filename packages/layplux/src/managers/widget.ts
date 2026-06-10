@@ -112,7 +112,7 @@ export function useWidget(
     watch(
       () => pane.viewMode.value,
       (mode) => {
-        skeleton.event!.emitGlobal(`widget:${name}:view-mode-changed`, { widget, mode });
+        skeleton.event.emitGlobal(`widget:${name}:view-mode-changed`, { widget, mode });
       },
     );
   }

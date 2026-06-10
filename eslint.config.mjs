@@ -30,7 +30,9 @@ export default [
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['*.config.ts', '*.config.mts', '*.config.cts'],
+        },
       },
     },
   },
