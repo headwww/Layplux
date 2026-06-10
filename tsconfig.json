@@ -38,9 +38,6 @@
     }
   },
   "include": [],
-  "references": [
-    { "path": "./packages/layplux" },
-    { "path": "./packages/playground" }
-  ],
+  "references": [{ "path": "./packages/layplux" }, { "path": "./packages/playground" }],
   "exclude": ["**/node_modules/**", "**/dist/**", "**/.turbo/**"]
 }

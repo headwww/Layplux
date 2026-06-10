@@ -1,0 +1,27 @@
+{
+  "name": "build-script",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@vue/babel-plugin-jsx": "^1.4.0",
+    "esbuild": "^0.25.0",
+    "glob": "^11.0.0",
+    "gulp": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^6.0.0",
+    "rollup": "^4.34.0",
+    "sass": "^1.80.0",
+    "vue-tsc": "^3.0.0"
+  },
+  "packageManager": "pnpm@10.33.4"
+}

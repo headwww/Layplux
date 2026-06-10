@@ -8,7 +8,7 @@
   "author": "",
   "scripts": {
     "dev": "pnpm -r --filter @layplux/playground dev",
-    "build": "pnpm -r --filter layplux build",
+    "build": "pnpm -C build-script build",
     "test": "pnpm -r --filter layplux test",
     "preview": "pnpm -r --filter @layplux/playground preview",
     "lint": "oxlint . && eslint .",
@@ -22,6 +22,7 @@
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@types/node": "^25.9.1",

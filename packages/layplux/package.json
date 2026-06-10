@@ -12,13 +12,13 @@
       "default": "./src/index.ts"
     },
     "./scss": {
-      "sass": "./src/styles/layplux.scss",
-      "default": "./src/styles/layplux.scss"
+      "sass": "./src/style/layplux.scss",
+      "default": "./src/style/layplux.scss"
     }
   },
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist",
+    "build": "gulp --gulpfile ../../build-script/gulpfile.js build",
     "test": "vitest run",
     "test:watch": "vitest"
   },
