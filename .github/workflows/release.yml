@@ -30,9 +30,9 @@ jobs:
           path: packages/layplux/dist/
 
       - name: Publish to npm
-        run: pnpm publish packages/layplux --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > packages/layplux/.npmrc
+          cd packages/layplux && npm publish
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
