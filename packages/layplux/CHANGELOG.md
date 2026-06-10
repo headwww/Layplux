@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.2
+
+### Patch Changes
+
+- 811711d: 更新导出方案
+
 ## 2.0.1
 
 ### Patch Changes
