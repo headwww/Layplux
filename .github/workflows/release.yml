@@ -2,13 +2,13 @@ name: Release
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   contents: write
-  pull-requests: write
   id-token: write
 
 jobs:
@@ -23,18 +23,46 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Create Release PR or Publish
-        uses: changesets/action@v1
-        with:
-          commit: 'chore: version packages'
-          title: 'chore: version packages'
-          publish: pnpm --filter layplux build && pnpm --filter layplux publish --no-git-checks
+      # 检测是否有待发布的 changeset 文件
+      - name: Check for changesets
+        id: check
+        run: |
+          if ls .changeset/*.md 2>/dev/null | grep -qv README; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 有 changeset 才往下走，否则普通提交直接跳过所有步骤
+      - name: Version packages
+        if: steps.check.outputs.has_changes == 'true'
+        run: pnpm changeset version
+
+      - name: Build
+        if: steps.check.outputs.has_changes == 'true'
+        run: pnpm --filter layplux build
+
+      # 先把版本号和 CHANGELOG 推回 master，再发布
+      # 确保即使 publish 失败，仓库里的版本记录也是准确的
+      - name: Commit and push version bump
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: version packages [skip ci]"
+          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        if: steps.check.outputs.has_changes == 'true'
+        run: pnpm changeset publish --access public
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
