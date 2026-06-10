@@ -3,22 +3,28 @@
   "version": "0.0.1",
   "description": "IDE-like window system and plugin framework for the web",
   "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "unpkg": "./dist/umd/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
     },
-    "./scss": {
-      "sass": "./src/styles/layplux.scss",
-      "default": "./src/styles/layplux.scss"
-    }
+    "./*": {
+      "types": "./dist/types/*.d.ts",
+      "import": "./dist/esm/*.mjs",
+      "require": "./dist/cjs/*.cjs"
+    },
+    "./style": "./dist/style/index.css",
+    "./style/scss": "./dist/style/layplux.scss"
   },
+  "files": ["dist"],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist",
+    "build": "gulp --gulpfile ../../build-script/gulpfile.js build",
     "test": "vitest run",
     "test:watch": "vitest"
   },

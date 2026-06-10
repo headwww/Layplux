@@ -8,7 +8,7 @@
   "author": "",
   "scripts": {
     "dev": "pnpm -r --filter @layplux/playground dev",
-    "build": "pnpm -r --filter layplux build",
+    "build": "pnpm -C build-script build",
     "test": "pnpm -r --filter layplux test",
     "preview": "pnpm -r --filter @layplux/playground preview",
     "lint": "oxlint . && eslint .",
