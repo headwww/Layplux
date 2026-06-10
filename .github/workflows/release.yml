@@ -35,6 +35,7 @@ jobs:
         run: pnpm -C build-script exec gulp build
 
       - name: Create Release PR or Publish
+        id: changesets
         uses: changesets/action@v1
         with:
           commit: "chore: version packages"
@@ -43,3 +44,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Enable auto-merge for Release PR
+        if: steps.changesets.outputs.published != 'true'
+        run: |
+          PR=$(gh pr list --head changeset-release/master --state open --json number -q '.[0].number')
+          if [ -n "$PR" ]; then
+            gh pr merge "$PR" --auto --merge
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
