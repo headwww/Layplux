@@ -17,6 +17,7 @@ export default defineConfig({
       '/guide/': [
         { text: '快速开始', link: '/guide/getting-started' },
         { text: '核心概念', link: '/guide/core-concepts' },
+        { text: '发布指南', link: '/guide/release' },
       ],
       '/api/': [
         { text: 'Skeleton', link: '/api/skeleton' },
