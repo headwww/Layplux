@@ -44,6 +44,11 @@ jobs:
         if: steps.check.outputs.has_changes == 'true'
         run: pnpm changeset version
 
+      # version bump 后重新生成 lockfile
+      - name: Update lockfile
+        if: steps.check.outputs.has_changes == 'true'
+        run: pnpm install --no-frozen-lockfile
+
       - name: Build
         if: steps.check.outputs.has_changes == 'true'
         run: pnpm --filter layplux build
