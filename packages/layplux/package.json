@@ -1,6 +1,6 @@
 {
   "name": "layplux",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "IDE-like window system and plugin framework for the web",
   "type": "module",
   "main": "./dist/cjs/index.cjs",
@@ -21,7 +21,9 @@
     "./style": "./dist/style/index.css",
     "./style/scss": "./dist/style/layplux.scss"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite build --watch",
     "build": "gulp --gulpfile ../../build-script/gulpfile.js build",
