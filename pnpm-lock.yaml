@@ -179,6 +179,28 @@ importers:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0)
 
+  packages/playground-layplux:
+    dependencies:
+      layplux:
+        specifier: ^2.0.0
+        version: 2.0.0(vue@3.5.34(typescript@6.0.3))
+      vue:
+        specifier: ^3.5.34
+        version: 3.5.34(typescript@6.0.3)
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.7
+        version: 6.0.7(vite@8.0.14(@types/node@25.9.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^5.1.5
+        version: 5.1.5(vite@8.0.14(@types/node@25.9.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))(vue@3.5.34(typescript@6.0.3))
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.14
+        version: 8.0.14(@types/node@25.9.1)(jiti@2.6.1)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0)
+
 packages:
 
   '@algolia/abtesting@1.19.0':
@@ -3180,6 +3202,11 @@ packages:
   last-run@2.0.0:
     resolution: {integrity: sha512-j+y6WhTLN4Itnf9j5ZQos1BGPCS8DAwmgMroR3OzfxAsBxam0hMw7J8M3KqZl0pLQJ1jNnwIexg5DYpC/ctwEQ==}
     engines: {node: '>= 10.13.0'}
+
+  layplux@2.0.0:
+    resolution: {integrity: sha512-7NYYPD+R6OQLLaVXsA+IH6bBfyDPyovcgI3cSfTr77K8YDQnWmGowXW/WTE49oPWlqkYHvMqwUfGlmwT6pVdQA==}
+    peerDependencies:
+      vue: ^3.5.0
 
   lead@4.0.0:
     resolution: {integrity: sha512-DpMa59o5uGUWWjruMp71e6knmwKU3jRBBn1kjuLWN9EeIOxNeSAwvHf03WIl8g/ZMR2oSQC9ej3yeLBwdDc/pg==}
@@ -7589,6 +7616,11 @@ snapshots:
   known-css-properties@0.37.0: {}
 
   last-run@2.0.0: {}
+
+  layplux@2.0.0(vue@3.5.34(typescript@6.0.3)):
+    dependencies:
+      eventemitter2: 6.4.9
+      vue: 3.5.34(typescript@6.0.3)
 
   lead@4.0.0: {}
 
