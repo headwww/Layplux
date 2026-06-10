@@ -19,7 +19,8 @@
       "require": "./dist/cjs/*.cjs"
     },
     "./style": "./dist/style/index.css",
-    "./style/scss": "./dist/style/layplux.scss"
+    "./style/scss": "./dist/style/layplux.scss",
+    "./scss": "./dist/style/layplux.scss"
   },
   "files": [
     "dist"

@@ -1,3 +1,4 @@
+import { statSync, readFileSync, writeFileSync } from 'fs';
 import { build } from 'esbuild';
 import { glob } from 'glob';
 import { resolve, dirname } from 'path';
@@ -25,4 +26,22 @@ export async function buildEsm() {
     platform: 'browser',
     target: 'es2020',
   });
+
+  // Post-process: add .mjs extension to bare relative imports.
+  const mjsFiles = await glob('dist/esm/**/*.mjs', { cwd: pkgRoot });
+  for (const rel of mjsFiles) {
+    const file = resolve(pkgRoot, rel);
+    let content = readFileSync(file, 'utf-8');
+    content = content.replace(/from\s+['"](\.[^'"]+)['"]/g, (match, importPath) => {
+      if (/\.[a-z]+$/i.test(importPath)) return match;
+      const absPath = resolve(dirname(file), importPath);
+      try {
+        if (statSync(absPath).isDirectory()) {
+          return match.replace(importPath, importPath + '/index.mjs');
+        }
+      } catch {}
+      return match.replace(importPath, importPath + '.mjs');
+    });
+    writeFileSync(file, content, 'utf-8');
+  }
 }
