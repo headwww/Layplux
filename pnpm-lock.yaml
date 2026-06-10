@@ -179,8 +179,8 @@ importers:
   packages/playground-layplux:
     dependencies:
       layplux:
-        specifier: ^2.0.0
-        version: 2.0.0(vue@3.5.34(typescript@6.0.3))
+        specifier: ^2.0.1
+        version: 2.0.1(vue@3.5.34(typescript@6.0.3))
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)
@@ -3039,8 +3039,8 @@ packages:
     resolution: {integrity: sha512-j+y6WhTLN4Itnf9j5ZQos1BGPCS8DAwmgMroR3OzfxAsBxam0hMw7J8M3KqZl0pLQJ1jNnwIexg5DYpC/ctwEQ==}
     engines: {node: '>= 10.13.0'}
 
-  layplux@2.0.0:
-    resolution: {integrity: sha512-7NYYPD+R6OQLLaVXsA+IH6bBfyDPyovcgI3cSfTr77K8YDQnWmGowXW/WTE49oPWlqkYHvMqwUfGlmwT6pVdQA==}
+  layplux@2.0.1:
+    resolution: {integrity: sha512-U4DTil/gUtM2DkRmDjOxF8mN8QbFb8ry3DiSQ2LrbZQnVZmnZHjmfVYTZj1Jx5uRDPixTdzo3vxrYogtfddHPQ==}
     peerDependencies:
       vue: ^3.5.0
 
@@ -7346,7 +7346,7 @@ snapshots:
 
   last-run@2.0.0: {}
 
-  layplux@2.0.0(vue@3.5.34(typescript@6.0.3)):
+  layplux@2.0.1(vue@3.5.34(typescript@6.0.3)):
     dependencies:
       eventemitter2: 6.4.9
       vue: 3.5.34(typescript@6.0.3)
