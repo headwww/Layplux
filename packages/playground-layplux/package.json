@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "layplux": "^2.0.2",
+    "layplux": "^2.0.0",
     "vue": "^3.5.34"
   },
   "devDependencies": {
