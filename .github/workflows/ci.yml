@@ -2,12 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [master, main]
+    branches: [master]
   pull_request:
-    branches: [master, main]
+    branches: [master]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -17,51 +17,43 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec oxlint .
       - run: pnpm exec eslint .
 
   typecheck:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
       - run: pnpm -C packages/layplux exec vue-tsc --noEmit
 
   build:
     needs: [lint, typecheck]
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
-
-      - name: Build layplux
-        run: pnpm -C build-script exec gulp build
-
+      - run: pnpm -C build-script exec gulp build
       - name: Verify dist
         run: |
           test -f packages/layplux/dist/esm/index.mjs
@@ -69,8 +61,3 @@ jobs:
           test -f packages/layplux/dist/umd/index.js
           test -f packages/layplux/dist/style/index.css
           test -f packages/layplux/dist/types/index.d.ts
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: packages/layplux/dist/

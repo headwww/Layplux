@@ -1,6 +1,6 @@
 # 发布指南
 
-本文档介绍 Layplux 项目的开发流程、CI/CD 和发布新版本的操作步骤。
+本文档介绍 Layplux 项目的开发流程、CI/CD 和基于 Changesets 的版本发布流程。
 
 ## 分支策略
 
@@ -61,77 +61,80 @@ pnpm build
 | gulp build | ESM / CJS / UMD / CSS / 类型声明 全量构建 |
 | 产物验证 | 检查 dist 目录完整 |
 
-工作流文件：[`.github/workflows/ci.yml`](https://github.com/headwww/Layplux/blob/master/.github/workflows/ci.yml)
+## 发布新版本（Changesets）
 
-## 发布新版本
+项目使用 [Changesets](https://github.com/changesets/changesets) 管理版本和变更日志。不
+需要手动改版本号或打 tag。
 
-### 前置条件（仅首次）
+### 首次配置（仅一次）
 
-在 GitHub 仓库 **Settings → Secrets and variables → Actions** 中添加 `NPM_TOKEN`：
+在 GitHub 仓库 **Settings → Secrets and variables → Actions** 中添加两个 Secrets：
 
-1. 登录 [npmjs.com](https://www.npmjs.com)，进入 **Access Tokens**
-2. 创建 **Automation** 类型的 token
-3. 将 token 添加到 GitHub Actions Secrets，名称为 `NPM_TOKEN`
+| Secret | 说明 |
+|--------|------|
+| `NPM_TOKEN` | npm 的 Granular Access Token，给 `layplux` 包 read/write 权限 |
+| `GITHUB_TOKEN` | GitHub 自动提供，无需手动配置 |
 
-### 操作步骤
+### 日常发布步骤
 
-**1. 确保代码已合并到 master**
-
-```bash
-git checkout master
-git pull origin master
-```
-
-**2. 本地构建验证**
+**1. 写完代码后，创建 changeset**
 
 ```bash
-pnpm build
+pnpm changeset
 ```
 
-**3. 更新版本号**
+交互式问答：
+
+1. 选要发布的包 → `layplux`（空格选中，回车确认）
+2. 选版本类型 → `patch`（修复）/ `minor`（新功能）/ `major`（破坏性变更）
+3. 输入变更说明（会出现在 CHANGELOG 中）
+
+执行后在 `.changeset/` 目录生成一个描述本次变更的 markdown 文件。
+
+**2. 提交代码和 changeset**
 
 ```bash
-cd packages/layplux
-
-# 语义化版本规则：
-pnpm version patch   # 0.0.1 → 0.0.2  修复 bug
-pnpm version minor   # 0.0.1 → 0.1.0  新增功能
-pnpm version major   # 0.0.1 → 1.0.0  破坏性变更
+git add .
+git commit -m "feat: 添加 xxx 功能"
+git push
 ```
 
-`pnpm version` 会自动：
-- 更新 `packages/layplux/package.json` 的 `version` 字段
-- 创建对应的 git commit
-- 创建 `v0.0.2` 格式的 git tag
+**3. 合并到 master**
 
-**4. 推送代码和 tag**
+合并 PR 或直接 push 到 master 后，GitHub Actions 自动运行 Release Workflow：
 
-```bash
-git push origin master
-git push origin v0.0.2  # 替换为实际版本号
-```
+- 检测到新的 changeset → 创建一个 **"Version Packages"** PR
+- 这个 PR 里自动更新了 `package.json` 版本号和 `CHANGELOG.md`
+- 确认无误后，合并这个 PR
 
-**5. 等待 CI 自动发布**
+**4. 合并 PR，自动发布**
 
-推送 tag 后，GitHub Actions 自动触发 Release Workflow：
+合并 "Version Packages" PR 后，Release Workflow 自动执行：
 
 ```
 安装依赖 → 构建产物 → 发布到 npm → 创建 GitHub Release
 ```
 
-工作流文件：[`.github/workflows/release.yml`](https://github.com/headwww/Layplux/blob/master/.github/workflows/release.yml)
+无需手动改版本号、打 tag、或执行 `npm publish`。
 
-**6. 验证发布结果**
+### 跳过发布
 
-```bash
-# 查看 npm 版本
-npm view layplux version
+如果只是修改文档、配置等不需要发布的变更，不加 changeset 即可，代码合并后不会触发发
+布流程。
 
-# 在项目中验证
-npm install layplux@latest
-```
+## npm 发布配置
 
-### 手动发布（CI 不可用时）
+### 创建 npm Token
+
+1. 登录 [npmjs.com](https://www.npmjs.com) → 头像 → **Access Tokens** → **Generate New Token**
+2. Token 类型选 **Granular Access Token**
+3. Packags and scopes → 添加 `layplux`，权限选 **Read and write**
+4. **Organizations 部分留空**
+5. **不要勾选** "Require two-factor authentication for API and CLI"
+6. 生成后复制 token，添加到 GitHub Secrets 的 `NPM_TOKEN`
+7. **同时确保 npm 账户设置中** "Require two-factor authentication for writes" **已取消勾选**
+
+## 手动发布（CI 不可用时）
 
 ```bash
 pnpm build
@@ -146,12 +149,10 @@ npm publish
 ```
 主版本号.次版本号.修订号  （MAJOR.MINOR.PATCH）
 
-MAJOR — 不兼容的 API 修改
-MINOR — 向下兼容的功能新增
-PATCH — 向下兼容的问题修复
+MAJOR — 不兼容的 API 修改  （changeset 中选 major）
+MINOR — 向下兼容的功能新增  （changeset 中选 minor）
+PATCH — 向下兼容的问题修复  （changeset 中选 patch）
 ```
-
-当前为 0.x 阶段，API 可能变动，minor 版本也可能包含不兼容变更。
 
 ## 产物说明
 

@@ -18,10 +18,12 @@
     "lint:all": "npm run lint && npm run lint:style",
     "lint:all:fix": "npm run lint:fix && npm run lint:style:fix",
     "format": "oxfmt .",
+    "changeset": "changeset",
     "format:check": "oxfmt . --check",
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@types/node": "^25.9.1",

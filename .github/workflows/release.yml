@@ -2,10 +2,12 @@ name: Release
 
 on:
   push:
-    tags: ['v*']
+    branches: [master]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -18,23 +20,16 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm -C build-script exec gulp build
 
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
+      - name: Build
+        run: pnpm -C build-script exec gulp build
+
+      - name: Create Release PR or Publish
+        uses: changesets/action@v1
         with:
-          name: dist
-          path: packages/layplux/dist/
-
-      - name: Publish to npm
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > packages/layplux/.npmrc
-          cd packages/layplux && npm publish
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
+          publish: pnpm -r publish --filter layplux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
