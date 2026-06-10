@@ -10,26 +10,28 @@ pnpm add layplux
 
 ```ts
 // 推荐：引入 SCSS 源文件，可访问所有变量和 mixin
-import 'layplux/scss'
+import 'layplux/scss';
 
 // 或者引入编译好的 CSS
-import 'layplux/dist/style/index.css'
+import 'layplux/scss';
 ```
 
 ::: tip SCSS 用户
 直接 `import 'layplux/scss'` 即可在你的 SCSS 中使用 Layplux 的变量和 mixin：
+
 ```scss
 @use 'layplux/scss' as layplux;
 ```
+
 :::
 
 ## 最小示例
 
 ```ts
-import { useSkeleton } from 'layplux'
-import { h } from 'vue'
+import { useSkeleton } from 'layplux';
+import { h } from 'vue';
 
-const skeleton = useSkeleton()
+const skeleton = useSkeleton();
 
 // 添加一个面板
 skeleton.add({
@@ -37,7 +39,7 @@ skeleton.add({
   type: 'panel',
   area: 'leftTopArea',
   content: h('div', 'Hello Layplux!'),
-})
+});
 ```
 
 ```vue
@@ -48,7 +50,7 @@ skeleton.add({
 </template>
 
 <script setup>
-import { Layplux } from 'layplux'
+import { Layplux } from 'layplux';
 </script>
 ```
 

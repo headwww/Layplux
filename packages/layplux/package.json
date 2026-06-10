@@ -19,7 +19,6 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./style.css": "./dist/index.css",
     "./scss": {
       "sass": "./src/style/layplux.scss",
       "default": "./src/style/layplux.scss"
@@ -36,7 +35,7 @@
         "require": "./dist/cjs/index.cjs",
         "default": "./dist/esm/index.mjs"
       },
-      "./style.css": "./dist/index.css",
+      "./style.css": "./dist/style/index.css",
       "./scss": {
         "sass": "./dist/style/layplux.scss",
         "default": "./dist/style/layplux.scss"
