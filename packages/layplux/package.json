@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -16,6 +17,31 @@
       "default": "./src/style/layplux.scss"
     }
   },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "main": "./dist/cjs/index.cjs",
+    "module": "./dist/esm/index.mjs",
+    "types": "./dist/types/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/types/index.d.ts",
+        "import": "./dist/esm/index.mjs",
+        "require": "./dist/cjs/index.cjs",
+        "default": "./dist/esm/index.mjs"
+      },
+      "./dist/style/*": "./dist/style/*",
+      "./scss": {
+        "sass": "./dist/style/layplux.scss",
+        "default": "./dist/style/layplux.scss"
+      }
+    }
+  },
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "scripts": {
     "dev": "vite build --watch",
     "build": "gulp --gulpfile ../../build-script/gulpfile.js build",
