@@ -63,6 +63,6 @@ jobs:
 
       - name: Publish to npm
         if: steps.check.outputs.has_changes == 'true'
-        run: pnpm changeset publish --access public
+        run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
