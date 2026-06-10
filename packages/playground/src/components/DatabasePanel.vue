@@ -1,3 +1,11 @@
+<!--
+ * @Author: shuwen 1243889238@qq.com
+ * @Date: 2026-06-09 18:35:17
+ * @LastEditors: shuwen 1243889238@qq.com
+ * @LastEditTime: 2026-06-10 11:16:31
+ * @FilePath: /Layplux/packages/playground/src/components/DatabasePanel.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script setup lang="ts">
 import { Input } from 'ant-design-vue';
 import { ConsoleSqlOutlined } from '@ant-design/icons-vue';
@@ -22,20 +30,45 @@ const tables = [
         <ConsoleSqlOutlined />
       </template>
     </Input>
-    <div style="padding:4px 8px;margin-top:4px;font-size:11px;font-weight:600;color:hsl(var(--layplux-muted-foreground));text-transform:uppercase">
+    <div
+      style="
+        padding: 4px 8px;
+        margin-top: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: hsl(var(--layplux-muted-foreground));
+        text-transform: uppercase;
+      "
+    >
       Tables
     </div>
     <div
       v-for="t in tables"
       :key="t.name"
       class="ide-hover"
-      style="display:flex;align-items:center;justify-content:space-between;padding:3px 8px;font-size:12px;cursor:pointer;border-radius:3px"
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 8px;
+        font-size: 12px;
+        cursor: pointer;
+        border-radius: 3px;
+      "
     >
-      <span style="display:flex;gap:6px;align-items:center">
-        <span :style="{ width:'8px',height:'8px',borderRadius:'50%',background:t.color,display:'inline-block' }" />
+      <span style="display: flex; gap: 6px; align-items: center">
+        <span
+          :style="{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: t.color,
+            display: 'inline-block',
+          }"
+        />
         {{ t.name }}
       </span>
-      <span style="font-size:10px;color:hsl(var(--layplux-muted-foreground))">{{ t.rows }} · {{ t.cols }} cols</span>
+      <span style="font-size: 10px; color: hsl(var(--layplux-muted-foreground))">{{ t.rows }} · {{ t.cols }} cols</span>
     </div>
   </div>
 </template>

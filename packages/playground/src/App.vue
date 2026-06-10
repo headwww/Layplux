@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, defineComponent, ref } from 'vue';
-import { Layplux } from 'layplux';
+import { Layplux, type ISkeleton } from 'layplux';
 import { useSkeleton } from '../../layplux/src/managers';
 import { Badge } from 'ant-design-vue';
 import {
@@ -33,7 +33,7 @@ import DatabasePanel from './components/DatabasePanel.vue';
 import FavoritesPanel from './components/FavoritesPanel.vue';
 import EventDebugPanel from './components/EventDebugPanel.vue';
 
-const skeleton = useSkeleton();
+const skeleton: ISkeleton = useSkeleton() as unknown as ISkeleton;
 
 // ═══ 国际化 ──────────────────────────────────────────────────────────
 const currentLocale = ref<string>('zh-CN');
@@ -49,7 +49,11 @@ const LocaleSwitcher = defineComponent({
 });
 
 // ═══ 亮暗切换 ────────────────────────────────────────────────────────
-const schemeIcons: Record<string, any> = { light: HighlightOutlined, dark: HighlightOutlined, system: LaptopOutlined };
+const schemeIcons: Record<string, any> = {
+  light: HighlightOutlined,
+  dark: HighlightOutlined,
+  system: LaptopOutlined,
+};
 const schemeLabels: Record<string, string> = { light: '亮色', dark: '暗色', system: '自动' };
 const nextSchemes: Record<string, 'light' | 'dark' | 'system'> = {
   light: 'dark',
@@ -120,7 +124,9 @@ const ToggleCenter = defineComponent({
           skeleton.centerArea.container.activate(target);
         },
       },
-      centerMode.value === 'router' ? [h(CodeOutlined), ' 编辑器'] : [h(ApartmentOutlined), ' 路由'],
+      centerMode.value === 'router'
+        ? [h(CodeOutlined), ' 编辑器']
+        : [h(ApartmentOutlined), ' 路由'],
     ),
 });
 
@@ -246,7 +252,10 @@ skeleton.add({
       'div',
       { style: { padding: '4px 16px', fontSize: 11 } },
       ['App.vue', 'setup()', 'toggleLocale()', 'skeleton', 'ProjectPanel'].map((n) =>
-        h('div', { class: 'ide-hover', style: { padding: '2px 0', cursor: 'pointer' } }, [h(CaretRightOutlined, { style: { fontSize: '10px', marginRight: '4px' } }), n]),
+        h('div', { class: 'ide-hover', style: { padding: '2px 0', cursor: 'pointer' } }, [
+          h(CaretRightOutlined, { style: { fontSize: '10px', marginRight: '4px' } }),
+          n,
+        ]),
       ),
     ),
   ]),
