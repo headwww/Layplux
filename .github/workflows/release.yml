@@ -27,7 +27,9 @@ jobs:
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
-      - run: pnpm install --no-frozen-lockfile
+      # install 在 version 之前，此时 lockfile 还是一致的
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # 检测是否有待发布的 changeset 文件
       - name: Check for changesets
@@ -38,19 +40,18 @@ jobs:
           else
             echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
+
+      # 修改 package.json 版本号和 CHANGELOG，不碰 lockfile
       - name: Version packages
         if: steps.check.outputs.has_changes == 'true'
         run: pnpm changeset version
-
-      # 新增这一步 —— 版本号变更后重新同步 lockfile
-      - name: Update lockfile
-        if: steps.check.outputs.has_changes == 'true'
-        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         if: steps.check.outputs.has_changes == 'true'
         run: pnpm --filter layplux build
 
+      # 把版本号变更（package.json + CHANGELOG）推回 master
+      # lockfile 没有变动，所以下次 CI --frozen-lockfile 不会报错
       - name: Commit and push version bump
         if: steps.check.outputs.has_changes == 'true'
         run: |
