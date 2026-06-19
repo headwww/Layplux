@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.5
+
+### Patch Changes
+
+- 2cb4a02: 样式变更
+
 ## 2.0.4
 
 ### Patch Changes
