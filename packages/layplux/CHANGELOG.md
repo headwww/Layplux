@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.4
+
+### Patch Changes
+
+- 524de98: 修改分割线
+
 ## 2.0.3
 
 ### Patch Changes

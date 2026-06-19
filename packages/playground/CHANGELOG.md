@@ -1,5 +1,12 @@
 # @layplux/playground
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [524de98]
+  - layplux@2.0.4
+
 ## 0.0.11
 
 ### Patch Changes
