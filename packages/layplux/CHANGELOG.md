@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.6
+
+### Patch Changes
+
+- 6db4028: 样式调整
+
 ## 2.0.5
 
 ### Patch Changes
