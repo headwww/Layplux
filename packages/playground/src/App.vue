@@ -33,7 +33,15 @@ import DatabasePanel from './components/DatabasePanel.vue';
 import FavoritesPanel from './components/FavoritesPanel.vue';
 import EventDebugPanel from './components/EventDebugPanel.vue';
 
-const skeleton = useSkeleton();
+// 从 localStorage 恢复状态
+const saved = JSON.parse(localStorage.getItem('layplux-state') || '{}');
+const skeleton = useSkeleton({ initialState: saved });
+
+// 监听状态变更，持久化到 localStorage
+skeleton.event.onGlobal('skeleton:state-changed', (state: any) => {
+  console.log('state-changed', state);
+  localStorage.setItem('layplux-state', JSON.stringify(state));
+});
 
 // ═══ 国际化 ──────────────────────────────────────────────────────────
 const currentLocale = ref<string>('zh-CN');

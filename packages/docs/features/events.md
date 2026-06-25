@@ -9,6 +9,7 @@ Layplux 基于 EventEmitter2 提供生命周期事件和跨组件通信。
 | `skeleton:widget-added` | Widget 注册时 |
 | `skeleton:widget-removed` | Widget 移除时 |
 | `skeleton:focus-changed` | 焦点切换时 |
+| `skeleton:state-changed` | 面板状态变更（尺寸/视图模式/激活） |
 | `widget:{name}:activated` | Widget 激活时 |
 | `widget:{name}:deactivated` | Widget 取消激活时 |
 | `widget:{name}:focus` | 获取焦点时 |
@@ -47,6 +48,23 @@ props.event.onGlobal('data:exported', (payload) => {
   // 处理数据
 })
 ```
+
+### 状态持久化
+
+`skeleton:state-changed` 是专门为持久化设计的事件，结合 `initialState` 即可实现会话恢复：
+
+```ts
+// 恢复状态
+const saved = JSON.parse(localStorage.getItem('layplux-state') || '{}')
+const skeleton = useSkeleton({ initialState: saved })
+
+// 持久化状态（尺寸变化会防抖 300ms）
+skeleton.event.onGlobal('skeleton:state-changed', (state) => {
+  localStorage.setItem('layplux-state', JSON.stringify(state))
+})
+```
+
+事件载荷为 `SkeletonState` 类型，包含所有面板尺寸、视图模式和激活状态。
 
 ## 架构
 

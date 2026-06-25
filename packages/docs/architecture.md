@@ -32,6 +32,7 @@ Layplux (Vue 组件)
 | `components/tooltip` | 提示工具 |
 | `utils/event-bus` | 事件总线（EventEmitter2） |
 | `utils/focus-tracker` | 焦点追踪 |
+| `types/state` | SkeletonState 类型定义 |
 | `layout/root-pane` | 根容器 |
 | `layout/center-area` | 中央区域（Dock/Undock/拖拽） |
 
