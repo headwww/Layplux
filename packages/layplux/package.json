@@ -1,6 +1,6 @@
 {
   "name": "layplux",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "IDE-like window system and plugin framework for the web",
   "files": [
     "dist"

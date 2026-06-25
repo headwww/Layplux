@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.8
+
+### Patch Changes
+
+- 981b8f3: 视图模式持久化有点 bug 修复一下
+
 ## 2.0.7
 
 ### Patch Changes
