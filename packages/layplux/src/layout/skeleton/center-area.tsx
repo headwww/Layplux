@@ -3,7 +3,6 @@ import {
   defineComponent,
   onMounted,
   onUnmounted,
-  ref,
   Teleport,
   type PropType,
 } from 'vue';
@@ -28,15 +27,7 @@ export const CenterArea = defineComponent({
       unmountFocusTracker?.();
     });
 
-    // ─── 面板尺寸状态 ─────────────────────────────────────────────────────
-    const leftWidth = ref(340);
-    const rightWidth = ref(340);
-    const bottomHeight = ref(300);
-
-    // 上下 / 左右内部分割比例 (0~1)
-    const leftSplitRatio = ref(0.5);
-    const rightSplitRatio = ref(0.5);
-    const bottomSplitRatio = ref(0.5);
+    const sk = props.skeleton!;
 
     // ─── 通用拖拽 ─────────────────────────────────────────────────────────
     function startDrag(e: MouseEvent, axis: 'x' | 'y', onMove: (delta: number) => void) {
@@ -54,44 +45,50 @@ export const CenterArea = defineComponent({
 
     // 左侧整体宽度
     function dragLeftWidth(e: MouseEvent) {
-      const base = leftWidth.value;
+      const base = sk.leftWidth.value;
       startDrag(e, 'x', (d) => {
-        leftWidth.value = Math.max(160, Math.min(600, base + d));
+        sk.leftWidth.value = Math.max(160, Math.min(600, base + d));
+        sk.notifyStateChange(true);
       });
     }
     // 右侧整体宽度（向左拖拽变宽，delta 取反）
     function dragRightWidth(e: MouseEvent) {
-      const base = rightWidth.value;
+      const base = sk.rightWidth.value;
       startDrag(e, 'x', (d) => {
-        rightWidth.value = Math.max(160, Math.min(600, base - d));
+        sk.rightWidth.value = Math.max(160, Math.min(600, base - d));
+        sk.notifyStateChange(true);
       });
     }
     // 底部整体高度（向上拖拽变高，delta 取反）
     function dragBottomHeight(e: MouseEvent) {
-      const base = bottomHeight.value;
+      const base = sk.bottomHeight.value;
       startDrag(e, 'y', (d) => {
-        bottomHeight.value = Math.max(80, Math.min(600, base - d));
+        sk.bottomHeight.value = Math.max(80, Math.min(600, base - d));
+        sk.notifyStateChange(true);
       });
     }
     // 左侧内部上下分割
     function dragLeftSplit(e: MouseEvent, totalHeight: number) {
-      const base = leftSplitRatio.value;
+      const base = sk.leftSplitRatio.value;
       startDrag(e, 'y', (d) => {
-        leftSplitRatio.value = Math.max(0.15, Math.min(0.85, base + d / totalHeight));
+        sk.leftSplitRatio.value = Math.max(0.15, Math.min(0.85, base + d / totalHeight));
+        sk.notifyStateChange(true);
       });
     }
     // 右侧内部上下分割
     function dragRightSplit(e: MouseEvent, totalHeight: number) {
-      const base = rightSplitRatio.value;
+      const base = sk.rightSplitRatio.value;
       startDrag(e, 'y', (d) => {
-        rightSplitRatio.value = Math.max(0.15, Math.min(0.85, base + d / totalHeight));
+        sk.rightSplitRatio.value = Math.max(0.15, Math.min(0.85, base + d / totalHeight));
+        sk.notifyStateChange(true);
       });
     }
     // 底部内部左右分割
     function dragBottomSplit(e: MouseEvent, totalWidth: number) {
-      const base = bottomSplitRatio.value;
+      const base = sk.bottomSplitRatio.value;
       startDrag(e, 'x', (d) => {
-        bottomSplitRatio.value = Math.max(0.15, Math.min(0.85, base + d / totalWidth));
+        sk.bottomSplitRatio.value = Math.max(0.15, Math.min(0.85, base + d / totalWidth));
+        sk.notifyStateChange(true);
       });
     }
 
@@ -262,12 +259,12 @@ export const CenterArea = defineComponent({
     });
 
     // ─── 内部分割高度 / 宽度（CSS calc 字符串） ───────────────────────────
-    const leftTopHeight = computed(() => `calc((100% - 4px) * ${leftSplitRatio.value})`);
-    const leftBottomHeight = computed(() => `calc((100% - 4px) * ${1 - leftSplitRatio.value})`);
-    const rightTopHeight = computed(() => `calc((100% - 4px) * ${rightSplitRatio.value})`);
-    const rightBottomHeight = computed(() => `calc((100% - 4px) * ${1 - rightSplitRatio.value})`);
-    const bottomLeftWidth = computed(() => `calc((100% - 4px) * ${bottomSplitRatio.value})`);
-    const bottomRightWidth = computed(() => `calc((100% - 4px) * ${1 - bottomSplitRatio.value})`);
+    const leftTopHeight = computed(() => `calc((100% - 4px) * ${sk.leftSplitRatio.value})`);
+    const leftBottomHeight = computed(() => `calc((100% - 4px) * ${1 - sk.leftSplitRatio.value})`);
+    const rightTopHeight = computed(() => `calc((100% - 4px) * ${sk.rightSplitRatio.value})`);
+    const rightBottomHeight = computed(() => `calc((100% - 4px) * ${1 - sk.rightSplitRatio.value})`);
+    const bottomLeftWidth = computed(() => `calc((100% - 4px) * ${sk.bottomSplitRatio.value})`);
+    const bottomRightWidth = computed(() => `calc((100% - 4px) * ${1 - sk.bottomSplitRatio.value})`);
 
     return () => {
       if (!props.skeleton) return null;
@@ -307,7 +304,7 @@ export const CenterArea = defineComponent({
           <div
             class="layplux-panel--undocked layplux-panel--undocked-left"
             v-show={isLeftUndockedVisible.value}
-            style={{ width: `${leftWidth.value}px` }}
+            style={{ width: `${sk.leftWidth.value}px` }}
           >
             <PanelView anchor="left-undocked-area" widget={leftUndockedWidget.value ?? undefined} />
             <div
@@ -320,7 +317,7 @@ export const CenterArea = defineComponent({
           <div
             class="layplux-panel--undocked layplux-panel--undocked-right"
             v-show={isRightUndockedVisible.value}
-            style={{ width: `${rightWidth.value}px` }}
+            style={{ width: `${sk.rightWidth.value}px` }}
           >
             <div
               class="layplux-resize-handle layplux-resize-handle--x layplux-resize-handle--edge-left"
@@ -336,7 +333,7 @@ export const CenterArea = defineComponent({
           <div
             class="layplux-panel--undocked layplux-panel--undocked-bottom"
             v-show={isBottomUndockedVisible.value}
-            style={{ height: `${bottomHeight.value}px` }}
+            style={{ height: `${sk.bottomHeight.value}px` }}
           >
             <div
               class="layplux-resize-handle layplux-resize-handle--y layplux-resize-handle--edge-top"
@@ -354,7 +351,7 @@ export const CenterArea = defineComponent({
             <div
               class="layplux-center-area__left"
               v-show={isLeftVisible.value}
-              style={{ width: `${leftWidth.value}px` }}
+              style={{ width: `${sk.leftWidth.value}px` }}
             >
               <div class="layplux-center-area__docked-panels">
                 <PanelView
@@ -408,7 +405,7 @@ export const CenterArea = defineComponent({
             <div
               class="layplux-center-area__right"
               v-show={isRightVisible.value}
-              style={{ width: `${rightWidth.value}px` }}
+              style={{ width: `${sk.rightWidth.value}px` }}
             >
               <div class="layplux-center-area__docked-panels">
                 <PanelView
@@ -452,7 +449,7 @@ export const CenterArea = defineComponent({
           <div
             class="layplux-center-area__bottom"
             v-show={isBottomVisible.value}
-            style={{ height: `${bottomHeight.value}px` }}
+            style={{ height: `${sk.bottomHeight.value}px` }}
           >
             <PanelView
               anchor="bottom-left-area"
