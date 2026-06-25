@@ -30,7 +30,8 @@
       "Bash(npx vue-tsc *)",
       "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux stash clear)",
       "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux add -A)",
-      "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux commit --no-verify -m ' *)"
+      "Bash(git -C /Users/shuwen/WorkSpace-Web/Layplux commit --no-verify -m ' *)",
+      "Bash(git *)"
     ]
   }
 }
