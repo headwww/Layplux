@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.7
+
+### Patch Changes
+
+- da54b4e: 加入状态控制，方便外部序列化存储
+
 ## 2.0.6
 
 ### Patch Changes
