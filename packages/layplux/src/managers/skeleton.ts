@@ -357,6 +357,7 @@ export function useSkeleton(options?: SkeletonOptions): ISkeleton {
     bottomSplitRatio,
     getState,
     notifyStateChange,
+    initialState,
   });
 
   return self;
