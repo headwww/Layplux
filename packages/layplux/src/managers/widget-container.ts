@@ -39,6 +39,7 @@ export type WidgetContainerHandle<T extends WidgetItem, G extends WidgetItem> = 
 export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetItem = any>(
   handle: WidgetContainerHandle<T, G>,
   skeleton: ISkeleton,
+  _areaName?: string,
 ): IWidgetContainer<T, G> {
   const maps: { [name: string]: T } = {};
   const items: Ref<T[]> = ref([]);
@@ -100,6 +101,7 @@ export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetI
     skeleton.focus(id);
     maps[id].focusable.active(); // 面板激活 → 同步焦点栈
     skeleton.event.emitGlobal(`widget:${id}:activated`, { widget: maps[id] });
+    skeleton.notifyStateChange(false);
   }
 
   function deactivate(): void {
@@ -110,6 +112,7 @@ export function useWidgetContainer<T extends WidgetItem = any, G extends WidgetI
       maps[current].focusable.suspense(); // 面板收起 → 从焦点栈移除
       skeleton.event.emitGlobal(`widget:${current}:deactivated`, { widget: maps[current] });
     }
+    skeleton.notifyStateChange(false);
   }
 
   function toggleActive(id: string): void {

@@ -5,6 +5,7 @@ import type {
   PanelWidgetConfig,
   SkeletonConfig,
 } from '../types';
+import type { SkeletonState } from '../types/state';
 import type { LaypluxLocale } from '../types/locale';
 import { useArea } from './area';
 import type { IArea } from './area';
@@ -17,6 +18,7 @@ import {
   getBuiltInLocale,
 } from '../utils';
 import { injectThemeCSS } from './theme';
+import type { ViewMode } from './pane';
 
 export interface ISkeleton {
   widgets: IWidget[];
@@ -49,14 +51,77 @@ export interface ISkeleton {
     name: string,
     handle: (item: T | G, container: IWidgetContainer<T, T | G>) => T,
   ): IWidgetContainer<T, T | G>;
+
+  // ─── 持久化状态 ────────────────────────────────────────────────
+  leftWidth: Ref<number>;
+  rightWidth: Ref<number>;
+  bottomHeight: Ref<number>;
+  leftSplitRatio: Ref<number>;
+  rightSplitRatio: Ref<number>;
+  bottomSplitRatio: Ref<number>;
+  getState(): SkeletonState;
+  notifyStateChange(debounce?: boolean): void;
 }
 
-export function useSkeleton(): ISkeleton {
+export interface SkeletonOptions {
+  initialState?: Partial<SkeletonState>;
+}
+
+export function useSkeleton(options?: SkeletonOptions): ISkeleton {
+  const { initialState } = options || {};
   const widgets: IWidget[] = [];
 
   const self = {} as ISkeleton;
 
   const containers = new Map<string, IWidgetContainer<any, any>>();
+
+  // ─── 持久化状态 refs ────────────────────────────────────────────
+  const leftWidth = ref(initialState?.leftWidth ?? 340);
+  const rightWidth = ref(initialState?.rightWidth ?? 340);
+  const bottomHeight = ref(initialState?.bottomHeight ?? 300);
+  const leftSplitRatio = ref(initialState?.leftSplitRatio ?? 0.5);
+  const rightSplitRatio = ref(initialState?.rightSplitRatio ?? 0.5);
+  const bottomSplitRatio = ref(initialState?.bottomSplitRatio ?? 0.5);
+
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function getState(): SkeletonState {
+    const viewModes: Record<string, ViewMode> = {};
+    widgets.forEach((w) => {
+      if (w.type === 'panel') {
+        viewModes[w.name] = w.pane.viewMode.value;
+      }
+    });
+
+    const activeIds: Record<string, string | null> = {};
+    containers.forEach((container, name) => {
+      activeIds[name] = container.activeId.value;
+    });
+
+    return {
+      leftWidth: leftWidth.value,
+      rightWidth: rightWidth.value,
+      bottomHeight: bottomHeight.value,
+      leftSplitRatio: leftSplitRatio.value,
+      rightSplitRatio: rightSplitRatio.value,
+      bottomSplitRatio: bottomSplitRatio.value,
+      viewModes,
+      activeIds,
+    };
+  }
+
+  function emitState() {
+    event.emitGlobal('skeleton:state-changed', getState());
+  }
+
+  function notifyStateChange(debounce = false) {
+    if (debounce) {
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(emitState, 300);
+    } else {
+      emitState();
+    }
+  }
 
   const focusTracker = new FocusTracker();
   const event = createPluginEventBus('skeleton');
@@ -243,8 +308,14 @@ export function useSkeleton(): ISkeleton {
     name: string,
     handle: (item: T | G, container: IWidgetContainer<T, T | G>) => T,
   ): IWidgetContainer<T, T | G> {
-    const container = useWidgetContainer<T, T | G>(handle, self);
+    const container = useWidgetContainer<T, T | G>(handle, self, name);
     containers.set(name, container);
+
+    const initialActiveId = initialState?.activeIds?.[name];
+    if (initialActiveId) {
+      container.activeId.value = initialActiveId;
+    }
+
     return container;
   }
 
@@ -277,6 +348,15 @@ export function useSkeleton(): ISkeleton {
     blur,
     add,
     createContainer,
+    // 持久化状态
+    leftWidth,
+    rightWidth,
+    bottomHeight,
+    leftSplitRatio,
+    rightSplitRatio,
+    bottomSplitRatio,
+    getState,
+    notifyStateChange,
   });
 
   return self;
