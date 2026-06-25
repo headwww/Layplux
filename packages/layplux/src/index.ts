@@ -23,6 +23,10 @@ export type {
   CenterWidgetProps,
 } from './types';
 
+// 持久化状态类型
+export type { SkeletonState } from './types/state';
+export type { SkeletonOptions } from './managers/skeleton';
+
 // 工具
 export { createPluginEventBus } from './utils/event-bus';
 export type { PluginEventBus } from './utils/event-bus';
