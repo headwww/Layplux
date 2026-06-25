@@ -1,5 +1,6 @@
 import { computed, h, watch, type Ref, type VNode } from 'vue';
 import type { InteractionWidgetAlign, SkeletonConfig, SkeletonConfigType } from '../types';
+import type { SkeletonState } from '../types/state';
 import { createContent, uniqueId, type PluginEventBus, type Focusable } from '../utils';
 import { WidgetTitleView, WidgetView } from '../components';
 import type { IWidgetContainer } from './widget-container';
@@ -27,7 +28,10 @@ export interface IWidget {
 export function useWidget(
   config: SkeletonConfig,
   container?: IWidgetContainer<IWidget, any>,
-  skeleton?: Pick<ISkeleton, 'focusedId' | 'focus' | 'blur' | 'focusTracker' | 'event'>,
+  skeleton?: Pick<ISkeleton, 'focusedId' | 'focus' | 'blur' | 'focusTracker' | 'event'> & {
+    notifyStateChange?: (debounce?: boolean) => void;
+    initialState?: Partial<SkeletonState>;
+  },
 ): IWidget {
   const { name, props, type } = config;
 
@@ -36,7 +40,10 @@ export function useWidget(
 
   const id: string = uniqueId(type);
   const align = props?.align ?? 'left';
-  const pane = usePane();
+  const initialViewMode = skeleton?.initialState?.viewModes?.[name];
+  const pane = usePane(initialViewMode, () => {
+    skeleton?.notifyStateChange?.(false);
+  });
 
   // ─── Focusable 注册 ──────────────────────────────────────────────────────
   // range 初始为 () => false，PanelView 挂载后通过 focusable.setRange(el) 注入真实 DOM
