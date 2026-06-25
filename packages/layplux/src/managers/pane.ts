@@ -10,11 +10,15 @@ export interface IPane {
   setViewMode: (mode: ViewMode) => void;
 }
 
-export function usePane(defaultViewMode: ViewMode = 'DockPinned'): IPane {
+export function usePane(
+  defaultViewMode: ViewMode = 'DockPinned',
+  onChange?: (mode: ViewMode) => void,
+): IPane {
   const viewMode = ref<ViewMode>(defaultViewMode);
 
   function setViewMode(mode: ViewMode) {
     viewMode.value = mode;
+    onChange?.(mode);
   }
 
   return {
