@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.9
+
+### Patch Changes
+
+- 68f9c33: 样式变更
+
 ## 2.0.8
 
 ### Patch Changes
