@@ -4,9 +4,9 @@
   padding: 6px 10px;
   font-size: 12px;
   line-height: 1.5;
-  color: hsl(var(--layplux-primary-foreground));
+  color: hsl(var(--layplux-popover-foreground));
   overflow-wrap: break-word;
-  background: hsl(var(--layplux-foreground));
+  background: hsl(var(--layplux-popover));
   border-radius: calc(var(--layplux-radius) - 2px);
   box-shadow:
     0 6px 16px 0 hsl(var(--layplux-shadow) / 8%),
@@ -22,7 +22,7 @@
     position: absolute;
     width: 6px;
     height: 6px;
-    background: hsl(var(--layplux-foreground));
+    background: hsl(var(--layplux-popover));
     transform: rotate(45deg);
   }
 }
