@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.11
+
+### Patch Changes
+
+- 78f86f9: 修改底部的样式
+
 ## 2.0.10
 
 ### Patch Changes
