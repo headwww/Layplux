@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.10
+
+### Patch Changes
+
+- fd4e0fb: 修复 tootip 的颜色在主题切换时候的问题
+
 ## 2.0.9
 
 ### Patch Changes
