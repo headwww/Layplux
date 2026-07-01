@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.12
+
+### Patch Changes
+
+- 80ac8f0: 修改顶部样式
+
 ## 2.0.11
 
 ### Patch Changes
