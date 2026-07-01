@@ -1,5 +1,11 @@
 # layplux
 
+## 2.0.13
+
+### Patch Changes
+
+- 26b6f73: 修复 pane 的标题的问题
+
 ## 2.0.12
 
 ### Patch Changes
