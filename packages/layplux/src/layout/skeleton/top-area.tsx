@@ -1,4 +1,4 @@
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, Fragment, type PropType } from 'vue';
 import type { InteractionWidgetConfig } from '../../types';
 import type { IWidget, IArea } from '../../managers';
 
@@ -22,7 +22,7 @@ export const TopArea = defineComponent({
           return index1 === index2 ? 0 : index1 > index2 ? 1 : -1;
         })
         .forEach((item) => {
-          const content = <div key={`top-area-${item.name}`}>{item.renderContent()}</div>;
+          const content = <Fragment key={`top-area-${item.name}`}>{item.renderContent()}</Fragment>;
           if (item.align === 'left') {
             left.push(content);
           } else if (item.align === 'center') {
