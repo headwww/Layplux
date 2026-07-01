@@ -1,4 +1,12 @@
-import { defineComponent, ref, inject, type PropType, type Ref, type VNode, type Component } from 'vue';
+import {
+  defineComponent,
+  ref,
+  inject,
+  type PropType,
+  type Ref,
+  type VNode,
+  type Component,
+} from 'vue';
 import type { IWidget } from '../../managers';
 import type { ViewMode } from '../../managers/pane';
 import {
@@ -40,7 +48,6 @@ export const PanelView = defineComponent({
   name: 'PanelView',
   props: {
     anchor: String,
-    title: String,
     widget: Object as PropType<IWidget>,
     menuItems: Array as PropType<MenuItemConfig[]>,
   },
@@ -138,7 +145,7 @@ export const PanelView = defineComponent({
       return (
         <div ref={panelRef} id={widget?.id} class="layplux-panel" onClick={handlePanelClick}>
           <div class="layplux-panel__header">
-            <span class="layplux-panel__title">{props.title ?? widget?.name}</span>
+            <span class="layplux-panel__title">{widget?.config?.props?.title || widget?.name}</span>
 
             {panelTitleExtra && createContent(panelTitleExtra)}
 

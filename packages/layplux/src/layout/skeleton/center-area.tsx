@@ -1,11 +1,4 @@
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  onUnmounted,
-  Teleport,
-  type PropType,
-} from 'vue';
+import { computed, defineComponent, onMounted, onUnmounted, Teleport, type PropType } from 'vue';
 import type { ISkeleton, IArea } from '../../managers';
 import type { CenterWidgetConfig } from '../../types';
 import { PanelView } from '../../components';
@@ -262,9 +255,13 @@ export const CenterArea = defineComponent({
     const leftTopHeight = computed(() => `calc((100% - 4px) * ${sk.leftSplitRatio.value})`);
     const leftBottomHeight = computed(() => `calc((100% - 4px) * ${1 - sk.leftSplitRatio.value})`);
     const rightTopHeight = computed(() => `calc((100% - 4px) * ${sk.rightSplitRatio.value})`);
-    const rightBottomHeight = computed(() => `calc((100% - 4px) * ${1 - sk.rightSplitRatio.value})`);
+    const rightBottomHeight = computed(
+      () => `calc((100% - 4px) * ${1 - sk.rightSplitRatio.value})`,
+    );
     const bottomLeftWidth = computed(() => `calc((100% - 4px) * ${sk.bottomSplitRatio.value})`);
-    const bottomRightWidth = computed(() => `calc((100% - 4px) * ${1 - sk.bottomSplitRatio.value})`);
+    const bottomRightWidth = computed(
+      () => `calc((100% - 4px) * ${1 - sk.bottomSplitRatio.value})`,
+    );
 
     return () => {
       if (!props.skeleton) return null;
